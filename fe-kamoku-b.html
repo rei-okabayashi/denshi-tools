@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>基本情報 科目B 反復トレーニング｜擬似言語×セキュリティ</title>
+<meta name="description" content="基本情報技術者試験（FE）科目B対策の反復ドリル。擬似言語のトレース・穴埋めとセキュリティのケース問題 全80問を本試験と同じ選択式で。間違えた問題ほど繰り返し出題して定着させます。">
+<meta name="theme-color" content="#F1EEE5">
+<meta property="og:title" content="基本情報 科目B 反復トレーニング｜擬似言語×セキュリティ">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nerunerunerure-hue.github.io/denshi-tools/fe-kamoku-b.html">
+<meta property="og:description" content="基本情報技術者試験（FE）科目B対策の反復ドリル。擬似言語のトレース・穴埋めとセキュリティのケース問題 全80問を本試験と同じ選択式で。間違えた問題ほど繰り返し出題して定着させます。">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme:light;
+    --bg:#F1EEE5; --ground:#E6E1D4; --surface:#FCFBF7; --surface2:#F2EFE6; --surface3:#EAE4D5;
+    --accent:#BE5A38; --accent-dim:#D69B81; --accent-soft:#F3E5DA; --accent-line:#E6C3B0; --accent-ink:#A54E31;
+    --ink:#211F1A; --ink-dim:#716C61;
+    --blue:#4A6FA5; --blue-soft:#E3EAF3; --blue-ink:#46699D;
+    --green:#4f6b3a; --green-soft:#E7EDDC;
+    --warn:#9a5a22; --warn-soft:#F5E8D4;
+    --border:#E2DCCD;
+    --sans:'Hanken Grotesk','Hiragino Kaku Gothic ProN','Meiryo','Yu Gothic',system-ui,sans-serif;
+    --mono:'JetBrains Mono','SFMono-Regular','Consolas',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{background:var(--bg)}
+  @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+  }
+  body{font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.85;
+    padding:0 14px calc(48px + env(safe-area-inset-bottom));-webkit-font-smoothing:antialiased}
+  .wrap{max-width:780px;margin:0 auto}
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(241,238,229,.93);backdrop-filter:blur(8px);
+    margin:0 -14px;padding:10px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+  .topbar a{color:var(--accent-ink);text-decoration:none;font-weight:600;font-size:.86rem}
+  .topbar .crumb{font-size:.86rem;color:var(--ink-dim)}
+  .topbar .prog{margin-left:auto;font-size:.8rem;color:var(--ink-dim);background:var(--surface);
+    border:1px solid var(--border);border-radius:99px;padding:2px 12px;font-weight:600;white-space:nowrap}
+  .topbar .prog b{color:var(--green)}
+  .hero{padding:26px 4px 6px}
+  .hero .eyebrow{color:var(--accent-ink);font-weight:700;font-size:.8rem;letter-spacing:.08em}
+  .hero h1{font-size:1.5rem;font-weight:700;margin:4px 0 8px}
+  .hero p.lead{color:var(--ink-dim);font-size:.9rem}
+  .toc{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0 8px;scroll-margin-top:56px}
+  .toc a{font-size:.76rem;text-decoration:none;color:var(--ink);background:var(--surface);
+    border:1px solid var(--border);border-radius:99px;padding:4px 11px;transition:.12s}
+  .toc a:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
+  main{display:flex;flex-direction:column;gap:18px;margin-top:14px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    padding:22px 20px;scroll-margin-top:64px;box-shadow:0 1px 2px rgba(50,38,24,.04)}
+  .card h2{font-size:1.13rem;margin-bottom:6px}
+  .card>p{font-size:.9rem;margin:8px 0}
+  .card p.sub{font-size:.85rem;color:var(--ink-dim)}
+  .card ul,.card ol{font-size:.9rem;padding-left:1.5em;margin:8px 0}
+  .card li{margin:4px 0}
+  .mini{font-size:.78rem;color:var(--ink-dim)}
+  .formula{font-family:var(--mono);text-align:center;font-size:.9rem;background:var(--surface2);
+    border-radius:10px;padding:10px 14px;margin:12px 0;letter-spacing:.02em}
+  /* ── コントロール ── */
+  .ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}
+  .ctl select{font-family:var(--sans);font-size:.88rem;padding:8px 12px;border:1px solid var(--border);
+    border-radius:10px;background:var(--surface2);color:var(--ink);max-width:100%}
+  .ctl select:focus{border-color:var(--accent-dim)}
+  .ctl select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .seg{display:flex;flex-wrap:wrap;gap:6px}
+  .seg label{font-size:.8rem;font-weight:600;color:var(--ink-dim);background:var(--surface2);
+    border:1px solid var(--border);border-radius:99px;padding:5px 13px;cursor:pointer;user-select:none;transition:.12s}
+  .seg input{position:absolute;opacity:0;pointer-events:none}
+  .seg label:has(input:checked){background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-ink)}
+  .seg label:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+  .btn{border:none;border-radius:11px;padding:12px 18px;font-family:var(--sans);font-weight:700;
+    font-size:.9rem;cursor:pointer;transition:.12s}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn-main:focus-visible{box-shadow:inset 0 0 0 2px rgba(255,255,255,.9)}
+  .btn-sub:focus-visible,.btn-ng:focus-visible{box-shadow:inset 0 0 0 2px var(--accent-dim)}
+  .btn-main{background:var(--accent-ink);color:#fff}
+  .btn-main:hover{background:#A84C2E}
+  .btn-main:disabled{background:var(--accent-dim);cursor:not-allowed}
+  .btn-sub{background:var(--surface2);color:var(--ink);border:1px solid var(--border)}
+  .btn-sub:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
+  .btn-ng{background:var(--warn-soft);color:var(--warn);border:1px solid #E8D3B0}
+  .btn-ng:hover{filter:brightness(.97)}
+  /* ── 出題カード ── */
+  .qcard{background:#FFFEFB;border:1px solid var(--border);border-radius:14px;padding:18px 16px;margin:12px 0}
+  .qcard .tag{font-size:.72rem;color:var(--ink-dim);letter-spacing:.04em;font-weight:600}
+  .qcard .tag b{color:var(--accent-ink)}
+  .qcard .qt{font-size:1rem;font-weight:700;line-height:1.75;margin:8px 0 4px;white-space:pre-line}
+  pre.code{font-family:var(--mono);font-size:.84rem;line-height:1.7;background:var(--surface2);
+    border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin:10px 0;
+    overflow-x:auto;white-space:pre;-webkit-overflow-scrolling:touch}
+  .choices{display:flex;flex-direction:column;gap:8px;margin:12px 0 2px}
+  .choice{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;
+    background:var(--surface2);border:1px solid var(--border);border-radius:11px;padding:11px 14px;
+    font-family:var(--sans);font-size:.92rem;line-height:1.6;color:var(--ink);cursor:pointer;transition:.12s}
+  .choice:hover{border-color:var(--accent-dim)}
+  .choice:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .choice .kn{font-weight:700;color:var(--accent-ink);flex-shrink:0}
+  .choice .cv{min-width:0;overflow-wrap:anywhere}
+  .choice .cv.cm{font-family:var(--mono);font-size:.87rem}
+  .choice:disabled{cursor:default;opacity:.55}
+  .choice.correct,.choice.correct:disabled{background:var(--green-soft);border-color:#C2D0AE;color:var(--green);opacity:1}
+  .choice.correct .kn{color:var(--green)}
+  .choice.wrong,.choice.wrong:disabled{background:var(--warn-soft);border-color:#E8D3B0;color:var(--warn);opacity:1}
+  .choice.wrong .kn{color:var(--warn)}
+  .qcard .ansbox{border-top:1px dashed var(--border);margin-top:12px;padding-top:12px}
+  .verdict{font-size:1.05rem;font-weight:700}
+  .verdict.good{color:var(--green)}
+  .verdict.bad{color:var(--warn)}
+  .requeue-note{font-size:.8rem;color:var(--warn);font-weight:600;margin-top:2px}
+  .exp{font-size:.86rem;color:var(--ink);margin-top:8px;white-space:pre-line;line-height:1.8}
+  .goref{display:inline-block;margin-top:10px;font-size:.8rem;color:var(--accent-ink);
+    text-decoration:none;font-weight:700;border-bottom:1.5px solid var(--accent-line)}
+  .statline{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.82rem;color:var(--ink-dim);font-weight:600;margin:6px 0}
+  .statline b{color:var(--accent-ink)}
+  .statline .g{color:var(--green)}
+  .statline .w{color:var(--warn)}
+  .nextline{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .nextline .btn{flex:1;min-width:140px}
+  .endchips{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 4px}
+  .endchips a{font-size:.78rem;text-decoration:none;color:var(--warn);background:var(--warn-soft);
+    border:1px solid #E8D3B0;border-radius:99px;padding:4px 12px;transition:.12s}
+  .endchips a:hover{filter:brightness(.97)}
+  .stopline{text-align:center;margin-top:8px}
+  .stopline button{background:none;border:none;color:var(--ink-dim);font-size:.76rem;font-family:var(--sans);
+    text-decoration:underline;cursor:pointer;padding:7px 10px;min-height:24px}
+  .stopline button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hidden{display:none}
+  /* ── 習熟マップ ── */
+  .mcat{border-bottom:1px dashed var(--border);padding:10px 0}
+  .mcat:last-of-type{border-bottom:none}
+  .mhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .mhead b{font-size:.9rem}
+  .mhead .mc{font-size:.78rem;color:var(--ink-dim);font-weight:600}
+  .mgo{margin-left:auto;background:none;border:none;font-family:var(--sans);font-size:.78rem;font-weight:700;
+    color:var(--accent-ink);cursor:pointer;text-decoration:underline;padding:4px 6px;min-height:24px}
+  .mgo:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .dots{display:flex;flex-wrap:wrap;gap:4px;margin:7px 0 0}
+  .dot{width:13px;height:13px;border-radius:4px;background:var(--surface3);border:1px solid var(--border)}
+  .dot.s0{background:var(--warn-soft);border-color:#DFBE8F}
+  .dot.s1{background:var(--accent-soft);border-color:var(--accent-dim)}
+  .dot.s2{background:#A7BC8C;border-color:#8CA36E}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.76rem;color:var(--ink-dim);margin-top:12px;align-items:center}
+  .legend .dot{display:inline-block;vertical-align:-2px;margin-right:4px}
+  .reset{text-align:center;margin-top:10px}
+  .reset button{background:none;border:none;color:var(--ink-dim);font-size:.74rem;font-family:var(--sans);
+    text-decoration:underline;cursor:pointer;padding:7px 10px;min-height:24px}
+  .reset button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  /* ── ポイント枠・リンク集 ── */
+  .point{background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:12px;
+    padding:12px 16px;margin:14px 0 2px;font-size:.88rem}
+  .point .tt{font-weight:700;color:var(--accent-ink);font-size:.84rem;display:block;margin-bottom:4px}
+  .related{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .related a{flex:1;min-width:200px;display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;
+    background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:11px 14px;
+    font-size:.84rem;font-weight:600;transition:.12s}
+  .related a:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
+  .pager{display:flex;justify-content:space-between;gap:12px;margin-top:6px}
+  .pager a{flex:1;text-decoration:none;background:var(--surface);border:1px solid var(--border);
+    border-radius:13px;padding:13px 16px;color:var(--ink);font-size:.86rem;font-weight:600;transition:.12s}
+  .pager a:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
+  .pager a.next{text-align:right}
+  .pager .dir{display:block;font-size:.7rem;color:var(--ink-dim);font-weight:500}
+  footer{text-align:center;color:var(--ink-dim);font-size:.72rem;margin-top:26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="topbar">
+  <a href="fe-guide.html">‹ 基本情報ノート</a>
+  <span class="crumb">科目B反復</span>
+  <span class="prog">定着 <b id="p-done">0</b>/<span id="p-total">0</span></span>
+</header>
+
+<div class="hero">
+  <div class="eyebrow">KAMOKU-B TRAINING</div>
+  <h1>🔁 科目B 反復トレーニング</h1>
+  <p class="lead">擬似言語のトレース・穴埋めとセキュリティのケース問題 全<span class="qtotal">80</span>問を、本試験と同じ選択式で解くドリルです。間違えた問題は<b>同じセッション内で何度でも</b>戻ってきて、2回連続で正解するまで「定着」になりません。解いた記録はこの端末に保存されます。</p>
+  <nav class="toc" aria-label="ページ内目次">
+    <a href="#drill">🎯 反復ドリル</a>
+    <a href="#map">📊 習熟マップ</a>
+    <a href="#tips">📖 トレースのコツ</a>
+    <a href="#links">🔗 復習リンク</a>
+  </nav>
+</div>
+
+<main>
+
+<section class="card">
+  <h2>🔄 このドリルの回し方</h2>
+  <ul>
+    <li>選択肢をタップすると<b>その場で正誤とトレース付き解説</b>が出ます。</li>
+    <li>間違えた問題は<b>数問後にもう一度</b>出ます（正解するまで繰り返し）。</li>
+    <li><b>2回連続で正解すると「定着」</b>。間違えると定着度は0に戻ります。</li>
+    <li>おすすめは、まず「全部・10問」で1周 → 2周目からは<b>🤔弱点だけ</b>で回すこと。</li>
+    <li>本試験の時間感覚は<b>1問5分</b>。結果画面の所要時間で確かめられます。</li>
+  </ul>
+</section>
+
+<!-- ============ 反復ドリル ============ -->
+<section class="card" id="drill">
+  <h2>🎯 反復ドリル</h2>
+  <p class="sub">本試験の科目Bは擬似言語16問＋セキュリティ4問の20問・100分。ここでは分野を絞って短く何周も回します。</p>
+
+  <div id="dr-setup">
+    <div class="ctl">
+      <select id="dr-cat" aria-label="出題分野"></select>
+      <div class="seg" role="radiogroup" aria-label="出題対象">
+        <label><input type="radio" name="dr-mode" value="all" checked>全部</label>
+        <label><input type="radio" name="dr-mode" value="weak">🤔弱点だけ</label>
+        <label><input type="radio" name="dr-mode" value="new">未挑戦だけ</label>
+      </div>
+    </div>
+    <div class="ctl">
+      <div class="seg" role="radiogroup" aria-label="出題数">
+        <label><input type="radio" name="dr-cnt" value="10" checked>10問</label>
+        <label><input type="radio" name="dr-cnt" value="20">20問</label>
+        <label><input type="radio" name="dr-cnt" value="all">全部</label>
+      </div>
+    </div>
+    <div class="ctl">
+      <button class="btn btn-main" id="dr-start">▶ スタート</button>
+      <span class="mini" id="dr-hint"></span>
+    </div>
+  </div>
+
+  <div id="dr-play" class="hidden">
+    <div class="statline">
+      <span>残り <b id="dr-left">0</b> 問</span>
+      <span class="g">⭕ <span id="dr-ok">0</span></span>
+      <span class="w">❌ <span id="dr-ng">0</span></span>
+      <span>🔁 再出題 <span id="dr-rq">0</span></span>
+    </div>
+    <div class="qcard">
+      <div class="tag" id="dr-tag"></div>
+      <div class="qt" id="dr-q"></div>
+      <pre class="code hidden" id="dr-code"></pre>
+      <div class="mini hidden" id="dr-scrollhint">← 横にスクロールできます →</div>
+      <div class="choices" id="dr-choices"></div>
+      <div class="ansbox hidden" id="dr-ans">
+        <div class="verdict" id="dr-verdict"></div>
+        <div class="requeue-note hidden" id="dr-requeue">🔁 この問題は少しあとでもう一度出ます</div>
+        <div class="exp" id="dr-exp"></div>
+        <a class="goref" id="dr-ref" href="#">→ 解説に戻る</a>
+        <div class="nextline">
+          <button class="btn btn-main" id="dr-next">次の問題 ›</button>
+        </div>
+      </div>
+    </div>
+    <div class="stopline"><button id="dr-stop">⏹ ここでやめる</button></div>
+  </div>
+
+  <div id="dr-done" class="hidden">
+    <div class="qcard">
+      <div class="tag">結果</div>
+      <div class="qt" id="dr-result"></div>
+      <div id="dr-weakwrap">
+        <p class="mini" style="margin-top:6px">❌になった問題の解説リンク：</p>
+        <div class="endchips" id="dr-weakchips"></div>
+      </div>
+      <div class="nextline">
+        <button class="btn btn-main" id="dr-again">🔁 もう一周</button>
+        <button class="btn btn-ng" id="dr-againweak">🤔 弱点だけで回す</button>
+        <button class="btn btn-sub" id="dr-back">設定に戻る</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="mini" style="margin-top:10px">⌨️ キーボード：<b>1〜5</b>で選択肢、<b>Enter</b>で次の問題へ。</p>
+</section>
+
+<!-- ============ 習熟マップ ============ -->
+<section class="card" id="map">
+  <h2>📊 習熟マップ</h2>
+  <p class="sub">1マス＝1問。分野ごとの定着具合がひと目でわかります。弱い分野は「この分野を回す」からすぐ復習。</p>
+  <div id="map-body"></div>
+  <div class="legend" aria-hidden="true">
+    <span><span class="dot"></span>未挑戦</span>
+    <span><span class="dot s0"></span>定着0（要復習）</span>
+    <span><span class="dot s1"></span>定着1（あと1回）</span>
+    <span><span class="dot s2"></span>定着（2回連続正解）</span>
+  </div>
+  <div class="reset"><button id="st-reset">学習記録をリセット</button></div>
+</section>
+
+<!-- ============ トレースのコツ ============ -->
+<section class="card" id="tips">
+  <h2>📖 トレースのコツ（試験直前の再確認用）</h2>
+  <p>科目Bは暗記ではなく<b>トレース（1行ずつ実行した気持ちで追うこと）</b>の試験です。手順はいつも同じ4ステップ。</p>
+  <ol>
+    <li><b>①ゴール確認</b>：何を答えるか（戻り値？出力？空欄？）を先に見る。</li>
+    <li><b>②初期値を書く</b>：変数の最初の値をメモの1行目に書く。</li>
+    <li><b>③1行ずつ追う</b>：ループは面倒でも省略せず、変数の値を毎回書く。</li>
+    <li><b>④答えの照合</b>：出た値を選択肢と突き合わせ、単位・添字を再確認。</li>
+  </ol>
+  <div class="formula">科目B：100分・20問 → セキュリティ4問を先に片付けて、擬似言語は1問5分厳守</div>
+  <div class="point"><span class="tt">⚡ ひっかけトップ5（迷ったらここに戻る）</span>
+    <ul>
+      <li><b>do〜while は必ず1回実行</b>される（後判定）。while との回数差が最頻出。</li>
+      <li><b>for は両端を含む</b>：「1 から n まで」は n 回。</li>
+      <li><b>配列の添字は1始まり</b>が基本。0始まりと思い込むとズレる。</li>
+      <li>演算子は <b>mod・×・÷ が先</b>、+・− が後、比較はもっと後。</li>
+      <li>二分探索は<b>境界の更新（±1）</b>と終了条件を丁寧に。</li>
+    </ul>
+  </div>
+  <p class="mini">トレース表の書き方そのものは <a href="fe-algo.html#al-4" style="color:var(--accent-ink)">9-4 トレース表の書き方</a> で復習できます。</p>
+</section>
+
+<!-- ============ 復習リンク ============ -->
+<section class="card" id="links">
+  <h2>🔗 復習リンク</h2>
+  <p class="sub">❌が続く分野は、ドリルを回す前に解説を読み直すほうが早いです。</p>
+  <div class="related">
+    <a href="fe-algo.html">🧩 科目B アルゴリズム解説<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">擬似言語の文法からトレースまで全18項目</span></a>
+    <a href="fe-security.html">🔒 セキュリティ解説<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">科目Bセキュリティ問題の知識のベース</span></a>
+    <a href="fe-cram.html">⚡ 直前対策ドリル<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">科目A向け一問一答×計算ドリル</span></a>
+    <a href="https://www.ipa.go.jp/shiken/mondai-kaiotu/sg_fe/koukai/2025r07.html" target="_blank" rel="noopener">📄 IPA 公開問題（2025年度）<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">本試験からの公開問題と解答例</span></a>
+  </div>
+</section>
+
+</main>
+
+<nav class="pager">
+  <a href="fe-algo.html"><span class="dir">‹ もどる</span>セクション9：科目B アルゴリズム</a>
+  <a href="fe-cram.html" class="next"><span class="dir">つぎへ ›</span>直前対策ドリル</a>
+</nav>
+
+<footer>基本情報 学習ノート ─ 科目B 反復トレーニング</footer>
+</div>
+
+<script>
+'use strict';
+const KEY='feKamokuB.v1';
+function loadSt(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function saveSt(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+
+const CATS=[
+ ['bas','文法・トレース'],['arr','配列'],['fnc','関数・再帰'],['dat','スタック・キュー・リスト'],
+ ['srt','探索・整列'],['tgh','木・グラフ・ハッシュ'],['str','文字列・ビット'],['sec','セキュリティ']
+];
+const CATLABEL={};CATS.forEach(c=>CATLABEL[c[0]]=c[1]);
+const TYPELABEL={trace:'トレース',fill:'穴埋め',sec:'ケース問題'};
+const REFLABEL={
+ 'al-1':'9-1 科目Bの戦い方','al-2':'9-2 擬似言語の読み方①','al-3':'9-3 擬似言語の読み方②',
+ 'al-4':'9-4 トレース表の書き方','al-5':'9-5 配列のトレース','al-6':'9-6 関数と引数',
+ 'al-7':'9-7 再帰の追い方','al-8':'9-8 スタックとキュー','al-9':'9-9 連結リスト',
+ 'al-10':'9-10 探索アルゴリズム','al-11':'9-11 ソートアルゴリズム','al-12':'9-12 計算量（オーダー記法）',
+ 'al-13':'9-13 ハッシュ法','al-14':'9-14 データサイエンス系問題','al-15':'9-15 科目Bセキュリティの解き方',
+ 'al-16':'9-16 木構造と二分木の走査','al-17':'9-17 グラフと隣接行列','al-18':'9-18 文字列処理のトレース',
+ 'sec-2':'4-2 マルウェアの種類','sec-3':'4-3 技術的な攻撃手法','sec-4':'4-4 人を狙う攻撃',
+ 'sec-5':'4-5 共通鍵暗号と公開鍵暗号','sec-7':'4-7 ハッシュ関数とデジタル署名','sec-8':'4-8 認証の技術',
+ 'sec-10':'4-10 ネットワークを守る装置','sec-11':'4-11 リスクマネジメントとISMS',
+ 'sec-12':'4-12 アクセス管理と組織的対策','sec-13':'4-13 バックアップとBCP'
+};
+
+const QBANK=[
+{"id": "bas-1", "cat": "bas", "type": "trace", "diff": 1, "title": "演算子の優先順位", "code": "整数型: a, b, c\na ← 7\nb ← 3\nc ← a mod b + a ÷ b × b\ncの値を出力する", "q": "このプログラムを実行した直後、変数cの値はどれか。（÷の結果は小数点以下を切り捨てる）", "choices": ["1", "6", "7", "9"], "ans": 2, "exp": "トレース: a=7,b=3\nmod,×,÷は+より優先し左から順に計算\na mod b=1、a÷b×b=(7÷3)×3=2×3=6\nc=1+6=7\n⭕ ウ: cは7\n❌ ア: a÷b×bの加算を忘れmod項だけを答えた誤り\n❌ イ: 優先順位を無視し左から順に計算(7 mod3=1→1+7=8→8÷3=2→2×3=6)した誤り\n❌ エ: (a mod b + a÷b)×b=(1+2)×3=9のように、×bを全体にまとめて掛けてしまった誤り", "ref": "fe-algo.html#al-2"},
+{"id": "bas-2", "cat": "bas", "type": "fill", "diff": 2, "title": "if-elseifの分岐", "code": "整数型: score, grade\nscore ← 55\nif (score ≧ 90)\n  grade ← 1\nelseif (score ≧ 70)\n  grade ← 2\nelseif (［　　　］)\n  grade ← 3\nelse\n  grade ← 4\nendif\ngradeの値を出力する", "q": "次のプログラムは、得点scoreを90点以上:1、70点以上90点未満:2、50点以上70点未満:3、50点未満:4としてgradeに設定する。score=55を実行するとgradeが3になった。空欄に入れる正しい字句はどれか。", "choices": ["score ≧ 50", "score ≧ 60", "score > 60", "score ≧ 65"], "ans": 0, "exp": "トレース: score=55\n(55≧90)偽 → (55≧70)偽 → 空欄を評価してgrade=3になった\n⭕ ア: score≧50は55≧50で真、grade=3と一致\n❌ イ: score≧60は55≧60で偽となりgrade=4になってしまう\n❌ ウ: score>60も55>60で偽、同様にgrade=4\n❌ エ: score≧65も偽でgrade=4", "ref": "fe-algo.html#al-3"},
+{"id": "bas-3", "cat": "bas", "type": "trace", "diff": 1, "title": "do-whileの実行回数", "code": "整数型: n, cnt\nn ← 5\ncnt ← 0\ndo\n  cnt ← cnt + 1\n  n ← n - 1\nwhile (n > 5)\ncntの値を出力する", "q": "このプログラムを実行した直後、変数cntの値はどれか。", "choices": ["0", "1", "2", "5"], "ans": 1, "exp": "トレース: n=5,cnt=0 → 後判定なので本体を先に実行: cnt=1,n=4\n条件(n>5)を判定: 4>5は偽 → 終了\n⭕ イ: cntは1\n❌ ア: whileの前判定と混同し0回実行と誤解した場合\n❌ ウ: 本体を2回実行したと誤解した場合\n❌ エ: ループが5回実行されると誤解した場合", "ref": "fe-algo.html#al-3"},
+{"id": "bas-4", "cat": "bas", "type": "trace", "diff": 1, "title": "forループの範囲", "code": "整数型: i, s\ns ← 0\nfor (i を 2 から 8 まで 2 ずつ増やす)\n  s ← s + i\nendfor\nsの値を出力する", "q": "このプログラムを実行した直後、変数sの値はどれか。", "choices": ["12", "14", "20", "30"], "ans": 2, "exp": "トレース: forは両端を含むためiは2,4,6,8の4回\ns=0+2=2→+4=6→+6=12→+8=20\n⭕ ウ: sは20\n❌ ア: 最後の8を含めず3回で終えたと誤解した場合の12\n❌ イ: 加算を1回誤って行った場合の14\n❌ エ: iが10まで続くと誤解した場合の30", "ref": "fe-algo.html#al-3"},
+{"id": "bas-5", "cat": "bas", "type": "fill", "diff": 2, "title": "二重ループの回数", "code": "整数型: i, j, cnt\ncnt ← 0\nfor (i を 1 から 3 まで 1 ずつ増やす)\n  for (j を 1 から ［　　　］ まで 1 ずつ増やす)\n    cnt ← cnt + 1\n  endfor\nendfor\ncntの値を出力する", "q": "このプログラムを実行するとcntの値が12になった。空欄に入れる正しい字句はどれか。", "choices": ["4", "i", "i+1", "3"], "ans": 0, "exp": "トレース: 外側iは1,2,3の3回実行される\n⭕ ア: 4(固定)なら内側は常に4回、合計3×4=12\n❌ イ: iなら内側はi回で合計1+2+3=6\n❌ ウ: i+1なら内側はi+1回で合計2+3+4=9\n❌ エ: 3なら内側は常に3回で合計3×3=9", "ref": "fe-algo.html#al-3"},
+{"id": "bas-6", "cat": "bas", "type": "trace", "diff": 2, "title": "配列要素の交換", "code": "整数型の配列: a ← {5, 8}\n整数型: tmp\ntmp ← a[1]\na[1] ← a[2]\na[2] ← tmp\na[1]とa[2]の値を出力する", "q": "このプログラムを実行した直後、a[1]とa[2]の値の組合せとして正しいものはどれか。配列の要素番号は1から始まる。", "choices": ["a[1]=5, a[2]=8", "a[1]=8, a[2]=8", "a[1]=5, a[2]=5", "a[1]=8, a[2]=5"], "ans": 3, "exp": "トレース: tmp←a[1]=5 → a[1]←a[2]=8 → a[2]←tmp=5\n⭕ エ: a[1]は8、a[2]は5\n❌ ア: 交換されず初期値のままと誤解した場合\n❌ イ: tmpへの代入前にa[1]を書き換えたと誤解しa[2]も8になったと考えた場合\n❌ ウ: 両方tmpの値(5)になったと誤解した場合", "ref": "fe-algo.html#al-4"},
+{"id": "bas-7", "cat": "bas", "type": "fill", "diff": 2, "title": "論理式の判定", "code": "整数型: x, y, judge\nx ← 3\ny ← 15\nif (x < 5 and ［　　　］)\n  judge ← 1\nelse\n  judge ← 2\nendif\njudgeの値を出力する", "q": "次のプログラムを実行するとjudgeの値が1になった。空欄に入れる正しい式はどれか。", "choices": ["y mod 4 = 0", "y mod 3 = 0", "y mod 5 = 1", "y ÷ 3 = 4"], "ans": 1, "exp": "トレース: x=3,y=15 → x<5は3<5で真\nandなので全体の真偽は空欄の式の真偽と一致する\n各選択肢をyの値で計算して真偽を確かめる\n⭕ イ: y mod3=0は15 mod3=0で真、judgeは1になる\n❌ ア: y mod4=0は15 mod4=3で偽となりjudgeは2になってしまう\n❌ ウ: y mod5=1は15 mod5=0で偽(0≠1)となりjudgeは2になってしまう\n❌ エ: y÷3=4は15÷3=5で偽(5≠4)となりjudgeは2になってしまう", "ref": "fe-algo.html#al-2"},
+{"id": "bas-8", "cat": "bas", "type": "trace", "diff": 3, "title": "分岐によるカウンタ更新", "code": "整数型: i, cnt\ni ← 1\ncnt ← 0\nwhile (i ≦ 10)\n  if (i mod 3 = 0)\n    cnt ← cnt + 1\n    i ← i + 2\n  else\n    i ← i + 1\n  endif\nendwhile\ncntの値を出力する", "q": "このプログラムを実行した直後、変数cntの値はどれか。", "choices": ["2", "4", "7", "3"], "ans": 3, "exp": "トレース: i=1→2→3(cnt=1,i=5)→6(cnt=2,i=8)→9(cnt=3,i=11)→終了\n⭕ エ: cntは3\n❌ ア: 3の倍数を1つ数え忘れた場合の2\n❌ イ: 数え過ぎた場合の4\n❌ ウ: 本体の実行回数(7回)をそのままcntと誤解した場合", "ref": "fe-algo.html#al-3"},
+{"id": "bas-9", "cat": "bas", "type": "fill", "diff": 3, "title": "比較演算子の組合せ", "code": "整数型: x, judge\nx ← 11\njudge ← 0\nif (［　　　］)\n  judge ← 1\nendif\njudgeの値を出力する", "q": "このプログラムは、xが1以上10以下のときだけjudgeに1を設定することを意図している。x=11で実行したところjudgeの値は0のままだった。空欄に入れた式として正しいものはどれか。", "choices": ["1 ≦ x and x ≦ 10", "1 ≦ x or x ≦ 10", "1 ≦ x and 10 ≦ x", "1 ≦ x and x ≦ 12"], "ans": 0, "exp": "トレース: x=11で各選択肢を評価\nア 1≦11(真)かつ11≦10(偽)→偽\nイ 1≦11(真)or 11≦10(偽)→真\nウ 1≦11(真)かつ10≦11(真)→真\nエ 1≦11(真)かつ11≦12(真)→真\n⭕ ア: 全体が偽となりjudgeは0のまま、観測結果と一致\n❌ イ: orでは片方が真なら常に真になり意図と異なる\n❌ ウ: 10≦xは上限を作らないため11でも真になる\n❌ エ: 上限を12としており10以下という条件を満たしていない", "ref": "fe-algo.html#al-3"},
+{"id": "bas-10", "cat": "bas", "type": "trace", "diff": 2, "title": "二重ループのトレース", "code": "整数型: i, j, cnt\ncnt ← 0\nfor (i を 1 から 4 まで 1 ずつ増やす)\n  for (j を i から 4 まで 1 ずつ増やす)\n    cnt ← cnt + 1\n  endfor\nendfor\ncntの値を出力する", "q": "このプログラムを実行した直後、変数cntの値はどれか。", "choices": ["4", "16", "20", "10"], "ans": 3, "exp": "トレース: i=1で内側4回、i=2で3回、i=3で2回、i=4で1回\ncnt=4+3+2+1=10\n⭕ エ: cntは10\n❌ ア: 外側ループの回数(4)だけを答えた誤り\n❌ イ: 内側を常に4回と誤解し4×4=16とした誤り\n❌ ウ: iが0から始まると誤解するなどして20とした誤り", "ref": "fe-algo.html#al-3"},
+{"id": "arr-1", "cat": "arr", "type": "trace", "diff": 1, "title": "配列要素の合計", "code": "整数型の配列: a ← {10, 20, 30, 40}\n整数型: i, s\ni ← 2\ns ← a[i] + a[i+1]", "q": "このプログラムの実行後、変数sの値はどれか。（配列の要素番号は1から始まる）", "choices": ["50", "30", "40", "70"], "ans": 0, "exp": "トレース: i=2 → a[2]=20, a[3]=30 → s=20+30=50\n⭕ ア: sは50\n❌ イ: a[1]+a[2]=10+20と添字を1つ前にずらして計算した場合\n❌ ウ: a[i]+a[i]のように+1を付け忘れた場合\n❌ エ: a[3]+a[4]=30+40と添字を1つ後ろにずらして計算した場合", "ref": "fe-algo.html#al-5"},
+{"id": "arr-2", "cat": "arr", "type": "fill", "diff": 2, "title": "累積和の計算", "code": "/* 配列の要素番号は1から始まる */\n整数型の配列: a ← {2, 4, 6, 8}\n整数型: i, sum\nsum ← 0\nfor (i を 1 から 4 まで 1 ずつ増やす)\n  sum ← ［　　　］\nendfor\n/* sumはaの全要素の合計とする */", "q": "sumに配列aの全要素の合計を求めるプログラムである。プログラム中の［　　　］に入れる正しいものはどれか。", "choices": ["sum + i", "a[i]", "sum + a[i]", "sum + a[i] + i"], "ans": 2, "exp": "累積和はループのたびに現在の要素a[i]をsumへ加算していく。ブランクにsum + a[i]を入れると、i=1〜4でsumは2+4+6+8=20になる\n⭕ ウ: sum + a[i]\n❌ ア: sum + iでは添字の値を加算してしまい、合計は1+2+3+4=10になる\n❌ イ: a[i]だけでは毎回上書きしてしまい、最終的にa[4]=8のみが残る\n❌ エ: sum + a[i] + iでは要素と添字を両方加算してしまい、合計が30になる", "ref": "fe-algo.html#al-5"},
+{"id": "arr-3", "cat": "arr", "type": "trace", "diff": 2, "title": "配列の逆順コピー", "code": "整数型の配列: a ← {1, 2, 3, 4, 5}\n整数型の配列: b ← {0, 0, 0, 0, 0}\n整数型: i, n\nn ← 5\nfor (i を 1 から n まで 1 ずつ増やす)\n  b[i] ← a[n - i + 1]\nendfor", "q": "配列aの内容を逆順にして配列bへコピーするプログラムである。実行後の配列bの内容はどれか。（配列の要素番号は1から始まる）", "choices": ["{1,2,3,4,5}", "{4,3,2,1,0}", "{5,4,3,2,0}", "{5,4,3,2,1}"], "ans": 3, "exp": "トレース: i=1:b[1]=a[5]=5→i=2:b[2]=a[4]=4→i=3:b[3]=a[3]=3→i=4:b[4]=a[2]=2→i=5:b[5]=a[1]=1\n⭕ エ: bは{5,4,3,2,1}\n❌ ア: aの内容をそのままコピーしたと誤解し、逆順になっていない場合\n❌ イ: 添字の計算をa[n-i]と誤ると存在しないa[0]を参照し、b[5]が初期値0のままになる場合\n❌ ウ: ループの終値をn-1と誤ると、b[5]への代入が行われず初期値0のまま残る場合", "ref": "fe-algo.html#al-5"},
+{"id": "arr-4", "cat": "arr", "type": "fill", "diff": 1, "title": "配列要素の入替え", "code": "/* 配列の要素番号は1から始まる */\n整数型の配列: a ← {3, 7}\n整数型: tmp\ntmp ← a[1]\na[1] ← a[2]\n［　　　］", "q": "a[1]とa[2]の値を入れ替えるプログラムである。プログラム中の［　　　］に入れる正しいものはどれか。", "choices": ["a[2] ← a[1]", "a[2] ← tmp", "tmp ← a[2]", "a[1] ← tmp"], "ans": 1, "exp": "トレース: tmpに元のa[1](3)を保存→a[1]←a[2]でa[1]は7に更新→ここでa[2]←tmpとしてa[2]に3を代入する。結果a={7,3}\n⭕ イ: a[2] ← tmp\n❌ ア: a[2]←a[1]とすると既に7に上書き済みのa[1]を代入してしまい、a={7,7}になり入替えにならない\n❌ ウ: tmp←a[2]としてもa[2]自体は変化せず、a={7,7}のままになる\n❌ エ: a[1]←tmpとするとa[1]が3に戻るだけでa[2]は変化せず、結果的に入替えが行われない(a={3,7})", "ref": "fe-algo.html#al-5"},
+{"id": "arr-5", "cat": "arr", "type": "fill", "diff": 2, "title": "添字の計算式", "code": "/* 配列の要素番号は1から始まる */\n整数型の配列: a ← {1,2,3,4,5,6,7,8,9,10}\n整数型: i, s\ns ← 0\nfor (i を 1 から 5 まで 1 ずつ増やす)\n  s ← s + a[［　　　］]\nendfor\n/* 偶数番目の要素だけを合計する */", "q": "配列aの偶数番目の要素（a[2], a[4], …, a[10]）だけを合計するプログラムである。プログラム中の［　　　］に入れる正しいものはどれか。", "choices": ["2 × i", "2 × i - 1", "i + 5", "i"], "ans": 0, "exp": "i=1〜5のとき2×iはa[2],a[4],a[6],a[8],a[10]となり、配列の偶数番目の要素だけを合計できる\n⭕ ア: 2 × i\n❌ イ: 2×i-1はa[1],a[3],a[5],a[7],a[9]となり奇数番目の要素になってしまう\n❌ ウ: i+5はa[6]〜a[10]の連続した要素になり、偶数番目に限定されない\n❌ エ: iはa[1]〜a[5]の先頭5個の要素になり、×2を忘れた誤りである", "ref": "fe-algo.html#al-5"},
+{"id": "arr-6", "cat": "arr", "type": "trace", "diff": 2, "title": "隣接要素の比較", "code": "整数型の配列: a ← {3, 1, 4, 1, 5, 9, 2}\n整数型: i, cnt\ncnt ← 0\nfor (i を 1 から 6 まで 1 ずつ増やす)\n  if (a[i] < a[i+1])\n    cnt ← cnt + 1\n  endif\nendfor", "q": "配列aにおいて、隣り合う2つの要素を比較し、後の要素が前の要素より大きい組の数をcntに求めるプログラムである。実行後、変数cntの値はどれか。（配列の要素数は7、要素番号は1から始まる）", "choices": ["2", "4", "6", "3"], "ans": 3, "exp": "トレース: (a1,a2)=(3,1)否→(a2,a3)=(1,4)真cnt=1→(a3,a4)=(4,1)否→(a4,a5)=(1,5)真cnt=2→(a5,a6)=(5,9)真cnt=3→(a6,a7)=(9,2)否。cnt=3\n⭕ エ: cntは3\n❌ ア: 1組の判定を見落とした場合\n❌ イ: 判定を数え過ぎた場合\n❌ ウ: 比較したペアの総数(6組)をそのままcntと誤認した場合", "ref": "fe-algo.html#al-5"},
+{"id": "arr-7", "cat": "arr", "type": "fill", "diff": 3, "title": "最小値の添字探索", "code": "/* 配列の要素番号は1から始まる */\n整数型の配列: a ← {8, 5, 9, 2, 6, 3}\n整数型: i, minVal, minIdx\nminVal ← a[1]\nminIdx ← 1\nfor (i を 2 から 6 まで 1 ずつ増やす)\n  if (a[i] < minVal)\n    minVal ← a[i]\n    ［　　　］\n  endif\nendfor", "q": "配列aの中から最小値の添字（位置）を求め、minIdxに格納するプログラムである。プログラム中の［　　　］に入れる正しいものはどれか。", "choices": ["minIdx ← minIdx + 1", "minIdx ← i", "i ← minIdx", "minIdx ← a[i]"], "ans": 1, "exp": "トレース: minVal=8,minIdx=1→i=2:a[2]=5<8でminVal=5,minIdx=2→i=3:9は更新なし→i=4:a[4]=2<5でminVal=2,minIdx=4→i=5:6は更新なし→i=6:3は更新なし。最終minIdx=4\n⭕ イ: minIdx ← i\n❌ ア: minIdx←minIdx+1では、2回目の更新でminIdx=2+1=3となり実際の位置4と食い違う\n❌ ウ: i←minIdxはminIdxへ代入しないため、minIdxは初期値1のまま変化しない\n❌ エ: minIdx←a[i]は添字ではなく値そのものを代入するため、最終的にminIdxは2(=minVal)になってしまう", "ref": "fe-algo.html#al-5"},
+{"id": "arr-8", "cat": "arr", "type": "trace", "diff": 1, "title": "配列要素の書換え", "code": "整数型の配列: a ← {10, 20, 30}\n整数型: i\ni ← 1\nwhile (i ≦ 3)\n  a[i] ← a[i] + i\n  i ← i + 1\nendwhile", "q": "このプログラムの実行後、配列aの内容はどれか。（配列の要素番号は1から始まる）", "choices": ["{10,20,30}", "{12,22,32}", "{11,22,33}", "{11,21,31}"], "ans": 2, "exp": "トレース: i=1:a[1]=10+1=11→i=2:a[2]=20+2=22→i=3:a[3]=30+3=33→i=4で条件4≦3が偽となり終了\n⭕ ウ: aは{11,22,33}\n❌ ア: 加算されず初期値のままだと誤解した場合\n❌ イ: 各要素に一律+2したと誤解した場合\n❌ エ: 加算する値を添字iではなく1固定と誤解した場合", "ref": "fe-algo.html#al-5"},
+{"id": "arr-9", "cat": "arr", "type": "trace", "diff": 2, "title": "最大値の探索", "code": "整数型の配列: a ← {5, 8, 3, 9, 6}\n整数型: i, max\nmax ← a[1]\nfor (i を 2 から 5 まで 1 ずつ増やす)\n  if (a[i] > max)\n    max ← a[i]\n  endif\nendfor", "q": "このプログラムの実行後、変数maxの値はどれか。（配列の要素番号は1から始まる）", "choices": ["8", "9", "6", "5"], "ans": 1, "exp": "トレース: max=5→i=2:8>5でmax=8→i=3:3は更新なし→i=4:9>8でmax=9→i=5:6は更新なし。max=9\n⭕ イ: maxは9\n❌ ア: i=4での更新を見落とした場合\n❌ ウ: 最後の要素a[5]を最大値と誤認した場合\n❌ エ: forの開始値を誤読するなどしてループ本体が一度も実行されず、初期値a[1]=5のまま変化しないと誤解した場合", "ref": "fe-algo.html#al-5"},
+{"id": "arr-10", "cat": "arr", "type": "trace", "diff": 3, "title": "二次元配列の列合計", "code": "整数型: i, s\n整数型の二次元配列: a  /* 3行3列 */\na[1,1] ← 1\na[1,2] ← 2\na[1,3] ← 3\na[2,1] ← 4\na[2,2] ← 5\na[2,3] ← 6\na[3,1] ← 7\na[3,2] ← 8\na[3,3] ← 9\ns ← 0\nfor (i を 1 から 3 まで 1 ずつ増やす)\n  s ← s + a[i, 2]\nendfor", "q": "このプログラムの実行後、変数sの値はどれか。（配列の添字は1から始まり、a[行,列]の順で指定する）", "choices": ["12", "18", "15", "45"], "ans": 2, "exp": "列2の要素はa[1,2]=2, a[2,2]=5, a[3,2]=8なので、s=2+5+8=15\n⭕ ウ: sは15\n❌ ア: 列1(1+4+7=12)の合計と取り違えた場合\n❌ イ: 列3(3+6+9=18)の合計と取り違えた場合\n❌ エ: 9要素すべての合計(45)と混同した場合", "ref": "fe-algo.html#al-5"},
+{"id": "fnc-1", "cat": "fnc", "type": "trace", "diff": 1, "title": "演算子の優先順位", "code": "○ calc(整数型: a, 整数型: b)\n  return a × 2 + b", "q": "calc(3, 4) の戻り値はどれか。", "choices": ["11", "18", "10", "14"], "ans": 2, "exp": "トレース: a=3, b=4 → a×2+b = 3×2+4 = 6+4 = 10\n⭕ ウ: 10\n❌ ア: bとaの役割を入れ替えてb×2+aと誤計算すると4×2+3=11\n❌ イ: ×より+を先に計算しa×(2+b)と誤読すると3×6=18\n❌ エ: 式全体を(a+b)×2と誤読すると7×2=14", "ref": "fe-algo.html#al-6"},
+{"id": "fnc-2", "cat": "fnc", "type": "trace", "diff": 2, "title": "式を引数に渡す呼出し", "code": "○ f(整数型: n)\n  return n × n - 1\n\n整数型: a, b\na ← 3\nb ← f(a + 1)\nbの値を出力する", "q": "このプログラムを実行したとき、出力される値はどれか。", "choices": ["15", "8", "16", "12"], "ans": 0, "exp": "トレース: a=3 → a+1=4 → f(4)=4×4-1=16-1=15 → bに15が代入され出力\n⭕ ア: 15\n❌ イ: +1を忘れてf(3)=3×3-1=8と計算した場合\n❌ ウ: -1を忘れてn×n=16とした場合\n❌ エ: n×n-1をn×(n-1)と誤読すると4×3=12", "ref": "fe-algo.html#al-6"},
+{"id": "fnc-3", "cat": "fnc", "type": "trace", "diff": 2, "title": "関数の組み合わせ呼出し", "code": "○ square(整数型: n)\n  return n × n\n\n○ addOne(整数型: n)\n  return square(n) + 1\n\n整数型: r\nr ← addOne(4)\nrの値を出力する", "q": "このプログラムを実行したとき、出力される値はどれか。", "choices": ["16", "25", "20", "17"], "ans": 3, "exp": "トレース: square(4)=4×4=16 → addOne(4)=square(4)+1=16+1=17\n⭕ エ: 17\n❌ ア: +1を忘れてsquare(4)の16のままとした場合\n❌ イ: 呼出し順序を逆に考えsquare(addOne(4))=square(5)=25と誤計算\n❌ ウ: +1を+nと読み違えて16+4=20と誤計算", "ref": "fe-algo.html#al-6"},
+{"id": "fnc-4", "cat": "fnc", "type": "trace", "diff": 2, "title": "再帰による階乗計算", "code": "○ fact(整数型: n)\n  if (n = 0)\n    return 1\n  else\n    return n × fact(n - 1)\n  endif", "q": "fact(4) の戻り値はどれか。", "choices": ["6", "24", "12", "120"], "ans": 1, "exp": "トレース: fact(4)=4×fact(3)=4×3×fact(2)=4×3×2×fact(1)=4×3×2×1×fact(0)=4×3×2×1×1=24\n⭕ イ: 24\n❌ ア: fact(4)ではなくfact(3)=3×2×1×1=6を計算した場合\n❌ ウ: fact(2)をfact(1)相当の1と早合点すると4×3×1=12\n❌ エ: 5の階乗5×4×3×2×1=120と混同した場合", "ref": "fe-algo.html#al-7"},
+{"id": "fnc-5", "cat": "fnc", "type": "fill", "diff": 2, "title": "再帰による総和計算", "code": "○ sum(整数型: n)\n  if (n ≦ 1)\n    return n\n  endif\n  return n + ［　　　］", "q": "sum(n)はnから1までの総和を返す関数である。プログラム中の［　　　］に入れる正しいものはどれか。", "choices": ["sum(n)", "sum(n - 1)", "sum(n + 1)", "sum(n - 2)"], "ans": 1, "exp": "nから1までの総和を再帰で求めるにはsum(n)=n+sum(n-1)、sum(1)=1(基底)とする\n⭕ イ: sum(n - 1)\n❌ ア: sum(n)のままでは同じ引数を無限に呼び出し終了しない\n❌ ウ: sum(n + 1)ではnが増加し続け終了しない\n❌ エ: sum(n - 2)はnとの偶奇が保たれるため必ずn=0またはn=1で停止し無限再帰にはならないが、1つおきの項しか加算しないため合計値が誤りになる(例: sum(4)=4+2+0=6となり正しい10にならない)", "ref": "fe-algo.html#al-7"},
+{"id": "fnc-6", "cat": "fnc", "type": "trace", "diff": 3, "title": "再帰呼出し前後の出力順", "code": "○ f(整数型: n)\n  if (n = 0)\n    return\n  endif\n  nの値を出力する\n  f(n - 1)\n  nの値を出力する", "q": "f(3) を呼び出したとき、出力される値の並びはどれか。", "choices": ["3 2 1 0 1 2 3", "3 2 1", "3 2 1 1 2 3", "1 2 3 3 2 1"], "ans": 2, "exp": "f(3):3を出力→f(2):2を出力→f(1):1を出力→f(0):n=0のためreturnのみ(出力なし)→f(1)が戻り2回目の1を出力→f(2)が戻り2回目の2を出力→f(3)が戻り2回目の3を出力\n出力順: 3,2,1,1,2,3\n⭕ ウ: 3 2 1 1 2 3\n❌ ア: f(0)でも0を出力すると誤解した場合(n=0はreturnのみで出力しない)\n❌ イ: 再帰呼出し後の2回目の出力を見落とした場合\n❌ エ: 呼出し前と呼出し後の出力順序を取り違えた場合", "ref": "fe-algo.html#al-7"},
+{"id": "fnc-7", "cat": "fnc", "type": "fill", "diff": 1, "title": "べき乗関数の基底条件", "code": "○ power(整数型: a, 整数型: n)\n  if (n = 0)\n    return ［　　　］\n  endif\n  return a × power(a, n - 1)", "q": "power(a, n) はaのn乗を返す関数である。プログラム中の［　　　］に入れる正しいものはどれか。", "choices": ["0", "a", "n", "1"], "ans": 3, "exp": "power(a,0)はaの0乗、すなわち1を返す必要がある(基底条件)\nn>0のときはa×power(a,n-1)で再帰的にn乗を計算する\n⭕ エ: 1\n❌ ア: 0を返すとpower(a,1)=a×0=0となりaのn乗にならない\n❌ イ: aを返すとpower(a,2)=a×a×a=a³となり乗数が1つ多くなる\n❌ ウ: nを返すとn=0のとき常に0が返り誤り", "ref": "fe-algo.html#al-7"},
+{"id": "fnc-8", "cat": "fnc", "type": "trace", "diff": 3, "title": "二重再帰の呼出し回数", "code": "○ rec(整数型: n)\n  if (n ≦ 1)\n    return 1\n  endif\n  return rec(n - 1) + rec(n - 2)", "q": "rec(4) を呼び出したとき、recが呼び出される回数（最初の呼出しを含む）はどれか。", "choices": ["9", "5", "7", "11"], "ans": 0, "exp": "呼出し木: rec(4)→rec(3),rec(2)\nrec(3)→rec(2),rec(1)基底\n1つ目のrec(2)→rec(1)基底,rec(0)基底\n2つ目のrec(2)(rec(4)直下)→rec(1)基底,rec(0)基底\n呼出し総数: rec(4),rec(3),rec(2),rec(1),rec(0),rec(1),rec(2),rec(1),rec(0)=9回\n⭕ ア: 9\n❌ イ: rec(2)からの2回の子呼出しを1回とまとめて数え漏らした場合\n❌ ウ: 最初のrec(4)自身の呼出しを回数に含め忘れた場合\n❌ エ: 基底条件のreturnを呼出しとは別にもう1回多く数えた場合", "ref": "fe-algo.html#al-7"},
+{"id": "fnc-9", "cat": "fnc", "type": "fill", "diff": 2, "title": "実引数の穴埋め", "code": "○ triple(整数型: x)\n  return x × 3\n\n整数型: a, b\na ← 4\nb ← triple(［　　　］)\nbの値を出力する", "q": "このプログラムを実行するとbの値として15が出力された。［　　　］に入れる正しいものはどれか。", "choices": ["a", "a × 2", "a + 1", "a - 1"], "ans": 2, "exp": "b=15となるにはtripleの引数xがx×3=15よりx=5である必要がある\na=4なのでx=5となる式を選ぶ\n⭕ ウ: a+1=4+1=5 → triple(5)=15\n❌ ア: aそのまま(4)ではtriple(4)=12\n❌ イ: a×2=8ではtriple(8)=24\n❌ エ: a-1=3ではtriple(3)=9", "ref": "fe-algo.html#al-6"},
+{"id": "fnc-10", "cat": "fnc", "type": "fill", "diff": 2, "title": "関数合成の穴埋め", "code": "○ double(整数型: n)\n  return n × 2\n\n○ inc(整数型: n)\n  return n + 1\n\n整数型: c\nc ← ［　　　］\ncの値を出力する", "q": "このプログラムを実行するとcの値として9が出力された。［　　　］に入れる正しいものはどれか。", "choices": ["double(inc(4))", "double(double(4))", "inc(inc(4))", "inc(double(4))"], "ans": 3, "exp": "各選択肢を計算する: double(4)=8, inc(4)=5\nア double(inc(4))=double(5)=10\nイ double(double(4))=double(8)=16\nウ inc(inc(4))=4+1+1=6\nエ inc(double(4))=inc(8)=8+1=9\n⭕ エ: inc(double(4))が9になる\n❌ ア〜ウ: 上記計算のとおりいずれも9にならない", "ref": "fe-algo.html#al-6"},
+{"id": "dat-1", "cat": "dat", "type": "trace", "diff": 1, "title": "スタックの出力値", "code": "整数型: a, b, c\nスタック型: st\nst.push(1)\nst.push(2)\nst.push(3)\na ← st.pop()\nst.push(a * 2)\nb ← st.pop()\nc ← st.pop()\ncの値を出力する", "q": "このプログラムを実行した直後に出力される値はどれか。", "choices": ["1", "2", "3", "6"], "ans": 1, "exp": "トレース: push(1)push(2)push(3)でst=[1,2,3](上端3)\na←pop()=3 → st=[1,2]\npush(a×2=6) → st=[1,2,6]\nb←pop()=6 → st=[1,2]\nc←pop()=2 → st=[1]\n⭕ イ: 出力されるcの値は2\n❌ ア: popし終えた後にstに残る要素(1)をcと取り違えた場合\n❌ ウ: 最初のpop結果a(=3)をcと取り違えた場合\n❌ エ: 2回目のpop結果b(=6)をcと取り違えた場合", "ref": "fe-algo.html#al-8"},
+{"id": "dat-2", "cat": "dat", "type": "trace", "diff": 2, "title": "スタックで逆順出力", "code": "文字列型の配列: a ← {\"A\",\"B\",\"C\",\"D\"}\n文字列型: r\n整数型: i, n\nスタック型: st\nr ← \"\"\nfor (i を 1 から 4 まで 1 ずつ増やす)\n  st.push(a[i])\nendfor\nn ← 4\nwhile (n > 2)\n  r ← r + st.pop()\n  n ← n - 1\nendwhile", "q": "このプログラムを実行した直後の変数rの値はどれか。", "choices": ["ABCD", "DCBA", "DC", "CD"], "ans": 2, "exp": "トレース: push(A,B,C,D)でst=[A,B,C,D](上端D)\nn=4: 4>2よりr=\"D\",st=[A,B,C],n=3\n3>2よりr=\"DC\",st=[A,B],n=2\n2>2は偽なので終了\n⭕ ウ: rは\"DC\"\n❌ ア: 逆順にせずそのまま連結した場合\n❌ イ: 境界条件を無視し4回とも取り出した場合(D,C,B,A)\n❌ エ: r←r+st.pop()をr←st.pop()+rのように連結順を逆にした場合(1回目r=\"D\"、2回目r=\"C\"+\"D\"=\"CD\")", "ref": "fe-algo.html#al-8"},
+{"id": "dat-3", "cat": "dat", "type": "trace", "diff": 1, "title": "キューのFIFO順", "code": "整数型の配列: a ← {5, 3, 8, 1}\n整数型: x\nキュー型: q\nq.enqueue(a[1])\nq.enqueue(a[2])\nq.enqueue(a[3])\nq.enqueue(a[4])\nx ← q.dequeue()\nx ← q.dequeue()\nx ← q.dequeue()", "q": "3回目のq.dequeue()の呼出しで得られる値はどれか。", "choices": ["1", "3", "5", "8"], "ans": 3, "exp": "トレース: enqueueの順は5→3→8→1\nキューはFIFOなので取り出す順も5→3→8→1\n1回目dequeue()=5, 2回目=3, 3回目=8\n⭕ エ: 3回目は8\n❌ ア: 4回目(最後)の値と取り違えた場合\n❌ イ: 2回目の値と取り違えた場合\n❌ ウ: 1回目の値と取り違えた場合", "ref": "fe-algo.html#al-8"},
+{"id": "dat-4", "cat": "dat", "type": "trace", "diff": 2, "title": "スタックとキュー併用", "code": "整数型の配列: a ← {2, 4, 6, 8}\n整数型: i, x, s\nキュー型: q\nスタック型: st\nfor (i を 1 から 4 まで 1 ずつ増やす)\n  q.enqueue(a[i])\nendfor\nfor (i を 1 から 4 まで 1 ずつ増やす)\n  x ← q.dequeue()\n  st.push(x)\nendfor\ns ← st.pop() + st.pop()", "q": "このプログラムを実行した直後の変数sの値はどれか。", "choices": ["6", "10", "14", "20"], "ans": 2, "exp": "トレース: キューqには2,4,6,8の順で入り、dequeueも同じ2,4,6,8の順で取り出される\nその順にstへpushするとst=[2,4,6,8](上端8)\ns←st.pop()+st.pop()=8+6=14\n⭕ ウ: sは14\n❌ ア: 最初にenqueueした2と4を足した場合(popの対象を取り違え)\n❌ イ: 途中の4と6を足した場合(popの回数・対象の誤り)\n❌ エ: 4個すべてを合計した場合(popは2回だけ)", "ref": "fe-algo.html#al-8"},
+{"id": "dat-5", "cat": "dat", "type": "fill", "diff": 2, "title": "連結リストへの挿入", "code": "ListElement: p, newElem\nnewElem.val ← 10\nnewElem.next ← ［　　　］\np.next ← newElem", "q": "ListElementクラスは、値を表すvalと次の要素への参照を表すnextをメンバにもつ。次のプログラムは、リストの節点pの直後に値10をもつ新しい節点を挿入する処理である。プログラム中の［　　　］に入れる正しい字句はどれか。", "choices": ["p.next", "p", "listHead", "未定義"], "ans": 0, "exp": "挿入前は …→p→(pの直後の要素)→… という並び\nnewElemを間に入れるには、pがまだ書き換わっていないうちにnewElem.nextへpの直後の要素への参照を退避しておく必要がある\n⭕ ア: newElem.next←p.nextで後続を正しく保持できる\n❌ イ: p自身を指すと循環参照になる\n❌ ウ: listHeadに置き換えると無関係な先頭要素につながる\n❌ エ: 未定義にすると後続の要素がすべて失われる", "ref": "fe-algo.html#al-9"},
+{"id": "dat-6", "cat": "dat", "type": "fill", "diff": 2, "title": "連結リストからの削除", "code": "ListElement: p\n整数型: v\nv ← 5\np ← listHead\nwhile (p.next.val ≠ v)\n  p ← p.next\nendwhile\np.next ← ［　　　］", "q": "ListElementクラスは、値を表すvalと次の要素への参照を表すnextをメンバにもつ。listHeadはリスト先頭への参照である。次のプログラムは、値がvである節点をリストから削除する処理である。プログラム中の［　　　］に入れる正しい字句はどれか。", "choices": ["p.next", "p.next.next", "未定義", "listHead"], "ans": 1, "exp": "whileでp.next.valがvと一致する直前までpを進める(pはvをもつ節点の直前を指す)\n削除は、pの次をvの節点のさらに次へつなぎ替えればよい\n⭕ イ: p.next←p.next.nextでvの節点を外せる\n❌ ア: p.next←p.nextは変化がなく削除されない\n❌ ウ: 未定義にするとvの節点より後ろがすべて失われる\n❌ エ: listHeadに置き換えると無関係な先頭要素につながる", "ref": "fe-algo.html#al-9"},
+{"id": "dat-7", "cat": "dat", "type": "trace", "diff": 3, "title": "スタックの条件分岐", "code": "整数型の配列: a ← {3, 4, 5, 8, 7, 2}\n整数型: i, s\nスタック型: st\ns ← 0\nfor (i を 1 から 6 まで 1 ずつ増やす)\n  if (a[i] mod 2 = 0)\n    st.push(a[i])\n  elseif (not st.isEmpty())\n    s ← s + st.pop()\n  endif\nendfor", "q": "このプログラムを実行した直後の変数sの値はどれか。", "choices": ["4", "8", "12", "15"], "ans": 2, "exp": "トレース: i=1(3,奇数,st空→何もしない)\ni=2(4,偶数→push,st=[4])\ni=3(5,奇数,st空でない→s=0+pop()=4,st=[])\ni=4(8,偶数→push,st=[8])\ni=5(7,奇数,st空でない→s=4+pop()=12,st=[])\ni=6(2,偶数→push,st=[2])\n⭕ ウ: sは12\n❌ ア: 1回目のpop結果(4)だけをsとした場合\n❌ イ: 2回目のpop結果(8)だけをsとした場合\n❌ エ: popした値ではなくa[i]の奇数値(3+5+7)を直接足した場合", "ref": "fe-algo.html#al-8"},
+{"id": "dat-8", "cat": "dat", "type": "fill", "diff": 3, "title": "連結リストの要素数", "code": "ListElement: p\n整数型: cnt\ncnt ← 0\np ← listHead\nwhile (［　　　］)\n  cnt ← cnt + 1\n  p ← p.next\nendwhile", "q": "ListElementクラスは、値を表すvalと次の要素への参照を表すnextをメンバにもつ。listHeadはリスト先頭への参照であり、終端の要素のnextは未定義である。次のプログラムは、リストの要素数をcntに求める処理である。プログラム中の［　　　］に入れる正しい字句はどれか。", "choices": ["p ≠ 未定義", "p.next ≠ 未定義", "p.val ≠ 未定義", "p = 未定義"], "ans": 0, "exp": "pは先頭から順に節点を指し進む変数、cntは訪れた節点の数を数える\n終端要素のnextは未定義なので、pが未定義になった時点で走査を終えればよい\n⭕ ア: p≠未定義の間だけ数えて進めば、リスト全体を漏れなく数えられる\n❌ イ: p.next≠未定義にすると終端の節点自体を数え損ね、1個少なくなる\n❌ ウ: valとnextを取り違えており、意図した終了判定にならない\n❌ エ: 条件が逆で、開始直後に0回でループが終了してしまう", "ref": "fe-algo.html#al-9"},
+{"id": "dat-9", "cat": "dat", "type": "fill", "diff": 2, "title": "スタックからキューへ", "code": "整数型の配列: a ← {1, 2, 3, 4, 5}\n整数型: i, x\nスタック型: st\nキュー型: q\nfor (i を 1 から 5 まで 1 ずつ増やす)\n  st.push(a[i])\nendfor\nfor (i を 1 から 5 まで 1 ずつ増やす)\n  x ← ［　　　］\n  q.enqueue(x)\nendfor", "q": "次のプログラムは、配列aの要素をスタックstに積んだ後、それらを取り出してキューqへ移す処理である。プログラム中の［　　　］に入れる正しい字句はどれか。", "choices": ["a[i]", "st.push(x)", "q.dequeue()", "st.pop()"], "ans": 3, "exp": "1つ目のforでa[1]〜a[5]をstに積む(st=[1,2,3,4,5]、上端が5)\n2つ目のforでは、積んだ値を1つずつ取り出してqへ移す必要がある\n⭕ エ: st.pop()でstの先頭を取り出せる\n❌ ア: a[i]はstを経由せず配列から直接取ることになり、意図と異なる\n❌ イ: push(x)はxへの代入前でxが未定義のまま積む操作になり成立しない\n❌ ウ: この時点でqはまだ空なのでdequeue()で取り出す値がない", "ref": "fe-algo.html#al-8"},
+{"id": "srt-1", "cat": "srt", "type": "trace", "diff": 1, "title": "線形探索のiの値", "code": "整数型の配列: a\n整数型: i, key\n論理型: mitsukatta\na ← {5, 3, 8, 1, 9}\nkey ← 8\ni ← 1\nmitsukatta ← false\nwhile (i ≦ 5 and not mitsukatta)\n  if (a[i] = key)\n    mitsukatta ← true\n  else\n    i ← i + 1\n  endif\nendwhile", "q": "このプログラムを実行した直後の変数iの値はどれか。", "choices": ["3", "4", "5", "6"], "ans": 0, "exp": "トレース: i=1(a[1]=5)不一致→i=2\ni=2(a[2]=3)不一致→i=3\ni=3(a[3]=8)一致→mitsukatta=true、iは3のまま\n条件判定が偽になりループ終了、iは更新されない\n⭕ ア: iの値は3\n❌ イ: 一致後にもう一度iを+1したと誤解した場合\n❌ ウ: ループが配列の末尾(5)まで回ったと誤解した場合\n❌ エ: 番兵法のように配列外までiが進むと誤解した場合", "ref": "fe-algo.html#al-10"},
+{"id": "srt-2", "cat": "srt", "type": "fill", "diff": 2, "title": "番兵の配置場所", "code": "整数型の配列: a\n整数型: i, n, key\nn ← 5\na ← {5, 3, 8, 1, 9, 0}\nkey ← 7\n［　　　］\ni ← 1\nwhile (a[i] ≠ key)\n  i ← i + 1\nendwhile\nif (i ≦ n)\n  iの値を出力する\nelse\n  0 を出力する\nendif", "q": "番兵法による線形探索である。番兵を配置する処理として、プログラム中の［　　　］に入れる正しいものはどれか。", "choices": ["a[n] ← key", "a[n + 1] ← key", "a[1] ← key", "a[0] ← key"], "ans": 1, "exp": "トレース: n=5、a←{5,3,8,1,9,0}、key=7\n［　　　］でa[6]←7として番兵を置く\ni=1~5では一致せずi=6でa[6]=7と一致し停止\ni≦nは6≦5で偽→elseで0を出力\n⭕ イ: 番兵はa[n+1]に置く(配列の末尾+1)\n❌ ア: a[n]は末尾の有効データを上書きしてしまう\n❌ ウ・エ: 先頭付近を上書きし正しく探索できない", "ref": "fe-algo.html#al-10"},
+{"id": "srt-3", "cat": "srt", "type": "trace", "diff": 2, "title": "二分探索のmid最終値", "code": "整数型の配列: a\n整数型: low, high, mid, key\na ← {2, 5, 8, 11, 14, 20, 27}\nkey ← 20\nlow ← 1\nhigh ← 7\nwhile (low ≦ high)\n  mid ← (low + high) ÷ 2\n  if (a[mid] = key)\n    low ← high + 1\n  elseif (a[mid] < key)\n    low ← mid + 1\n  else\n    high ← mid - 1\n  endif\nendwhile", "q": "このプログラムを実行した直後の変数midの値はどれか。（÷の結果は小数点以下を切り捨てる）", "choices": ["4", "5", "6", "7"], "ans": 2, "exp": "トレース: low=1,high=7→mid=4,a[4]=11<20→low=5\nlow=5,high=7→mid=6,a[6]=20=key→low←8として終了\nmidの最後の代入値は6\n⭕ ウ: midの値は6\n❌ ア: 1回目のmidの値(4)を最終値と誤認\n❌ イ: low更新後の値(5)をmidと誤認\n❌ エ: highの初期値(7)を最終値と誤認", "ref": "fe-algo.html#al-10"},
+{"id": "srt-4", "cat": "srt", "type": "fill", "diff": 2, "title": "バブルソート内側範囲", "code": "整数型の配列: a\n整数型: i, j, tmp, n\nn ← 5\na ← {4, 1, 5, 2, 3}\nfor (i を 1 から n - 1 まで 1 ずつ増やす)\n  for (j を 1 から ［　　　］ まで 1 ずつ増やす)\n    if (a[j] > a[j + 1])\n      tmp ← a[j]\n      a[j] ← a[j + 1]\n      a[j + 1] ← tmp\n    endif\n  endfor\nendfor", "q": "配列aを昇順に整列するバブルソートである。整列を正しく完了し、かつ比較回数が最小になるように、プログラム中の［　　　］に入れる正しいものはどれか。", "choices": ["n", "n - i", "n - 1", "i"], "ans": 1, "exp": "外側iは1〜n-1(4回)、内側jの上限が範囲・効率を左右する\n⭕ イ: n-iならiが増えるたび範囲が縮み、既に確定した末尾を比較せず最小回数になる\n❌ ア: nだとj+1がn+1(=6)となり配列の範囲外を参照する\n❌ ウ: n-1は毎回同じ範囲を比較し続け無駄が残る\n❌ エ: iだと範囲の増減が逆になり末尾まで比較できない", "ref": "fe-algo.html#al-11"},
+{"id": "srt-5", "cat": "srt", "type": "trace", "diff": 1, "title": "選択ソート1回目終了", "code": "整数型の配列: a\n整数型: i, j, minIdx, tmp\na ← {6, 2, 7, 1, 4}\nfor (i を 1 から 4 まで 1 ずつ増やす)\n  minIdx ← i\n  for (j を i + 1 から 5 まで 1 ずつ増やす)\n    if (a[j] < a[minIdx])\n      minIdx ← j\n    endif\n  endfor\n  tmp ← a[i]\n  a[i] ← a[minIdx]\n  a[minIdx] ← tmp\nendfor", "q": "選択ソートで配列aを昇順に整列するプログラムである。外側for文の1回目の繰返し(i=1)が終了した直後の配列aはどれか。", "choices": ["{2, 6, 7, 1, 4}", "{6, 2, 7, 1, 4}", "{1, 2, 7, 6, 4}", "{1, 2, 4, 6, 7}"], "ans": 2, "exp": "トレース: minIdx=1→j=2:a2=2<6でminIdx=2→j=3:a3=7<2偽\nj=4:a4=1<2でminIdx=4→j=5:a5=4<1偽→確定minIdx=4\na[1]とa[4]を交換 → {1, 2, 7, 6, 4}\n⭕ ウ: 1回目終了直後は{1,2,7,6,4}\n❌ ア: j=2で見つけた候補で探索を打ち切り交換した場合\n❌ イ: 最小値を見つけたのに交換を忘れた場合\n❌ エ: 全ての繰返しが終わった最終結果と混同した場合", "ref": "fe-algo.html#al-11"},
+{"id": "srt-6", "cat": "srt", "type": "fill", "diff": 3, "title": "選択ソートの最小値判定", "code": "整数型の配列: a\n整数型: i, j, minIdx, tmp\na ← {3, 1, 4, 5, 2}\nfor (i を 1 から 4 まで 1 ずつ増やす)\n  minIdx ← i\n  for (j を i + 1 から 5 まで 1 ずつ増やす)\n    if (［　　　］)\n      minIdx ← j\n    endif\n  endfor\n  tmp ← a[i]\n  a[i] ← a[minIdx]\n  a[minIdx] ← tmp\nendfor", "q": "配列aを昇順に整列する選択ソートである。プログラム中の［　　　］に入れる正しいものはどれか。", "choices": ["a[j] < a[minIdx]", "a[j] < a[i]", "a[minIdx] < a[j]", "j < minIdx"], "ans": 0, "exp": "i=1のときj=2(a[2]=1)で1<3→minIdx=2に更新\n以降a[3]=4,a[4]=5,a[5]=2はいずれも1未満でなく確定\n⭕ ア: 常に現在の最小候補a[minIdx]と比較して更新する\n❌ イ: a[j]<a[i]は固定のa[i]と比較するため後続候補で誤って上書きされる\n❌ ウ: 不等号が逆になっており最大値を選んでしまう\n❌ エ: 添字の大小しか見ておらずminIdxが更新されない", "ref": "fe-algo.html#al-11"},
+{"id": "srt-7", "cat": "srt", "type": "trace", "diff": 3, "title": "二分探索の比較回数", "code": "整数型の配列: a\n整数型: low, high, mid, key\na ← {1, 4, 6, 9, 13, 18, 22, 25}\nkey ← 10\nlow ← 1\nhigh ← 8\nwhile (low ≦ high)\n  mid ← (low + high) ÷ 2\n  if (a[mid] = key)\n    low ← high + 1\n  elseif (a[mid] < key)\n    low ← mid + 1\n  else\n    high ← mid - 1\n  endif\nendwhile", "q": "このプログラムを実行したとき、while文のループ本体が実行される回数はどれか。（配列の要素番号は1から始まる。÷の結果は小数点以下を切り捨てる）", "choices": ["2", "3", "4", "5"], "ans": 1, "exp": "トレース: low=1,high=8→mid=4,a[4]=9<10→low=5(1回目)\nlow=5,high=8→mid=6,a[6]=18>10→high=5(2回目)\nlow=5,high=5→mid=5,a[5]=13>10→high=4(3回目)\nlow=5,high=4でlow≦highが偽となり終了、3回実行\n⭕ イ: ループ本体は3回実行される\n❌ ア: 実際より1回少なく数えた場合\n❌ ウ: 実際より1回多く数えた場合\n❌ エ: 実際より2回多く数えた場合", "ref": "fe-algo.html#al-10"},
+{"id": "srt-8", "cat": "srt", "type": "trace", "diff": 2, "title": "バブルソート交換回数", "code": "整数型の配列: a\n整数型: i, j, tmp, cnt\na ← {5, 2, 4, 1, 3}\ncnt ← 0\nfor (i を 1 から 4 まで 1 ずつ増やす)\n  for (j を 1 から 5 - i まで 1 ずつ増やす)\n    if (a[j] > a[j + 1])\n      tmp ← a[j]\n      a[j] ← a[j + 1]\n      a[j + 1] ← tmp\n      cnt ← cnt + 1\n    endif\n  endfor\nendfor", "q": "このプログラムを実行した直後の変数cntの値はどれか。（配列の要素番号は1から始まる）", "choices": ["5", "6", "7", "8"], "ans": 2, "exp": "トレース(交換のみ記載): i=1で4回交換→{2,4,1,3,5}\ni=2で2回交換→{2,1,3,4,5}\ni=3で1回交換→{1,2,3,4,5}\ni=4で交換なし、合計交換回数は4+2+1+0=7\n⭕ ウ: cntの値は7\n❌ ア: 交換を2回数え落とした場合\n❌ イ: 交換を1回数え落とした場合\n❌ エ: 交換を1回多く数えた場合", "ref": "fe-algo.html#al-11"},
+{"id": "srt-9", "cat": "srt", "type": "trace", "diff": 3, "title": "挿入ソートの途中経過", "code": "整数型の配列: a\n整数型: i, j, key\na ← {5, 1, 4, 2, 3}\nfor (i を 2 から 5 まで 1 ずつ増やす)\n  key ← a[i]\n  j ← i - 1\n  while (j ≧ 1 and a[j] > key)\n    a[j + 1] ← a[j]\n    j ← j - 1\n  endwhile\n  a[j + 1] ← key\nendfor", "q": "挿入ソートで配列aを昇順に整列するプログラムである。外側for文でi=4の繰返しが終了した直後の配列aはどれか。（配列の要素番号は1から始まる）", "choices": ["{1, 4, 5, 2, 3}", "{1, 2, 3, 4, 5}", "{1, 2, 5, 4, 3}", "{1, 2, 4, 5, 3}"], "ans": 3, "exp": "トレース(i=4まで): i=2でkey=1を先頭へ挿入→{1,5,4,2,3}\ni=3でkey=4を挿入→{1,4,5,2,3}\ni=4でkey=2、a[3]=5とa[2]=4を後方にずらし\na[1]の後ろへ挿入 → {1, 2, 4, 5, 3}\n⭕ エ: i=4終了直後は{1,2,4,5,3}\n❌ ア: i=3までの状態。i=4の挿入がまだ行われていない\n❌ イ: 最後(i=5)まで実行し終えた後の配列。設問はi=4終了直後を問うている\n❌ ウ: a[2]とa[3]の移動順を取り違えた場合", "ref": "fe-algo.html#al-11"},
+{"id": "srt-10", "cat": "srt", "type": "fill", "diff": 1, "title": "線形探索の走査範囲", "code": "○ tansaku(整数型の配列: a, 整数型: n, 整数型: key)\n  整数型: i\n  for (i を 1 から ［　　　］ まで 1 ずつ増やす)\n    if (a[i] = key)\n      return i\n    endif\n  endfor\n  return -1", "q": "配列a(要素番号1〜n)からkeyを線形探索する関数である。配列の全要素を漏れなく調べるように、プログラム中の［　　　］に入れる正しいものはどれか。", "choices": ["n - 1", "n", "n + 1", "i"], "ans": 1, "exp": "forの範囲は1から配列の末尾要素番号nまで含める必要がある\n⭕ イ: nまでとすれば最後の要素a[n]まで確認できる\n❌ ア: n-1では末尾のa[n]を調べず探索し損なう\n❌ ウ: n+1は存在しないa[n+1]を参照し範囲外になる\n❌ エ: iは変数自身で範囲の指定として不適切", "ref": "fe-algo.html#al-10"},
+{"id": "tgh-1", "cat": "tgh", "type": "trace", "diff": 2, "title": "隣接行列と相互辺の数", "code": "整数型: i, j, c\nc ← 0\nfor (i を 1 から 4 まで 1 ずつ増やす)\n  for (j を 1 から 4 まで 1 ずつ増やす)\n    if (g[i,j] = 1 and g[j,i] = 1)\n      c ← c + 1\n    endif\n  endfor\nendfor", "q": "有向グラフの隣接行列g(g[i,j]=1は節点iから節点jへの辺があることを表す。行方向がi、列方向がjで、値は次の通り)がある。\ng[1,1..4]: 0 1 1 1\ng[2,1..4]: 0 0 1 0\ng[3,1..4]: 1 0 0 1\ng[4,1..4]: 0 0 0 0\nこのプログラムを実行した直後の変数cの値はどれか。", "choices": ["2", "0", "1", "6"], "ans": 0, "exp": "g[i,j]=1かつg[j,i]=1となる(i,j)の組を数える(相互に辺がある組は2回数えられる)。\n(1,3): g[1,3]=1, g[3,1]=1で成立→c=1\n(3,1): g[3,1]=1, g[1,3]=1で成立→c=2\n他の組(1,2)(1,4)(2,3)(3,4)などは片方向にしか辺がなく不成立\n⭕ ア: cは2\n❌ イ: 相互の辺は存在しないと誤解した場合の値\n❌ ウ: (1,3)と(3,1)を同一の辺とみなし1回しか数えなかった場合の値\n❌ エ: andの条件を見落としg[i,j]=1だけで数えると、辺の総数6を数えてしまう", "ref": "fe-algo.html#al-17"},
+{"id": "tgh-2", "cat": "tgh", "type": "fill", "diff": 2, "title": "線形走査法の空欄", "code": "○ insert(整数型の配列: t, 整数型: k, 整数型: m)\n  整数型: j\n  j ← k mod m\n  while (t[j] ≠ -1)\n    j ← ［　　　］\n  endwhile\n  t[j] ← k", "q": "手続きinsertは、ハッシュ表t(要素数m、要素番号0〜m-1、空き要素は-1)にキーkを線形走査法で格納する。空欄に入れる式として適切なものはどれか。", "choices": ["j + 1", "(j - 1) mod m", "(j + 1) mod m", "k mod m"], "ans": 2, "exp": "線形走査法は衝突時に次の要素番号へ1つずつ進め、末尾(m-1)の次はmで割った余りにより先頭(0)へ戻る。\n❌ ア: j+1だとj=m-1のとき配列の範囲外mを参照してしまい周回できない\n❌ イ: (j-1) mod mは逆方向に走査してしまい、線形走査法の定義と異なる\n⭕ ウ: (j+1) mod mはj=m-1のとき0に戻り、それ以外はj+1になる\n❌ エ: k mod mは常に同じ初期位置hに戻ってしまい、tが埋まっている限り無限ループになる", "ref": "fe-algo.html#al-13"},
+{"id": "tgh-3", "cat": "tgh", "type": "trace", "diff": 3, "title": "入れ子ループの計算量", "code": "○ 整数型: f(整数型: n)\n  整数型: i, j, c\n  c ← 0\n  for (i を 1 から n まで 1 ずつ増やす)\n    j ← 1\n    while (j < n)\n      c ← c + 1\n      j ← j × 2\n    endwhile\n  endfor\n  return c", "q": "関数f(n)の戻り値cが増加する割合(オーダー)を表すものとして、最も適切なものはどれか。", "choices": ["O(n)", "O(n²)", "O(log n)", "O(n log n)"], "ans": 3, "exp": "外側のforはn回繰り返す。内側のwhileはjが1から2倍ずつ増えてn以上になるまでなので、約log2 n回繰り返す。\n全体の繰返し回数はn×log2 nのオーダーとなる。\n❌ ア: 内側のwhileが1回で終わると誤解した場合のオーダー\n❌ イ: 内側のwhileも1ずつ線形に増えると誤解した場合のオーダー\n❌ ウ: 外側のforを見落とし、内側のwhileだけを数えた場合のオーダー\n⭕ エ: O(n log n)", "ref": "fe-algo.html#al-12"},
+{"id": "tgh-4", "cat": "tgh", "type": "trace", "diff": 1, "title": "二分木の先行順走査", "code": "文字列型の配列: v ← {\"A\",\"B\",\"C\",\"D\",\"E\"}\n整数型の配列: l ← {2, 4, 0, 0, 0}\n整数型の配列: r ← {3, 5, 0, 0, 0}\n○ pre(整数型: i)\n  if (i = 0)\n    return\n  endif\n  v[i]を出力する\n  pre(l[i])\n  pre(r[i])", "q": "配列v,l,rは二分木を表す(配列の要素番号は1から始まり、要素番号iの左の子はl[i]、右の子はr[i]、値がない子は0とする)。節点1を根としてpre(1)を呼び出したとき、出力される文字の並びはどれか。", "choices": ["D B E A C", "A B D E C", "D E B C A", "A B C D E"], "ans": 1, "exp": "トレース: pre(1)→A出力→pre(2)呼出\npre(2)→B出力→pre(4)呼出\npre(4)→D出力→pre(0),pre(0)は何もせず戻る\npre(2)に戻りpre(5)呼出→E出力→pre(0),pre(0)\npre(1)に戻りpre(3)呼出→C出力→pre(0),pre(0)\n出力順: A B D E C\n❌ ア: 左→根→右の中間順(D B E A C)と混同\n⭕ イ: 根→左部分木→右部分木の順(先行順)で正しい\n❌ ウ: 左→右→根の後行順(D E B C A)と混同\n❌ エ: 再帰をたどらず要素番号の並び順をそのまま出力したもの", "ref": "fe-algo.html#al-16"},
+{"id": "tgh-5", "cat": "tgh", "type": "fill", "diff": 1, "title": "中間順走査の空欄", "code": "文字列型の配列: v ← {\"A\",\"B\",\"C\",\"D\",\"E\"}\n整数型の配列: l ← {2, 4, 0, 0, 0}\n整数型の配列: r ← {3, 5, 0, 0, 0}\n○ ord(整数型: i)\n  if (i = 0)\n    return\n  endif\n  ord(l[i])\n  ［　　　］\n  ord(r[i])", "q": "配列v,l,rは二分木を表す(配列の要素番号は1から始まり、要素番号iの左の子はl[i]、右の子はr[i]、値がない子は0とする)。手続きordを中間順(in-order)走査にするために、空欄に入れる処理として適切なものはどれか。", "choices": ["ord(l[i])", "return", "v[i]を出力する", "ord(r[i])"], "ans": 2, "exp": "中間順は「左部分木→根→右部分木」の順に処理する。\n空欄の直前でord(l[i])が呼ばれ左部分木を処理済み、直後にord(r[i])で右部分木を処理するので、空欄では根の値v[i]を出力すればよい。\n❌ ア: ord(l[i])を重ねて呼ぶと左部分木を2回たどり、値は一切出力されない\n❌ イ: returnを入れるとそこで処理が終了し、ord(r[i])が実行されず右部分木が処理されない\n⭕ ウ: v[i]を出力するを入れると左→根→右の中間順になる\n❌ エ: ord(r[i])を入れると右部分木を2回たどることになり、出力が一切行われない", "ref": "fe-algo.html#al-16"},
+{"id": "tgh-6", "cat": "tgh", "type": "trace", "diff": 2, "title": "完全二分木の配列表現", "code": "整数型の配列: a ← {0, 4, 9, 3, 1, 8, 2, 6}\n整数型: i, n\ni ← 1\nn ← 7\nwhile (2 × i ≦ n)\n  if (2×i+1 ≦ n and a[2×i+1] > a[2×i])\n    i ← 2 × i + 1\n  else\n    i ← 2 × i\n  endif\nendwhile", "q": "配列aは完全二分木を表す(配列の要素番号は0から始まるが要素番号0は使わず、要素番号1が根。要素番号iの子は2iと2i+1)。このプログラムの実行が終了した直後の変数iの値はどれか。", "choices": ["4", "5", "7", "2"], "ans": 1, "exp": "トレース: i=1(a[1]=4)→2×1+1=3≦7かつa[3]=3>a[2]=9は偽→i←2×1=2\ni=2(a[2]=9)→2×2+1=5≦7かつa[5]=8>a[4]=1は真→i←2×2+1=5\ni=5→2×5=10≦7は偽で終了\n❌ ア: if文の条件を常に偽(常に左の子i←2iを選ぶ)と誤解すると、1→2→4と進みi=4になる\n⭕ イ: iは5\n❌ ウ: if文の条件を常に真と誤解すると1→3→7と進んでしまう\n❌ エ: whileを1回だけ実行するifと誤解すると1回目の更新i=2で止まる", "ref": "fe-algo.html#al-16"},
+{"id": "tgh-7", "cat": "tgh", "type": "fill", "diff": 2, "title": "完全二分木の葉の判定", "code": "○ 論理型: isLeaf(整数型: i, 整数型: n)\n  if (［　　　］)\n    return true\n  else\n    return false\n  endif", "q": "isLeafは、完全二分木(要素番号1が根、要素番号iの子は2iと2i+1、節点数はn)において節点iが葉かどうかを判定する関数である。空欄に入れる条件式として適切なものはどれか。", "choices": ["2 × i ≧ n", "i = n", "2 × i + 1 > n", "2 × i > n"], "ans": 3, "exp": "完全二分木では節点iの左の子の要素番号は2i。左の子が存在しない(2i>n)なら右の子(2i+1)も存在しないため、iは葉と判定できる。\n❌ ア: 2×i≧nだと2×i=nのとき(左の子がちょうどn番目に存在する)も葉と誤判定する\n❌ イ: i=nは配列末尾の節点だけを葉とみなし、他の葉を見逃す\n❌ ウ: 2×i+1>nは右の子の有無しか見ておらず、左の子だけを持つ節点も葉と誤判定する\n⭕ エ: 2×i>nならiは葉", "ref": "fe-algo.html#al-16"},
+{"id": "tgh-8", "cat": "tgh", "type": "trace", "diff": 3, "title": "ハッシュの衝突と線形走査", "code": "整数型の配列: t ← {-1,-1,-1,-1,-1,-1,-1}\n整数型の配列: k ← {10,3,17,24,6}\n整数型: i, h, j\nfor (i を 1 から 5 まで 1 ずつ増やす)\n  h ← k[i] mod 7\n  j ← h\n  while (t[j] ≠ -1)\n    j ← (j + 1) mod 7\n  endwhile\n  t[j] ← k[i]\nendfor", "q": "配列tは要素番号0〜6のハッシュ表で、初期値はすべて-1(空き)である。配列kの要素番号は1から始まる。ハッシュ関数はキーを7で割った余りとし、衝突時は線形走査法(次の要素番号を1つずつ調べ、6の次は0に戻る)で空きを探す。配列kの値を先頭から順に格納したとき、キー24(k[4])が格納される要素番号はどれか。", "choices": ["6", "3", "5", "4"], "ans": 0, "exp": "トレース: 10→h=3、t[3]空き→t[3]=10\n3→h=3、t[3]埋まり→j=4、t[4]空き→t[4]=3\n17→h=3埋まり→j=4埋まり→j=5空き→t[5]=17\n24→h=3埋まり→j=4埋まり→j=5埋まり→j=6空き→t[6]=24\n⭕ ア: 24は要素番号6に格納される\n❌ イ: 3(衝突チェック前の初期候補h)で止めてしまった値\n❌ ウ: 2回目の衝突(t[4]埋まり)までしか考慮せず、t[5]が既に17で埋まっていることを見落とした値\n❌ エ: 1回目の衝突(t[3]埋まり)だけを考慮し2回目以降を見落とした値", "ref": "fe-algo.html#al-13"},
+{"id": "tgh-9", "cat": "tgh", "type": "fill", "diff": 2, "title": "二分探索木の探索方向", "code": "整数型の配列: v ← {50,30,70,20,40,60,80}\n整数型: i, x\nx ← 65\ni ← 1\nwhile (i ≦ 7 and v[i] ≠ x)\n  if (［　　　］)\n    i ← 2 × i\n  else\n    i ← 2 × i + 1\n  endif\nendwhile", "q": "配列vは二分探索木を表す(配列の要素番号は1から始まり、要素番号1が根、要素番号iの子は2iと2i+1で、左の子は親より小さく右の子は親より大きい)。キーxを探索する処理として、空欄に入れる条件式はどれか。", "choices": ["x > v[i]", "x < v[i]", "i ≦ 7", "v[i] ≠ x"], "ans": 1, "exp": "二分探索木の探索では、探す値xが現在の節点の値v[i]より小さければ左の子(2i)へ、大きければ右の子(2i+1)へ進む。\n❌ ア: 大小関係が逆になり、探索方向が反対になって正しい経路をたどれない\n⭕ イ: x < v[i]なら左(2i)、そうでなければ右(2i+1)へ進み正しく探索できる\n❌ ウ: xとの比較を行わず、i≦7である限り常に左(2i)へ進んでしまい探索にならない\n❌ エ: while文の継続条件と同じ式で、ループ内では常にtrueとなるため常に左(2i)へ進んでしまう", "ref": "fe-algo.html#al-16"},
+{"id": "str-1", "cat": "str", "type": "trace", "diff": 1, "title": "文字列の反転", "code": "/* length(s)はsの文字数を返す */\n/* s[i]はsのi文字目を表す。先頭は1文字目 */\n文字列型: s, r\n整数型: i\ns ← \"avocado\"\nr ← \"\"\nfor (i を length(s) から 1 まで 1 ずつ減らす)\n  r ← r + s[i]\nendfor", "q": "このプログラムの実行が終了した直後の、文字列rの値はどれか。", "choices": ["odacova", "odacov", "dacova", "avocado"], "ans": 0, "exp": "トレース: s=\"avocado\"(7文字) i=7:r=\"o\" i=6:r=\"od\" i=5:r=\"oda\" i=4:r=\"odac\" i=3:r=\"odaco\" i=2:r=\"odacov\" i=1:r=\"odacova\"\n⭕ ア: 最終的なrは\"odacova\"\n❌ イ: ループがi=1の回を実行せず終了したと誤解した場合の値(末尾に加わるs[1]=\"a\"が欠ける)\n❌ ウ: ループがi=7の回を実行せず開始したと誤解した場合の値(先頭に加わるs[7]=\"o\"が欠ける)\n❌ エ: 反転処理が行われず、sがそのままrになったと誤解した場合の値", "ref": "fe-algo.html#al-18"},
+{"id": "str-2", "cat": "str", "type": "fill", "diff": 2, "title": "特定文字のカウント", "code": "/* length(s)はsの文字数を返す */\n/* s[i]はsのi文字目を表す。先頭は1文字目 */\n文字列型: s\n整数型: i, cnt\ns ← \"mississippi\"\ncnt ← 0\nfor (i を 1 から length(s) まで 1 ずつ増やす)\n  if (s[i] = \"s\")\n    ［　　　］\n  endif\nendfor", "q": "文字列sに含まれる文字\"s\"の個数を数えてcntに格納する。プログラム中の［　　　］に入れる正しいものはどれか。", "choices": ["cnt ← i + 1", "i ← i + 1", "cnt ← cnt + 1", "cnt ← cnt + s[i]"], "ans": 2, "exp": "s=\"mississippi\"では\"s\"がi=3,4,6,7の4か所に現れる\n⭕ ウ: s[i]が\"s\"と一致するたびにcntを1増やせば、最終的にcntは4になる\n❌ ア: cntではなくiの値を加えており、文字の個数を数える処理になっていない\n❌ イ: iはfor文が自動で増やす変数であり、ここで重ねて増やすとs[i]の参照位置がずれる\n❌ エ: 文字列であるs[i]を整数cntに加算しており、型が合わない", "ref": "fe-algo.html#al-18"},
+{"id": "str-3", "cat": "str", "type": "trace", "diff": 1, "title": "s[i]の1文字参照", "code": "/* length(s)はsの文字数を返す */\n/* s[i]はsのi文字目を表す。先頭は1文字目 */\n文字列型: s, moji\n整数型: n\ns ← \"programming\"\nn ← length(s)\nmoji ← s[n - 3]", "q": "実行終了時点の文字列mojiの値はどれか。", "choices": ["i", "a", "g", "m"], "ans": 3, "exp": "トレース: s=\"programming\"の文字数nは11、n-3=8\ns[8]は先頭から8番目の文字で\"m\"\n⭕ エ: mojiは\"m\"\n❌ ア: n-3を9と誤って計算した場合の値(s[9]=\"i\")\n❌ イ: n-3を6と誤って計算した場合の値(s[6]=\"a\")\n❌ ウ: nをそのままインデックスに使った場合の値(s[11]=\"g\")", "ref": "fe-algo.html#al-18"},
+{"id": "str-4", "cat": "str", "type": "fill", "diff": 2, "title": "文字の置換処理", "code": "/* length(s)はsの文字数を返す */\n/* s[i]はsのi文字目を表す。先頭は1文字目 */\n文字列型: s, kekka\n整数型: i\ns ← \"fe_kadai_1\"\nkekka ← \"\"\nfor (i を 1 から length(s) まで 1 ずつ増やす)\n  if (［　　　］)\n    kekka ← kekka + \" \"\n  else\n    kekka ← kekka + s[i]\n  endif\nendfor", "q": "文字列s中のすべての\"_\"を半角空白に置き換えてkekkaに格納する。プログラム中の［　　　］に入れる正しいものはどれか。", "choices": ["s[i] = \"_\"", "i = length(s)", "s[i] ≠ \"_\"", "kekka = \"_\""], "ans": 0, "exp": "s=\"fe_kadai_1\"では\"_\"がi=3,9の位置にある\n⭕ ア: s[i]が\"_\"と等しいときだけ空白に置き換える条件になっている\n❌ イ: iとlength(s)の比較では特定の文字を判定できない\n❌ ウ: 条件を逆にすると\"_\"以外の文字がすべて空白に置き換わってしまう\n❌ エ: 比較対象がkekka(結果を格納する変数)になっており、s[i]を見ていない", "ref": "fe-algo.html#al-18"},
+{"id": "str-5", "cat": "str", "type": "trace", "diff": 2, "title": "回文判定", "code": "/* length(s)はsの文字数を返す */\n/* s[i]はsのi文字目を表す。先頭は1文字目 */\n文字列型: s\n整数型: i, j\n論理型: kekka\ns ← \"abcdcxa\"\ni ← 1\nj ← length(s)\nkekka ← true\nwhile (i < j)\n  if (s[i] ≠ s[j])\n    kekka ← false\n  endif\n  i ← i + 1\n  j ← j - 1\nendwhile", "q": "実行が終了した直後のkekkaの値と、while文の本体が実行された回数の組合せはどれか。", "choices": ["kekka = true、3回", "kekka = false、3回", "kekka = false、4回", "kekka = true、4回"], "ans": 1, "exp": "トレース: s=\"abcdcxa\"(7文字)\ni=1,j=7: s[1]=\"a\",s[7]=\"a\"→等しく変化なし(1回目)\ni=2,j=6: s[2]=\"b\",s[6]=\"x\"→異なるのでkekka←false(2回目)\ni=3,j=5: s[3]=\"c\",s[5]=\"c\"→等しいがkekkaはtrueに戻らない(3回目)\ni=4,j=4: 4<4が偽でループ終了\n⭕ イ: kekkaはfalseのまま、本体は3回実行\n❌ ア: 途中で一致した比較があってもtrueには戻らない\n❌ ウ/エ: 中央の1文字(i=j=4)は比較しないため4回にはならない", "ref": "fe-algo.html#al-18"},
+{"id": "str-6", "cat": "str", "type": "trace", "diff": 2, "title": "ビットごとのAND", "code": "/* length(s)はsの文字数を返す */\n/* s1[i],s2[i]は先頭からi文字目を表す(先頭は1) */\n文字列型: s1, s2, kekka\n整数型: i\ns1 ← \"1101\"\ns2 ← \"1011\"\nkekka ← \"\"\nfor (i を 1 から length(s1) まで 1 ずつ増やす)\n  if (s1[i] = \"1\" and s2[i] = \"1\")\n    kekka ← kekka + \"1\"\n  else\n    kekka ← kekka + \"0\"\n  endif\nendfor", "q": "このプログラムは、2進数を表す2つの文字列s1,s2についてビットごとの論理積(AND)を求め、結果をkekkaに格納する処理である。実行終了時点のkekkaの値はどれか。", "choices": ["1111", "1101", "1001", "0110"], "ans": 2, "exp": "トレース: i=1 s1[1]=\"1\",s2[1]=\"1\"→ともに\"1\"なのでkekka=\"1\"\ni=2 s1[2]=\"1\",s2[2]=\"0\"→kekka=\"10\"\ni=3 s1[3]=\"0\",s2[3]=\"1\"→kekka=\"100\"\ni=4 s1[4]=\"1\",s2[4]=\"1\"→kekka=\"1001\"\n⭕ ウ: kekkaは\"1001\"\n❌ ア: andをorと取り違えた場合の結果(どちらか一方が\"1\"なら\"1\"になる)\n❌ イ: 条件判定を行わずs1[i]をそのまま追加した(s1をコピーした)場合の値\n❌ エ: 一致・不一致を判定する条件(排他的論理和)と取り違えた場合の結果", "ref": "fe-algo.html#al-18"},
+{"id": "str-7", "cat": "str", "type": "fill", "diff": 3, "title": "ビットごとのOR", "code": "/* length(s)はsの文字数を返す */\n/* s1[i],s2[i]は先頭からi文字目を表す(先頭は1) */\n文字列型: s1, s2, kekka\n整数型: i\ns1 ← \"10110\"\ns2 ← \"01100\"\nkekka ← \"\"\nfor (i を 1 から length(s1) まで 1 ずつ増やす)\n  if (［　　　］)\n    kekka ← kekka + \"0\"\n  else\n    kekka ← kekka + \"1\"\n  endif\nendfor", "q": "このプログラムは、2進数を表す2つの文字列s1,s2についてビットごとの論理和(OR)を求め、結果をkekkaに格納する処理である。プログラム中の［　　　］に入れる正しいものはどれか。", "choices": ["s1[i] = \"1\" or s2[i] = \"1\"", "s1[i] = \"0\" or s2[i] = \"0\"", "s1[i] = \"1\" and s2[i] = \"1\"", "s1[i] = \"0\" and s2[i] = \"0\""], "ans": 3, "exp": "if文は「真のとき\"0\"、偽のとき\"1\"を追加する」構造になっている点に注意する\nOR(論理和)の結果が\"0\"になるのは、s1[i]とs2[i]がともに\"0\"のときだけである\n⭕ エ: s1[i]=\"0\" and s2[i]=\"0\"なら両方\"0\"のときだけ\"0\"が追加され、kekka=\"11110\"となりOR結果と一致する\n❌ ア: 一見自然なOR条件だが、真のとき\"0\"が追加されるため結果が反転し\"00001\"になる\n❌ イ: 少なくとも一方が\"0\"の位置すべてで\"0\"になるため、片方だけ\"1\"の位置までが\"0\"になり\"00100\"(実質AND)になる\n❌ ウ: 両方\"1\"の位置だけ\"0\"になり、\"11011\"(実質NAND)になってしまう", "ref": "fe-algo.html#al-18"},
+{"id": "str-8", "cat": "str", "type": "trace", "diff": 2, "title": "2倍の繰返しとシフト", "code": "整数型: x, n, i\nx ← 3\nn ← 4\nfor (i を 1 から n まで 1 ずつ増やす)\n  x ← x × 2\nendfor", "q": "次のプログラムは、整数xをnビットだけ左にシフトする処理を、xを2倍にする操作をn回繰り返すことで実現したものである。実行終了時点のxの値はどれか。", "choices": ["24", "48", "96", "7"], "ans": 1, "exp": "トレース: x=3\ni=1:x=6\ni=2:x=12\ni=3:x=24\ni=4:x=48\nnまでの4回ループが終わり、xは48\n⭕ イ: xの最終値は48(3を4ビット左シフトした値)\n❌ ア: ループがn-1回(3回)しか実行されなかったと誤解した場合の値\n❌ ウ: ループがn+1回(5回)実行されたと誤解した場合の値\n❌ エ: xとnを掛け算ではなく足し算(3+4)したと誤解した場合の値", "ref": "fe-algo.html#al-3"},
+{"id": "sec-1", "cat": "sec", "type": "sec", "diff": 2, "title": "標的型メールの真偽確認", "code": null, "q": "経理部宛てに、取引先の実在する担当者名をかたり、過去のメール件名を引用した返信を装うメールが届いた。本文には「至急、請求書の支払い口座が変更になった」とあり、添付のExcelファイルにはマクロを有効化するよう指示があった。この状況で経理部員が取るべき最も適切な行動はどれか。", "choices": ["過去のメール件名が一致しているため本物と判断し、指示どおり口座を変更して支払う", "マクロを無効化した状態で添付ファイルを開き、内容だけを確認する", "添付ファイルは開かず、電話など別の手段で取引先に直接、変更の事実を確認する", "疑わしいので削除し、取引先には何も連絡しない"], "ans": 2, "exp": "標的型攻撃メールは実在の取引先や過去のやり取りを装って信頼させる手口が多い。\n⭕ ウ: メール以外の経路(電話等)で真偽を確認するのが鉄則。攻撃者が用意した連絡先には頼らない\n❌ ア: 件名の一致は攻撃者が過去のメールを窃取・引用していれば容易に偽装できる\n❌ イ: マクロ無効化してもファイル自体に他の悪性コードが仕込まれている可能性があり、開くこと自体がリスク\n❌ エ: 削除して連絡しないと、取引先側の被害把握が遅れ組織としての対応にもならない", "ref": "fe-security.html#sec-4"},
+{"id": "sec-2", "cat": "sec", "type": "sec", "diff": 2, "title": "異動時の権限見直し", "code": null, "q": "C社では、人事異動で開発部門から営業部門へ異動した社員のアカウントについて、異動後も開発用システムへのアクセス権限が残ったままになっていた。半年後の監査でこれが発覚した。再発防止策として最も適切なものはどれか。", "choices": ["人事異動の情報とアカウントの権限設定を連動させ、異動時に不要な権限を速やかに削除する運用にする", "全社員に開発用システムへの閲覧権限を一律に付与し、権限管理を簡素化する", "パスワードの有効期限を短縮し、頻繁に変更させる", "監査の頻度を半年に1回から1年に1回に減らす"], "ans": 0, "exp": "最小権限の原則は、業務上必要な権限だけを付与し、不要になった権限は速やかに削除すること。\n⭕ ア: 人事情報とアカウント権限を連動させることで、異動のたびに権限が取り残されるのを防げる\n❌ イ: 一律付与は最小権限の原則に反し、リスクをむしろ拡大させる\n❌ ウ: パスワード変更頻度は権限の取り残し問題とは無関係\n❌ エ: 監査頻度を下げると発見がさらに遅れ、逆効果", "ref": "fe-security.html#sec-12"},
+{"id": "sec-3", "cat": "sec", "type": "sec", "diff": 2, "title": "USB持ち出しの統制", "code": null, "q": "D社の社員が、自宅で作業するために顧客情報を含むファイルを私物のUSBメモリにコピーして持ち帰った。USBメモリは暗号化されておらず、通勤中に紛失してしまった。この事態を防ぐための組織的対策として、最も適切なものはどれか。", "choices": ["USBメモリの容量が大きいものを支給し、一度に多くのデータを持ち出せるようにする", "紛失に備えて、同じデータのコピーを複数のUSBメモリに分散して保管させる", "持ち出しの記録は残さず、社員の自己申告のみに委ねる", "私物USBメモリの業務利用と社外への情報持ち出しを原則禁止し、やむを得ない場合は暗号化と許可申請を必須にする"], "ans": 3, "exp": "⭕ エ: 私物媒体の利用制限・暗号化・許可制は情報持ち出しの基本的な統制策\n❌ ア: 大容量化は紛失時の被害をむしろ拡大させる\n❌ イ: コピーを分散させても紛失・漏えいのリスク自体は減らず、管理対象が増えるだけ\n❌ ウ: 記録を残さないと事後の追跡や被害範囲の特定ができない", "ref": "fe-security.html#sec-12"},
+{"id": "sec-4", "cat": "sec", "type": "sec", "diff": 3, "title": "クラウド公開設定の責任", "code": null, "q": "E社はクラウドストレージサービスに顧客データのバックアップを保管していた。設定担当者は「共有リンクを知っている人なら誰でも閲覧可能」という設定のまま運用しており、後日そのリンクが外部の掲示板に貼られ、データが第三者に閲覧されたことが判明した。この事案の根本原因として、最も適切なものはどれか。", "choices": ["クラウド事業者のデータセンターが海外にあったこと", "アクセス権限の範囲を利用者側が正しく設定・管理していなかったこと", "バックアップの保存先としてクラウドを選んだこと自体", "顧客データの容量がクラウドの上限に近かったこと"], "ans": 1, "exp": "クラウドサービスは「クラウド事業者が守る範囲」と「利用者(自社)が守る範囲」を分担する責任共有モデルであり、アクセス権限の設定は利用者側の責任範囲。\n⭕ イ: 「リンクを知っていれば誰でも閲覧可能」という公開範囲の設定ミスが直接の原因であり、これは利用者側が管理すべき事項\n❌ ア: データセンターの所在地は今回の漏えい経路とは無関係\n❌ ウ: クラウド利用自体が問題なのではなく、設定の誤りが問題\n❌ エ: 容量の上限と情報漏えいは関係がない", "ref": "fe-security.html#sec-12"},
+{"id": "sec-5", "cat": "sec", "type": "sec", "diff": 3, "title": "内部不正防止の職務分離", "code": null, "q": "I社の経理担当者は、支払い伝票の作成から承認、実際の振込操作までを一人で担当していた。ある日、この担当者が架空の取引先を作り、自分が管理する口座へ不正に送金していたことが発覚した。同様の不正を防ぐための組織的対策として、最も適切なものはどれか。", "choices": ["経理担当者に対して、より高度な会計知識の研修を実施する", "経理担当者の作業を効率化するため、承認プロセスを廃止して処理を迅速化する", "経理担当者の給与を引き上げ、不正の動機をなくす", "伝票の作成者・承認者・振込実行者を別の担当者に分け、一人が全工程を完結できないようにする"], "ans": 3, "exp": "内部不正対策の基本は「職務分離」。一人がすべての工程を完結できる状態(不正のトライアングルにおける機会)をなくすことが有効。\n⭕ エ: 作成・承認・実行を別人に分けることで相互牽制が働き、一人での不正実行を防げる\n❌ ア: 知識研修は不正の抑止に直接つながらない\n❌ イ: 承認プロセスの廃止はむしろ不正の機会を増やす逆効果\n❌ ウ: 給与引き上げだけで動機を完全になくせる保証はなく、統制の仕組みとしては不十分", "ref": "fe-security.html#sec-12"},
+{"id": "sec-6", "cat": "sec", "type": "sec", "diff": 2, "title": "バックアップの隔離不足", "code": null, "q": "K社はランサムウェア対策として毎日バックアップを取得している。しかし、バックアップ先は業務用PCと常時ネットワーク接続された同一サーバー内のフォルダのみであり、オフラインの保管先は用意していなかった。ランサムウェアに感染した場合、このバックアップ運用ではどのような問題が生じる可能性が高いか。", "choices": ["バックアップの取得時間が長くなり、業務に支障が出る", "バックアップの保存容量が不足し、古いデータから自動的に削除される", "ネットワーク越しに接続されたバックアップまで暗号化され、復旧に使えなくなるおそれがある", "バックアップデータの文字コードが変換され、開けなくなる"], "ans": 2, "exp": "ランサムウェアは接続されているドライブ・共有フォルダも暗号化対象にすることが多い。\n⭕ ウ: 常時接続のバックアップは感染時に一緒に暗号化され、復旧の頼みの綱を失う。オフライン保管や世代管理が必要\n❌ ア: 取得時間の長さは今回のリスクの本質ではない\n❌ イ: 容量不足の話は本文に記載がなく、想定される主要リスクではない\n❌ エ: 文字コード変換はランサムウェア被害と直接関係しない", "ref": "fe-security.html#sec-13"},
+{"id": "sec-7", "cat": "sec", "type": "sec", "diff": 1, "title": "パッチ適用の先送りリスク", "code": null, "q": "L社では、サーバーソフトウェアに深刻な脆弱性を修正するセキュリティパッチが提供されたが、「業務に影響が出るかもしれない」という理由で適用を先送りにしていた。数週間後、その脆弱性を悪用した攻撃を受け被害が発生した。この事案から導かれる教訓として、最も適切なものはどれか。", "choices": ["セキュリティパッチは提供後、検証したうえで速やかに適用する運用を徹底すべきである", "パッチは業務影響のリスクがあるため、原則として適用しない方針にすべきである", "脆弱性情報は公開されないよう、パッチ提供元に働きかけるべきである", "攻撃を受けてから対応すれば十分であり、事前のパッチ適用は不要である"], "ans": 0, "exp": "⭕ ア: 既知の脆弱性は公開された時点で攻撃者にも知られるため、検証後速やかに適用するのが基本方針\n❌ イ: 適用しない方針は既知の脆弱性を放置することになり、被害を招いた原因そのもの\n❌ ウ: 脆弱性情報の非公開化は現実的でなく、対策の代わりにはならない\n❌ エ: 事後対応のみでは今回のような被害を防げない", "ref": "fe-security.html#sec-3"},
+{"id": "sec-8", "cat": "sec", "type": "sec", "diff": 2, "title": "フィッシングSMSへの対処", "code": null, "q": "M社の社員宛てに、実在する宅配業者を装い「荷物のお届けに関する確認」と称するSMSが届いた。文中のリンク先は業者の公式サイトとよく似たデザインの偽サイトで、住所とクレジットカード番号の入力を求めるものだった。この状況に対する最も適切な行動はどれか。", "choices": ["リンク先のデザインが公式サイトに似ているため、信頼して情報を入力する", "クレジットカード番号だけは入力せず、住所は問題ないので入力する", "SMS内のリンクは開かず、宅配業者の公式アプリやブックマーク済みの正規URLから直接状況を確認する", "リンク先が本物かどうかは、URLの文字数が長いかどうかで判断する"], "ans": 2, "exp": "フィッシングサイトは公式サイトを模倣したデザインで信頼させ、URL自体は微妙に異なることが多い(タイポスクワッティング等)。\n⭕ ウ: SMS内のリンクは経由せず、公式アプリや自分でブックマークした正規URLから確認するのが安全\n❌ ア: デザインの類似は容易に模倣できるため、信頼の根拠にならない\n❌ イ: 住所だけでも個人情報の漏えいであり、一部だけなら安全という判断は誤り\n❌ エ: URLの文字数の長短は真偽判定の基準にならない", "ref": "fe-security.html#sec-4"},
+{"id": "sec-9", "cat": "sec", "type": "sec", "diff": 1, "title": "感染疑い時の報告対応", "code": null, "q": "A社の社員Pは、業務用PCに見慣れない警告ポップアップが表示され続けることに気づいた。Pは自己判断でPCの電源を切り、翌朝に情報システム部門へ報告した。この対応について、最も適切な指摘はどれか。", "choices": ["気づいた時点で直ちに報告し、ネットワーク遮断などの指示を仰ぐべきだった", "電源を切った時点で証拠保全は完了しているので、翌朝の報告で問題ない", "個人の判断でウイルス対策ソフトを再インストールすべきだった", "PCの電源を切らず、そのまま朝まで業務を続けるべきだった"], "ans": 0, "exp": "感染疑いの原則は「気づいたら直ちに報告し、指示に従って隔離する」。電源offはメモリ上の揮発性証拠(マルウェアの通信先やプロセス情報)を消してしまうおそれがある。\n⭕ ア: 直ちに報告し指示を仰ぐのが正しい。電源offの是非も含め専門部署の判断に委ねる\n❌ イ: 電源offで証拠保全が完了するわけではなく、翌朝までの放置も被害拡大のおそれがある\n❌ ウ: 独断のソフト再インストールは調査の妨げになる\n❌ エ: 感染疑いのまま業務を続けるのは被害拡大のリスクがある", "ref": "fe-algo.html#al-15"},
+{"id": "sec-10", "cat": "sec", "type": "sec", "diff": 2, "title": "多要素認証の効果", "code": null, "q": "B社では社外からの重要システムへのログインについて、IDとパスワードのみで認証していたが、パスワードリスト型攻撃による不正ログイン被害が他社で相次いだことを受け、対策を検討している。最も効果的な対策はどれか。", "choices": ["パスワードの文字数を4文字から6文字に変更する", "パスワードの有効期限を1年から半年に短縮する", "ログイン画面にパスワードのヒント表示機能を追加する", "パスワードに加えてスマートフォンアプリのワンタイムコード入力を必須にする"], "ans": 3, "exp": "パスワードリスト型攻撃は、他サービスから漏えいしたID・パスワードの組合せを使い回してログインを試みる攻撃。パスワードという「知識」だけに頼る限り防ぎきれない。\n⭕ エ: ワンタイムコード(所持要素)を組み合わせる多要素認証により、パスワードが漏えいしても不正ログインを防げる\n❌ ア/イ: いずれもパスワード(知識要素)だけの強化であり、漏えい済みの正しい組合せには無効\n❌ ウ: ヒント表示はむしろ推測の手がかりを与え、セキュリティを下げる", "ref": "fe-security.html#sec-8"},
+{"id": "sec-11", "cat": "sec", "type": "sec", "diff": 1, "title": "パスワード使い回しの危険", "code": null, "q": "情報システム部門が社内アンケートを実施したところ、多くの社員が業務システムと個人利用のSNSで同じパスワードを使い回していることが分かった。この状況が引き起こすリスクとして、最も適切なものはどれか。", "choices": ["パスワードを覚えやすくなるため、システム管理者の負担が軽減される", "SNS側でパスワードが漏えいした場合、同じ認証情報で業務システムへの不正ログインを試みられるおそれがある", "同じパスワードであれば、パスワードの強度は自動的に高くなる", "使い回しは業務システム側のログを増加させるだけで、セキュリティ上の問題はない"], "ans": 1, "exp": "⭕ イ: 使い回しは「パスワードリスト型攻撃」の温床。1つの漏えいが複数サービスへの不正ログインにつながる\n❌ ア: 覚えやすさは利用者側の話で、管理者の負担軽減とは関係がなく、そもそもリスクの説明になっていない\n❌ ウ: パスワードの強度は使い回しの有無と無関係\n❌ エ: 使い回しはログ量ではなく不正アクセスの実害に直結する重大なリスク", "ref": "fe-security.html#sec-4"},
+{"id": "sec-12", "cat": "sec", "type": "sec", "diff": 2, "title": "委託先のセキュリティ管理", "code": null, "q": "F社は顧客データの分析業務を外部業者G社に委託した。契約書にはセキュリティに関する条項がなく、G社での作業状況の確認も行っていなかった。その後、G社の再委託先での管理不備により顧客データが漏えいした。F社が委託時点で講じておくべきだった対策として、最も適切なものはどれか。", "choices": ["G社の見積金額が最も安いことだけを確認して契約する", "委託後は業務の詳細をG社に一任し、F社は一切関与しない", "契約書にセキュリティ要件と再委託の可否・条件を明記し、委託先の対策状況を定期的に確認する", "顧客データの分析結果だけを受け取り、委託先の選定基準は設けない"], "ans": 2, "exp": "委託元は委託先(および再委託先)の管理状況についても監督責任を負う。\n⭕ ウ: 契約にセキュリティ要件・再委託条件を明記し、実施状況を定期確認することが委託先管理の基本\n❌ ア: 価格だけでの選定はセキュリティ水準を確認しておらず不十分\n❌ イ: 委託後に一任してしまうと監督ができず、再委託先の不備にも気づけない\n❌ エ: 選定基準を設けないこと自体がリスクの放置につながる", "ref": "fe-security.html#sec-12"},
+{"id": "sec-13", "cat": "sec", "type": "sec", "diff": 3, "title": "ログ保全の不備", "code": null, "q": "H社でシステムへの不正アクセスが疑われる事案が発生した。調査を始めたところ、アクセスログの保存期間が1週間しかなく、事案発覚時点で当該期間のログはすでに上書きされて消えていた。加えて、ログを保管していたサーバーは管理者権限を持つ担当者なら誰でも内容を書き換えられる状態だった。この状況の問題点として、最も適切なものはどれか。", "choices": ["ログの保存期間が短く、改ざん防止の仕組みもないこと", "ログのファイル形式がテキスト形式であったこと", "ログを取得する対象のシステムが多すぎたこと", "ログの保存期間が1週間もあったこと自体が問題である"], "ans": 0, "exp": "ログは事案発生時の原因究明・証拠保全の要。保存期間の短さと改ざん可能な管理体制はどちらも致命的な弱点。\n⭕ ア: 十分な保存期間の確保と、書換えできない仕組み(アクセス制限・改ざん検知)の両方が欠けている\n❌ イ: ファイル形式は証拠能力そのものとは直接関係しない\n❌ ウ: 取得対象の多さは今回問題として述べられていない\n❌ エ: 保存期間はむしろ短すぎたことが問題であり、1週間という長さ自体が問題なのではない", "ref": "fe-security.html#sec-11"},
+{"id": "sec-14", "cat": "sec", "type": "sec", "diff": 2, "title": "公衆無線LANの盗聴リスク", "code": null, "q": "J社の社員は、外出先のカフェで急ぎの資料を確認する必要が生じた。店内の暗号化されていない公衆無線LANに接続し、そのままHTTP接続で社内システムにIDとパスワードを入力してログインした。この行為に潜むリスクとして、最も適切なものはどれか。", "choices": ["カフェの電気代が余分にかかる", "公衆無線LANの通信を第三者に傍受され、IDとパスワードが盗み見られるおそれがある", "公衆無線LANは自宅の回線より通信速度が遅いだけで、セキュリティ上の問題はない", "HTTP接続はHTTPS接続よりも通信容量を多く消費する"], "ans": 1, "exp": "⭕ イ: 暗号化されていない通信は経路上で盗聴されるおそれがあり、認証情報の窃取につながる\n❌ ア: 本問のリスクとは無関係\n❌ ウ: 速度の問題ではなく、暗号化の有無がセキュリティ上の核心\n❌ エ: 通信容量の多寡はここでのリスクとは無関係", "ref": "fe-security.html#sec-3"}
+];
+
+const BYID={};QBANK.forEach(q=>BYID[q.id]=q);
+const KANA=['ア','イ','ウ','エ','オ'];
+let ST=loadSt();
+const $=id=>document.getElementById(id);
+
+function stOf(id){return ST[id]||{s:0,w:0,n:0}}
+function isMastered(id){const t=ST[id];return !!t&&t.n>0&&t.s>=2}
+function isWeak(id){const t=ST[id];return !!t&&t.n>0&&t.s<2}
+function isNew(id){const t=ST[id];return !t||!t.n}
+function refLabel(ref){const a=(ref||'').split('#')[1];return REFLABEL[a]||'関連解説'}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=a[i];a[i]=a[j];a[j]=t}return a}
+
+/* ── 実行状態 ── */
+let queue=[],cur=null,answered=false;
+let run={total:0,answers:0,first:0,wrong:0,requeue:0,wrongIds:[],t0:0};
+
+function selMode(){const el=document.querySelector('input[name="dr-mode"]:checked');return el?el.value:'all'}
+function selCnt(){const el=document.querySelector('input[name="dr-cnt"]:checked');return el?el.value:'10'}
+function pool(){
+  const cat=$('dr-cat').value,mode=selMode();
+  return QBANK.filter(q=>cat==='all'||q.cat===cat)
+    .filter(q=>mode==='weak'?isWeak(q.id):(mode==='new'?isNew(q.id):true))
+    .map(q=>q.id);
+}
+function updateHint(){
+  const n=pool().length;
+  $('dr-hint').textContent=n?('対象 '+n+'問'):'対象になる問題がありません（対象を「全部」にするか、分野を変えてください）';
+  $('dr-start').disabled=!n;
+}
+
+function show(el,on){el.classList.toggle('hidden',!on)}
+function setPanel(name){
+  show($('dr-setup'),name==='setup');
+  show($('dr-play'),name==='play');
+  show($('dr-done'),name==='done');
+}
+
+function start(){
+  const ids=shuffle(pool());
+  if(!ids.length)return;
+  const c=selCnt();
+  queue=(c==='all')?ids:ids.slice(0,Math.min(ids.length,parseInt(c,10)));
+  run={total:queue.length,answers:0,first:0,wrong:0,requeue:0,wrongIds:[],t0:Date.now()};
+  setPanel('play');
+  next();
+}
+function next(){
+  if(!queue.length){finish();return}
+  cur=BYID[queue.shift()];
+  answered=false;
+  const st=stOf(cur.id);
+  $('dr-tag').innerHTML='<b>'+CATLABEL[cur.cat]+'</b> ・ '+TYPELABEL[cur.type]+' ・ '+
+    '★'.repeat(cur.diff)+'☆'.repeat(3-cur.diff)+' ・ 定着 '+Math.min(st.s,2)+'/2';
+  $('dr-q').textContent=cur.q;
+  const codeEl=$('dr-code');
+  if(cur.code){codeEl.textContent=cur.code;show(codeEl,true)}else{codeEl.textContent='';show(codeEl,false)}
+  const box=$('dr-choices');box.innerHTML='';
+  cur.choices.forEach((c,i)=>{
+    const b=document.createElement('button');
+    b.type='button';b.className='choice';
+    const kn=document.createElement('span');kn.className='kn';kn.textContent=KANA[i];
+    const cv=document.createElement('span');cv.className='cv'+(cur.code?' cm':'');cv.textContent=c;
+    b.appendChild(kn);b.appendChild(cv);
+    b.addEventListener('click',()=>choose(i));
+    box.appendChild(b);
+  });
+  show($('dr-ans'),false);
+  $('dr-left').textContent=queue.length+1;
+  requestAnimationFrame(()=>{show($('dr-scrollhint'),cur.code&&codeEl.scrollWidth>codeEl.clientWidth)});
+  $('dr-play').scrollIntoView({block:'nearest'});
+  const fb=box.querySelector('.choice');
+  if(fb)fb.focus({preventScroll:true});
+}
+function choose(i){
+  if(answered||!cur)return;
+  answered=true;
+  const ok=(i===cur.ans);
+  const t=stOf(cur.id);
+  t.n=(t.n||0)+1;
+  if(ok){t.s=Math.min(3,(t.s||0)+1)}else{t.s=0;t.w=(t.w||0)+1}
+  ST[cur.id]=t;saveSt(ST);
+  run.answers++;
+  if(ok){if(run.wrongIds.indexOf(cur.id)<0)run.first++}
+  else{
+    run.wrong++;
+    if(run.wrongIds.indexOf(cur.id)<0)run.wrongIds.push(cur.id);
+    queue.splice(Math.min(3,queue.length),0,cur.id);
+    run.requeue++;
+  }
+  const btns=$('dr-choices').querySelectorAll('.choice');
+  btns.forEach((b,j)=>{
+    b.disabled=true;
+    if(j===cur.ans)b.classList.add('correct');
+    if(j===i&&!ok)b.classList.add('wrong');
+  });
+  $('dr-verdict').textContent=ok?'⭕ 正解！':'❌ 不正解… 正解は「'+KANA[cur.ans]+'」';
+  $('dr-verdict').className='verdict '+(ok?'good':'bad');
+  show($('dr-requeue'),!ok);
+  $('dr-exp').textContent=cur.exp;
+  const ref=$('dr-ref');ref.href=cur.ref;ref.textContent='→ 解説に戻る（'+refLabel(cur.ref)+'）';
+  show($('dr-ans'),true);
+  $('dr-ok').textContent=run.first;
+  $('dr-ng').textContent=run.wrong;
+  $('dr-rq').textContent=run.requeue;
+  $('dr-left').textContent=queue.length;
+  updateProg();
+  renderMap();
+  $('dr-next').focus({preventScroll:true});
+  $('dr-next').scrollIntoView({block:'nearest'});
+}
+function fmtTime(ms){
+  const s=Math.round(ms/1000),m=Math.floor(s/60);
+  return m+'分'+String(s%60).padStart(2,'0')+'秒';
+}
+function finish(){
+  setPanel('done');
+  const el=$('dr-result');
+  const t=fmtTime(Date.now()-run.t0);
+  el.textContent=run.total+'問中、一発正解 '+run.first+'問。（解答 '+run.answers+'回・再出題 '+run.requeue+'回・所要 '+t+'）'+
+    (run.wrong===0?'\n全問一発正解！この分野は仕上がっています。':'\n❌だった問題は定着0に戻っています。解説を読んでからもう一周どうぞ。');
+  const chips=$('dr-weakchips');chips.innerHTML='';
+  show($('dr-weakwrap'),run.wrongIds.length>0);
+  run.wrongIds.forEach(id=>{
+    const q=BYID[id];if(!q)return;
+    const a=document.createElement('a');
+    a.href=q.ref;a.textContent='🤔 '+q.title+'（'+refLabel(q.ref)+'）';
+    chips.appendChild(a);
+  });
+}
+function stopRun(){
+  if(run.answers>0){finish()}else{setPanel('setup');updateHint()}
+}
+
+/* ── 習熟マップ・進捗 ── */
+function updateProg(){
+  const n=QBANK.filter(q=>isMastered(q.id)).length;
+  $('p-done').textContent=n;
+  $('p-total').textContent=QBANK.length;
+}
+function renderMap(){
+  const body=$('map-body');body.innerHTML='';
+  CATS.forEach(pair=>{
+    const key=pair[0],label=pair[1];
+    const qs=QBANK.filter(q=>q.cat===key);
+    if(!qs.length)return;
+    const done=qs.filter(q=>isMastered(q.id)).length;
+    const div=document.createElement('div');div.className='mcat';
+    const head=document.createElement('div');head.className='mhead';
+    const b=document.createElement('b');b.textContent=label;
+    const mc=document.createElement('span');mc.className='mc';mc.textContent='定着 '+done+'/'+qs.length;
+    const go=document.createElement('button');go.type='button';go.className='mgo';
+    go.textContent='この分野を回す ›';
+    go.addEventListener('click',()=>{
+      $('dr-cat').value=key;
+      setPanel('setup');updateHint();
+      document.getElementById('drill').scrollIntoView();
+      $('dr-start').focus({preventScroll:true});
+    });
+    head.appendChild(b);head.appendChild(mc);head.appendChild(go);
+    const dots=document.createElement('div');dots.className='dots';dots.setAttribute('aria-hidden','true');
+    qs.forEach(q=>{
+      const d=document.createElement('span');
+      const t=ST[q.id];
+      let cls='dot';
+      if(t&&t.n>0){cls+=t.s>=2?' s2':(t.s===1?' s1':' s0')}
+      d.className=cls;d.title=q.title;
+      dots.appendChild(d);
+    });
+    div.appendChild(head);div.appendChild(dots);
+    body.appendChild(div);
+  });
+}
+
+/* ── 初期化 ── */
+function buildCatSelect(){
+  const sel=$('dr-cat');
+  const optAll=document.createElement('option');
+  optAll.value='all';optAll.textContent='全分野（'+QBANK.length+'問）';
+  sel.appendChild(optAll);
+  CATS.forEach(pair=>{
+    const n=QBANK.filter(q=>q.cat===pair[0]).length;
+    if(!n)return;
+    const o=document.createElement('option');
+    o.value=pair[0];o.textContent=pair[1]+'（'+n+'問）';
+    sel.appendChild(o);
+  });
+}
+function init(){
+  buildCatSelect();
+  document.querySelectorAll('.qtotal').forEach(el=>el.textContent=QBANK.length);
+  $('dr-start').addEventListener('click',start);
+  $('dr-next').addEventListener('click',next);
+  $('dr-stop').addEventListener('click',stopRun);
+  $('dr-again').addEventListener('click',start);
+  $('dr-againweak').addEventListener('click',()=>{
+    const w=document.querySelector('input[name="dr-mode"][value="weak"]');
+    if(w)w.checked=true;
+    updateHint();
+    if(pool().length){start()}else{setPanel('setup')}
+  });
+  $('dr-back').addEventListener('click',()=>{setPanel('setup');updateHint()});
+  $('dr-cat').addEventListener('change',updateHint);
+  document.querySelectorAll('input[name="dr-mode"]').forEach(r=>r.addEventListener('change',updateHint));
+  $('st-reset').addEventListener('click',()=>{
+    if(!confirm('この端末の学習記録（定着度）をすべて消します。よろしいですか？'))return;
+    ST={};saveSt(ST);updateProg();renderMap();
+  });
+  document.addEventListener('keydown',e=>{
+    const t=e.target;
+    if(t&&t.closest&&t.closest('select,input,textarea'))return;
+    if($('dr-play').classList.contains('hidden'))return;
+    if(!answered&&/^[1-5]$/.test(e.key)){
+      const idx=parseInt(e.key,10)-1;
+      if(cur&&idx<cur.choices.length)choose(idx);
+    }else if(answered&&e.key==='Enter'){
+      /* button/a上のEnterはネイティブのclick発火に任せる(二重進行防止) */
+      if(t&&t.closest&&t.closest('button,a'))return;
+      e.preventDefault();next();
+    }
+  });
+  updateProg();
+  renderMap();
+  updateHint();
+}
+init();
+</script>
+</body>
+</html>
