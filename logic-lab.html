@@ -20,8 +20,10 @@
     --bg:#F1EEE5; --ground:#E6E1D4; --surface:#FCFBF7; --surface2:#F2EFE6;
     --accent:#BE5A38; --accent-ink:#A54E31; --accent-dim:#D69B81; --accent-soft:#F3E5DA; --accent-line:#E6C3B0;
     --ink:#211F1A; --ink-dim:#716C61; --border:#E2DCCD;
-    --ok:#5C7A4E; --ok-soft:#E4ECDE;
-    --wire-off:#B4AC9C;
+    /* --ok は --ok-soft の上に文字として載るので4.5:1を満たす濃さにしてある(実測5.06:1) */
+    --ok:#4F6942; --ok-soft:#E4ECDE;
+    /* 消灯中の配線も背景に対して3:1以上（SC 1.4.11）を確保する(実測3.31:1) */
+    --wire-off:#8B8272;
     --sans:'Hanken Grotesk','Hiragino Kaku Gothic ProN','Meiryo','Yu Gothic',system-ui,sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -32,9 +34,14 @@
     color:var(--ink); background:var(--bg);
     display:flex; flex-direction:column; overflow:hidden;
     overscroll-behavior:none;
+    touch-action:manipulation; /* 文字やバーの余白でダブルタップ拡大が起きないように（#boardは別途none） */
     padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   }
   button{font-family:var(--sans); touch-action:manipulation; cursor:pointer;}
+  /* キーボード操作時のフォーカスを、他の公開ページと同じ暖色リングで明示する
+     （ブラウザ既定リングは配色によっては見づらいため。SC 1.4.11 の3:1を満たす色） */
+  :focus-visible{outline:2.5px solid var(--accent-ink); outline-offset:2px;}
+  .pal:focus-visible{outline-offset:1px;}
 
   /* ---- header ---- */
   header{
@@ -55,6 +62,7 @@
     header h1{font-size:.88rem;}
     .tabs button{padding:5px 7px; font-size:.73rem;}
     .icobtn{width:30px; height:30px; font-size:.9rem;}
+    .icobtn::after{inset:-7px;} /* 30px本体でもタッチ領域44px相当を維持 */
     .hbtns{gap:4px;}
   }
   .tabs button.active{background:var(--surface); color:var(--ink); box-shadow:0 1px 3px rgba(50,38,24,.12);}
@@ -74,7 +82,9 @@
     background:var(--accent-soft); border-bottom:1px solid var(--accent-line);
     padding:6px 12px; min-height:34px; font-size:.78rem; color:var(--ink);
   }
+  /* 見出し表示のときだけ1行に省略（ヒント文は折り返して全文見せたいので分ける） */
   #statusmsg{flex:1; min-width:0; line-height:1.4;}
+  #statusmsg.title{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   #matchchip{
     flex:0 0 auto; font-weight:700; font-size:.75rem; padding:3px 9px; border-radius:999px;
     background:var(--surface); border:1px solid var(--accent-line); color:var(--ink-dim); display:none;
@@ -90,7 +100,12 @@
   #board{
     position:absolute; inset:0; width:100%; height:100%;
     touch-action:none; display:block;
+    -webkit-touch-callout:none; /* 部品を長押ししてもiOSの選択メニューを出さない */
   }
+  /* キーボードで盤面に来たときだけ枠を出す。枠が画面端で切れないよう内側に描く */
+  #board:focus-visible{outline:2.5px solid var(--accent-ink); outline-offset:-3px;}
+  /* タップ/クリック由来のフォーカスでは枠を出さない（上の全体ルールも打ち消す） */
+  #board:focus-visible[data-ptr]{outline:none;}
   #zoomctl{
     position:absolute; right:10px; bottom:10px; display:flex; flex-direction:column; gap:6px;
   }
@@ -101,7 +116,13 @@
     flex:0 0 auto; display:flex; gap:6px; overflow-x:auto; padding:8px 10px 4px;
     background:var(--surface); border-top:1px solid var(--border);
     scrollbar-width:none;
+    /* 画面幅に収まらない分があることを端のフェードで示す（既定は両端0=変化なし） */
+    --fade-l:0px; --fade-r:0px;
+    -webkit-mask-image:linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+            mask-image:linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
   }
+  #palette.fade-l{--fade-l:24px;}
+  #palette.fade-r{--fade-r:24px;}
   #palette::-webkit-scrollbar{display:none;}
   .pal{
     flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:1px;
@@ -112,6 +133,9 @@
   }
   .pal svg{display:block;}
   .pal span{font-size:.62rem; font-weight:600; color:var(--ink-dim);}
+  @media (hover:hover) and (pointer:fine){
+    .pal:not(:disabled):hover{border-color:var(--accent-dim);}
+  }
   .pal:not(:disabled):active{border-color:var(--accent-dim); background:var(--accent-soft);}
   .pal:disabled{opacity:.38;}
   .pal.locked{position:relative;}
@@ -133,6 +157,8 @@
   }
   #trash.show{display:flex;}
   #trash.hot{background:var(--accent-ink); border-color:var(--accent-ink); border-style:solid; color:#fff;}
+  #trash.locked{color:var(--ink-dim); border-color:var(--ink-dim);}
+  #trash.locked.hot{background:var(--ink-dim); border-color:var(--ink-dim); border-style:solid; color:#fff;}
 
   /* ---- action bar ---- */
   #actionbar{
@@ -158,11 +184,14 @@
     background:var(--surface); border-radius:18px 18px 0 0;
     border:1px solid var(--border); border-bottom:none;
     max-height:72dvh; display:flex; flex-direction:column;
-    transform:translateY(105%); transition:transform .22s ease;
+    /* 画面外へ逃がすだけだと、閉じている間も中のボタンがTabで拾えてしまうのでvisibilityで隠す。
+       開くときは即座に可視、閉じるときはスライドが終わってから隠す（0sの遅延切替） */
+    transform:translateY(105%); transition:transform .22s ease, visibility 0s linear .22s;
+    visibility:hidden;
     padding-bottom:env(safe-area-inset-bottom);
     box-shadow:0 -10px 34px rgba(50,38,24,.22);
   }
-  #sheet.show{transform:translateY(0);}
+  #sheet.show{transform:translateY(0); visibility:visible; transition:transform .22s ease, visibility 0s;}
   #sheethead{
     flex:0 0 auto; display:flex; align-items:center; padding:12px 16px 8px;
     border-bottom:1px solid var(--border);
@@ -174,6 +203,9 @@
   }
   #sheetbody{flex:1 1 auto; overflow-y:auto; padding:12px 16px 18px; -webkit-overflow-scrolling:touch;}
 
+  /* 目には見せず読み上げにだけ渡すテキスト */
+  .vh{position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0;}
+
   /* truth table */
   table.tt{border-collapse:collapse; font-size:.8rem; margin:0 auto;}
   table.tt th, table.tt td{
@@ -182,7 +214,7 @@
   table.tt th{background:var(--surface2); font-weight:700;}
   table.tt th.outcol, table.tt td.outcol{border-left:2px solid var(--accent-dim);}
   table.tt tr.cur td{background:var(--accent-soft);}
-  table.tt td.ng{background:#F6DDD4; color:var(--accent-ink); font-weight:700;}
+  table.tt td.ng{background:#F6DDD4; color:#9C4A2E; font-weight:700;} /* 淡赤の上でも4.5:1を満たす濃さ(実測4.72:1) */
   table.tt td.okv{color:var(--ok);}
   .ttnote{font-size:.72rem; color:var(--ink-dim); margin-top:10px; line-height:1.6; text-align:center;}
 
@@ -203,7 +235,6 @@
   .chcard .t{display:block; font-size:.85rem; font-weight:700;}
   .chcard .s{display:block; font-size:.7rem; color:var(--ink-dim); margin-top:1px;}
   .chcard .st{flex:0 0 auto; font-size:.7rem; color:#936A58; letter-spacing:.05em;}
-  .chcard.done .chk{color:var(--ok); font-weight:700; font-size:.9rem;}
 
   /* help / hint */
   .helpbody{font-size:.82rem; line-height:1.8; color:var(--ink);}
@@ -249,7 +280,9 @@
   @media (prefers-reduced-motion:reduce){
     .confetti{display:none;}
     #clearcard{animation:none;}
-    #sheet{transition:none;}
+    #sheet, #sheet.show{transition:none;} /* .show側にもtransitionがあるので両方止める */
+    .picked{animation:none;}
+    .shake{animation:none;}
   }
 
   /* ---- SVG parts ---- */
@@ -257,6 +290,13 @@
   .node-body{cursor:grab;}
   .wire-hit{stroke:transparent; stroke-width:16; fill:none; cursor:pointer;}
   .port-hit{fill:transparent; cursor:crosshair;}
+  /* ホバーの視覚フィードバックはマウス等ポインタ精度のある環境のみ
+     （タッチ端末はタップ後も:hoverが残留し、触れた部品が光ったままになるため） */
+  @media (hover:hover) and (pointer:fine){
+    .node-body:hover{filter:drop-shadow(0 0 2.5px var(--accent)) drop-shadow(0 0 2.5px var(--accent));}
+    .wire-hit:hover + path{filter:drop-shadow(0 0 2px var(--accent));}
+    .port-hit:hover{fill:var(--accent-dim); opacity:.45;}
+  }
   @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:.35;}}
   .picked{animation:pulse .8s infinite;}
   @keyframes shake{
@@ -270,8 +310,8 @@
 <header>
   <h1>論理回路ラボ<span class="dot">.</span></h1>
   <div class="tabs">
-    <button id="tab-free">自由制作</button>
-    <button id="tab-ch">チャレンジ</button>
+    <button id="tab-free" aria-pressed="true">自由制作</button>
+    <button id="tab-ch" aria-pressed="false">チャレンジ</button>
   </div>
   <div class="hbtns">
     <button class="icobtn" id="undobtn" aria-label="元に戻す" disabled>↩</button>
@@ -281,13 +321,15 @@
 </header>
 
 <div id="statusbar">
-  <span id="statusmsg"></span>
-  <span id="matchchip"></span>
+  <span id="statusmsg" aria-live="polite"></span>
+  <span id="matchchip" aria-live="polite"></span>
   <button id="listbtn">問題一覧</button>
 </div>
 
 <div id="canvaswrap">
-  <svg id="board" xmlns="http://www.w3.org/2000/svg"></svg>
+  <svg id="board" xmlns="http://www.w3.org/2000/svg" tabindex="0" role="application"
+       aria-label="回路キャンバス" aria-describedby="boardhelp"></svg>
+  <p id="boardhelp" class="vh">矢印キーで部品を選び、Enterでスイッチの切替、cキーで配線、wキーで配線を順に選択、Shift+矢印で部品を移動、Deleteで選択中の部品または配線を削除できます。回路の入出力は「真理値表」ボタンで一覧できます。</p>
   <div id="zoomctl">
     <button class="icobtn" id="zin" aria-label="拡大">＋</button>
     <button class="icobtn" id="zout" aria-label="縮小">−</button>
@@ -307,16 +349,16 @@
 </div>
 
 <div id="scrim"></div>
-<div id="sheet" role="dialog" aria-modal="true">
+<div id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheettitle">
   <div id="sheethead"><h2 id="sheettitle"></h2><button id="sheetclose" aria-label="閉じる">✕</button></div>
   <div id="sheetbody"></div>
 </div>
 
-<div id="toast"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 
-<div id="clearov">
+<div id="clearov" role="dialog" aria-modal="true" aria-labelledby="clearttl" aria-describedby="clearsub">
   <div id="clearcard">
-    <h2>クリア！</h2>
+    <h2 id="clearttl">クリア！</h2>
     <div class="sub" id="clearsub"></div>
     <div class="btns">
       <button class="primary" id="nextbtn">次の問題へ</button>
@@ -403,10 +445,11 @@ const CHALLENGES = [
    desc:'A+Bの1桁の足し算。和S（1の位）と桁上げC（2の位）の2出力を同時に満たそう。',
    hint:'S = A XOR B、C = A AND B。同じ入力を2つのゲートに分岐させるのがポイント。',
    inputs:['A','B'], outputs:['S','C'], fn:v=>[v.A ^ v.B, v.A & v.B], palette:GATE_ORDER},
+  // 桁上げは入力Ci・出力Coで対になる記法にする（前問の出力Cと役割が入れ替わって見えないように）
   {id:'full',  no:12, stars:5, title:'全加算器に挑戦',
-   desc:'A+B+C（Cは下位からの桁上げ）の足し算。和Sと桁上げCoの2出力。最終問題！',
-   hint:'S = A XOR B XOR C。Coは「2つ以上が1」つまり多数決回路と同じ。半加算器2個+ORでも作れる。',
-   inputs:['A','B','C'], outputs:['S','Co'], fn:v=>[(v.A ^ v.B) ^ v.C, (v.A+v.B+v.C>=2)?1:0], palette:GATE_ORDER},
+   desc:'A+B+Ci（Ciは下位からの桁上げ入力）の足し算。和Sと桁上げ出力Coの2出力。最終問題！',
+   hint:'S = A XOR B XOR Ci。Coは「3つのうち2つ以上が1」、つまり多数決回路と同じ。半加算器2個+ORでも作れる。',
+   inputs:['A','B','Ci'], outputs:['S','Co'], fn:v=>[(v.A ^ v.B) ^ v.Ci, (v.A+v.B+v.Ci>=2)?1:0], palette:GATE_ORDER},
 ];
 
 /* ---------- localStorage ラッパ（無効環境でもメモリで動く） ---------- */
@@ -430,6 +473,7 @@ const store = (()=>{
   return {
     get(k, def){ const m = load(); return (k in m) ? m[k] : def; },
     set(k, v){ load(); mem[k] = v; save(); },
+    reset(){ mem = {}; save(); },   // 起動に失敗したときの最終手段
   };
 })();
 
@@ -444,13 +488,18 @@ let undoStack = [], redoStack = [];
 let view = { x:0, y:0, z:1 };         // pan/zoom
 let lastValues = null;                // 直近の評価結果
 let justCleared = false;              // クリア演出の再発火防止
-let clearedNow = false;
+let fitClampHinted = false;           // 「画面に収まりきらない」案内は問題ごとに1回だけ
 
 const $ = id => document.getElementById(id);
 const board = $('board');
 
 /* ---------- 汎用 ---------- */
 function uid(){ return 'n' + (idSeq++); }
+// aria-liveの要素は同じ文字列でも代入し直すと読み上げが再発火するため、変化時だけ書く
+function setText(el, s){ if(el.textContent !== s) el.textContent = s; }
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 function cloneState(s){ return JSON.parse(JSON.stringify(s)); }
 function nodeById(id){ return state.nodes.find(n=>n.id===id); }
 
@@ -460,6 +509,11 @@ function toast(msg, ms=2200){
   t.classList.add('show');
   clearTimeout(t._tm);
   t._tm = setTimeout(()=>t.classList.remove('show'), ms);
+}
+function hideToastNow(){
+  const t = $('toast');
+  clearTimeout(t._tm);
+  t.classList.remove('show');
 }
 
 /* ---------- ジオメトリ ---------- */
@@ -479,6 +533,7 @@ function portsOf(n){
 }
 function portWorld(n, dir, idx){
   const p = portsOf(n)[dir==='out'?'outs':'ins'][idx];
+  if(!p) return {x:n.x, y:n.y}; // 想定外のポート番号でも描画を止めない（validCircuitの二重ガード）
   return {x:n.x + p.x, y:n.y + p.y};
 }
 function wirePath(x1,y1,x2,y2){
@@ -590,6 +645,7 @@ function snapshot(){
 }
 function undo(){
   if(!undoStack.length) return;
+  if(gesture || pinch || palDrag) return; // ポインタ操作の途中でstateが差し替わるとgestureが壊れるため
   redoStack.push(cloneState(state));
   state = undoStack.pop();
   selection = null; picked = null;
@@ -597,6 +653,7 @@ function undo(){
 }
 function redo(){
   if(!redoStack.length) return;
+  if(gesture || pinch || palDrag) return;
   undoStack.push(cloneState(state));
   state = redoStack.pop();
   selection = null; picked = null;
@@ -634,8 +691,19 @@ function isCleared(chId){
 
 /* ---------- 状態変更のコミット ---------- */
 function commit(save=true){
+  // rewireやカスケード削除でselectionの指す配線/ノードが消えていたら追随して解除
+  // （放置すると削除ボタンだけ有効なまま残り、無意味なundo履歴が積まれる）
+  if(selection){
+    const exists = selection.kind==='wire'
+      ? state.wires.some(w=>w.id===selection.id)
+      : state.nodes.some(n=>n.id===selection.id);
+    if(!exists) selection = null;
+  }
+  // 配線待ち(picked)の元ノードが消えていたら解除する。
+  // 放置すると次の接続操作が無言で失敗し、ポートも点滅しないので原因が分からなくなる
+  if(picked && !state.nodes.some(n=>n.id===picked.nodeId)) picked = null;
   lastValues = evaluate(state.nodes, state.wires);
-  if(lastValues.cyclic) toast('回路にループがあります（想定外です）');
+  if(lastValues.cyclic) toast('回路にループができてるみたい（想定外だよ）');
   render();
   updateStatus();
   updateUndoBtns(); // undo/redo経由でも必ずボタン状態を同期する
@@ -644,16 +712,14 @@ function commit(save=true){
 }
 
 function checkClear(){
-  clearedNow = false;
   if(mode!=='ch' || !curCh) return;
   const m = challengeMatch();
   const chip = $('matchchip');
   chip.style.display = 'inline-block';
-  chip.textContent = `一致 ${m.match}/${m.total}`;
+  setText(chip, `一致 ${m.match}/${m.total}行`); // 真理値表の行数だと分かるように単位をつける
   chip.classList.toggle('full', m.match===m.total);
   if(m.match===m.total && !justCleared){
     justCleared = true;
-    clearedNow = true;
     markCleared();
     showClearOverlay();
   }else if(m.match!==m.total){
@@ -662,12 +728,17 @@ function checkClear(){
 }
 
 function showClearOverlay(){
+  hideToastNow(); // 削除直後にクリアした場合、直前のトーストが演出に重ならないように
   const gates = state.nodes.filter(n=>!(n.type==='SW'||n.type==='LED')).length;
   $('clearsub').textContent = `「${curCh.title}」を攻略！ 使用ゲート数: ${gates}個`;
   const idx = CHALLENGES.findIndex(c=>c.id===curCh.id);
   $('nextbtn').style.display = idx < CHALLENGES.length-1 ? '' : 'none';
   const ov = $('clearov');
+  if(!activeModal()) modalReturnFocus = document.activeElement;
   ov.classList.add('show');
+  void ov.offsetHeight;
+  const first = focusablesIn(ov)[0];
+  if(first) first.focus(); // キーボード/読み上げの現在地を演出内へ移す
   // CSSコンフェッティ
   const card = $('clearcard');
   card.querySelectorAll('.confetti').forEach(e=>e.remove());
@@ -688,8 +759,11 @@ function setMode(m, chId){
   selection = null; picked = null;
   undoStack = []; redoStack = []; updateUndoBtns();
   justCleared = false;
+  fitClampHinted = false;
   $('tab-free').classList.toggle('active', m==='free');
   $('tab-ch').classList.toggle('active', m==='ch');
+  $('tab-free').setAttribute('aria-pressed', m==='free'); // 見た目のハイライトだけでなく状態として伝える
+  $('tab-ch').setAttribute('aria-pressed', m==='ch');
   $('goalbtn').style.display = m==='ch' ? '' : 'none';
   $('hintbtn').style.display = m==='ch' ? '' : 'none';
   $('listbtn').style.display = m==='ch' ? 'inline-block' : 'none'; // CSS既定がnoneなので''では出ない
@@ -701,7 +775,7 @@ function setMode(m, chId){
     const saved = store.get('free', null);
     if(saved && validCircuit(saved.circuit)){
       state = saved.circuit;
-      idSeq = saved.idSeq || guessIdSeq();
+      idSeq = safeIdSeq(saved.idSeq);
     }else{
       state = defaultFreeCircuit();
     }
@@ -709,9 +783,13 @@ function setMode(m, chId){
     curCh = CHALLENGES.find(c=>c.id===chId) || CHALLENGES[0];
     const prog = store.get('progress', {});
     const saved = prog[curCh.id];
-    if(saved && validCircuit(saved.circuit)){
+    // Q12の入力ラベルをC→Ciに改名した分の読み替え。作りかけの回路を捨てさせない
+    if(curCh.id==='full' && saved && saved.circuit && Array.isArray(saved.circuit.nodes)){
+      saved.circuit.nodes.forEach(n=>{ if(n && n.type==='SW' && n.label==='C') n.label = 'Ci'; });
+    }
+    if(saved && validCircuit(saved.circuit) && presetMatches(saved.circuit, curCh)){
       state = saved.circuit;
-      idSeq = saved.idSeq || guessIdSeq();
+      idSeq = safeIdSeq(saved.idSeq);
       // クリア済み回路を開き直したとき、開いた瞬間の再クリア演出は抑止
       const m2 = (()=>{ try{ return challengeMatch(); }catch(e){ return null; } })();
       justCleared = !!(m2 && m2.match===m2.total);
@@ -726,21 +804,53 @@ function setMode(m, chId){
 }
 
 // 保存データの健全性チェック（壊れたlocalStorageで起動不能にならないように）
+// ここを通ったデータは render()/evaluate() が例外なく扱えることを保証する。
+// 「あとで落ちる形」（存在しないポート番号、出力を持たないノードからの配線など）も入口で弾く。
 function validCircuit(c){
   if(!c || !Array.isArray(c.nodes) || !Array.isArray(c.wires)) return false;
-  const ids = new Set();
+  const byId = new Map();
+  let swCount = 0, ledCount = 0;
   for(const n of c.nodes){
-    if(!n || typeof n.id!=='string' || ids.has(n.id)) return false;
+    if(!n || typeof n.id!=='string' || byId.has(n.id)) return false;
     if(!(n.type==='SW' || n.type==='LED' || GATES[n.type])) return false;
-    if(typeof n.x!=='number' || typeof n.y!=='number') return false;
-    ids.add(n.id);
+    if(!Number.isFinite(n.x) || !Number.isFinite(n.y)) return false; // NaN/Infinityはビューを壊す
+    if(n.type==='SW'){
+      if(!(n.value===undefined || n.value===0 || n.value===1)) return false;
+      swCount++;
+    }
+    if(n.type==='LED') ledCount++;
+    if((n.type==='SW' || n.type==='LED') && typeof n.label!=='string') return false; // 表示ラベル必須
+    byId.set(n.id, n);
   }
+  if(swCount>MAX_SW || ledCount>MAX_LED) return false;
+  const wireIds = new Set(), usedInPorts = new Set();
   for(const w of c.wires){
-    if(!w || !ids.has(w.from) || !w.to || !ids.has(w.to.node)) return false;
-    if(typeof w.to.port!=='number') return false;
+    if(!w || typeof w.id!=='string' || wireIds.has(w.id)) return false;
+    if(!byId.has(w.from) || !w.to || !byId.has(w.to.node)) return false;
+    if(!Number.isInteger(w.to.port)) return false;
+    if(!portsOf(byId.get(w.from)).outs.length) return false;         // LEDなど出力の無いノードが始点
+    const ins = portsOf(byId.get(w.to.node)).ins;
+    if(w.to.port < 0 || w.to.port >= ins.length) return false;       // 存在しない入力ポート番号
+    const slot = w.to.node + '#' + w.to.port;
+    if(usedInPorts.has(slot)) return false;                          // 1入力1本の不変条件
+    usedInPorts.add(slot);
+    wireIds.add(w.id);
   }
+  if(evaluate(c.nodes, c.wires).cyclic) return false;                // ループを含む保存データ
   return true;
 }
+
+// チャレンジ定義を後から直すと、古い保存回路は入出力ラベルが噛み合わず永久に一致しなくなる。
+// ラベル構成が現在の定義と違う保存データは捨てて、初期配置からやり直させる。
+function presetMatches(c, ch){
+  const eq = (a,b)=>a.length===b.length && a.every((v,i)=>v===b[i]);
+  const sw  = c.nodes.filter(n=>n.type==='SW').map(n=>n.label).sort();
+  const led = c.nodes.filter(n=>n.type==='LED').map(n=>n.label).sort();
+  return eq(sw, [...ch.inputs].sort()) && eq(led, [...ch.outputs].sort());
+}
+
+// 保存されたidSeqは壊れていることがある（文字列やNaNだとuid()が重複IDを作る）
+function safeIdSeq(v){ return (Number.isInteger(v) && v > 0) ? v : guessIdSeq(); }
 
 function guessIdSeq(){
   let mx = 0;
@@ -780,13 +890,24 @@ function buildPalette(){
   for(const t of paletteItems()){
     const b = document.createElement('button');
     b.className = 'pal';
-    const locked = allowed && !allowed.includes(t) && !(t==='SW'||t==='LED');
+    // allowed が入るのはチャレンジ時だけで、そのときパレットはゲートのみ（SW/LEDは並ばない）
+    const locked = !!(allowed && !allowed.includes(t));
     if(locked) b.classList.add('locked');
     b.innerHTML = palIcon(t) + `<span>${t==='SW'?'スイッチ':t==='LED'?'LED':t}</span>`;
+    if(locked) b.setAttribute('aria-label', `${t}（この問題では使えない）`); // 🔒印の意味を読み上げにも渡す
     setupPalButton(b, t, locked);
     pal.appendChild(b);
   }
+  updatePaletteFade();
 }
+// スクロールできる方向の端をぼかして「まだ部品がある」ことを見せる
+function updatePaletteFade(){
+  const p = $('palette');
+  const max = p.scrollWidth - p.clientWidth;
+  p.classList.toggle('fade-l', p.scrollLeft > 4);
+  p.classList.toggle('fade-r', max - p.scrollLeft > 4);
+}
+$('palette').addEventListener('scroll', updatePaletteFade, {passive:true});
 
 /* ---------- パレット→キャンバスのドラッグ&ドロップ追加 ---------- */
 let palDrag = null;   // {type, pid, sx, sy, active, locked, ghost}
@@ -879,12 +1000,23 @@ function gateShape(type, forIcon){
     case 'XNOR':
       body = in2 + `<path d="M8,8 Q20,28 8,48" fill="none" stroke="var(--ink)" stroke-width="${sw}"/>` +
              `<path d="M15,8 Q27,28 15,48 Q41,48 61,28 Q41,8 15,8 Z" ${stroke}/>` + bub(66);
-      outStub = `<line x1="71" y1="28" x2="84" y2="28" ${lineS}/>`; label = lbl(34,'XNOR'); break;
+      outStub = `<line x1="71" y1="28" x2="84" y2="28" ${lineS}/>`; label = lbl(38,'XNOR'); break;
     case 'NOT':
       body = in1 + `<path d="M14,10 L46,28 L14,46 Z" ${stroke}/>` + bub(51);
       outStub = `<line x1="56" y1="28" x2="84" y2="28" ${lineS}/>`; label = lbl(27,'NOT'); break;
   }
   return body + outStub + label;
+}
+
+// 読み上げ・ステータス表示で使う部品の呼び名。
+// 同じ型のゲートが複数あると「ANDゲート」だけでは区別できないので通し番号をつける
+// （文言が変わらないと aria-live が選択の移動を読み上げないため、機能上も必要）
+function nodeAxName(n){
+  if(n.type==='SW')  return `スイッチ${n.label} 値${n.value ?? 0}`;
+  if(n.type==='LED') return `LED ${n.label} 値${lastValues ? (lastValues.values[n.id] ?? 0) : 0}`;
+  const same = readingOrder().filter(x=>x.type===n.type);
+  if(same.length < 2) return `${n.type}ゲート`;
+  return `${n.type}ゲート ${same.findIndex(x=>x.id===n.id)+1}/${same.length}`;
 }
 
 function nodeMarkup(n){
@@ -898,7 +1030,7 @@ function nodeMarkup(n){
       `<line x1="${SW_W-8}" y1="${SW_H/2}" x2="${SW_W}" y2="${SW_H/2}" stroke="var(--ink)" stroke-width="2"/>` +
       `<rect class="node-body" data-node="${n.id}" x="2" y="2" width="${SW_W-10}" height="${SW_H-4}" rx="10" ` +
         `fill="${on?'var(--accent-soft)':'var(--surface)'}" stroke="${on?'var(--accent)':'var(--ink-dim)'}" stroke-width="2"/>` +
-      `<text x="${(SW_W-8)/2}" y="15" text-anchor="middle" font-size="11" font-weight="600" fill="var(--ink-dim)" pointer-events="none">${n.label}</text>` +
+      `<text x="${(SW_W-8)/2}" y="15" text-anchor="middle" font-size="11" font-weight="600" fill="var(--ink-dim)" pointer-events="none">${escapeHtml(n.label)}</text>` +
       `<text x="${(SW_W-8)/2}" y="38" text-anchor="middle" font-size="20" font-weight="700" fill="${on?'var(--accent)':'var(--ink)'}" pointer-events="none">${on?1:0}</text>`;
   }else if(n.type==='LED'){
     const on = v===1;
@@ -908,7 +1040,7 @@ function nodeMarkup(n){
       `<circle class="node-body" data-node="${n.id}" cx="32" cy="26" r="18" ` +
         `fill="${on?'var(--accent)':'var(--surface)'}" stroke="${on?'var(--accent)':'var(--ink-dim)'}" stroke-width="2"/>` +
       `<text x="32" y="31" text-anchor="middle" font-size="14" font-weight="700" fill="${on?'#fff':'var(--ink-dim)'}" pointer-events="none">${on?1:0}</text>` +
-      `<text x="32" y="57" text-anchor="middle" font-size="11" font-weight="600" fill="var(--ink-dim)" pointer-events="none">${n.label}</text>`;
+      `<text x="32" y="57" text-anchor="middle" font-size="11" font-weight="600" fill="var(--ink-dim)" pointer-events="none">${escapeHtml(n.label)}</text>`;
   }else{
     inner = `<g class="node-body" data-node="${n.id}">${gateShape(n.type, false)}</g>`;
   }
@@ -928,7 +1060,7 @@ function nodeMarkup(n){
   });
   const selRect = sel ? `<rect x="-7" y="-7" width="${sz.w+14}" height="${sz.h+14}" rx="10" fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="5 4" pointer-events="none"/>` : '';
   // shake用の内側g: CSSアニメのtransformが外側のtransform属性を上書きしないよう分離
-  return `<g data-ng="${n.id}" transform="translate(${n.x},${n.y})"><g class="ninner">${inner}${ports}${selRect}</g></g>`;
+  return `<g data-ng="${n.id}" transform="translate(${n.x},${n.y})" role="img" aria-label="${escapeHtml(nodeAxName(n))}${sel?'（選択中）':''}"><g class="ninner">${inner}${ports}${selRect}</g></g>`;
 }
 
 function wireMarkup(w){
@@ -949,7 +1081,13 @@ function render(){
   let html = `<defs><pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1.2" cy="1.2" r="1.2" fill="var(--ground)"/></pattern></defs>` +
     `<rect x="${-gridExtent}" y="${-gridExtent}" width="${gridExtent*2}" height="${gridExtent*2}" fill="url(#dots)" data-bg="1"/>`;
   for(const w of state.wires) html += wireMarkup(w);
-  for(const n of state.nodes) html += nodeMarkup(n);
+  // 選択中のノードは最後に描画して最前面へ（重なった部品の下に選択枠やポートが
+  // 隠れて掴めなくなるのを防ぐ。露出している一部をタップして選択すれば前面に出せる）
+  const frontId = selection && selection.kind==='node' ? selection.id : null;
+  const nodesToDraw = frontId
+    ? [...state.nodes.filter(n=>n.id!==frontId), ...state.nodes.filter(n=>n.id===frontId)]
+    : state.nodes;
+  for(const n of nodesToDraw) html += nodeMarkup(n);
   html += `<path id="rubber" d="" fill="none" stroke="var(--accent-dim)" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round" pointer-events="none"/>`;
   board.innerHTML = html;
   applyView();
@@ -977,6 +1115,23 @@ function fitView(){
   view.z = Math.max(0.62, z); // スマホでゲート記号が潰れない下限（あふれた分はパンで見る）
   view.x = (x1+x2)/2 - r.width/view.z/2;
   view.y = (y1+y2)/2 - r.height/view.z/2;
+  applyView();
+  // 下限で頭打ちになった＝画面に収まっていない。横画面や小さい端末で無言にしない
+  if(z < view.z && !fitClampHinted){
+    fitClampHinted = true;
+    setHint('回路が画面に収まりきらないよ。背景をドラッグで移動、2本指ピンチで縮小できる');
+  }
+}
+// 選んだ部品が画面外なら、その分だけ視点を寄せる（キーボード操作で迷子にならないように）
+function ensureVisible(n){
+  const r = board.getBoundingClientRect();
+  if(!r.width) return;
+  const s = nodeSize(n), m = 24;
+  const vw = r.width/view.z, vh = r.height/view.z;
+  if(n.x - m < view.x) view.x = n.x - m;
+  else if(n.x + s.w + m > view.x + vw) view.x = n.x + s.w + m - vw;
+  if(n.y - m < view.y) view.y = n.y - m;
+  else if(n.y + s.h + m > view.y + vh) view.y = n.y + s.h + m - vh;
   applyView();
 }
 
@@ -1041,7 +1196,7 @@ function tryConnect(fromNodeId, toNodeId, toPort, opts={}){
   }
   if(wouldCycle(fromNodeId, toNodeId)){
     shakeNode(toNodeId);
-    toast('ループになる配線は作れません（出力が自分に戻ってきちゃう）');
+    toast('ループになる配線は作れないよ（出力が自分に戻ってきちゃう）');
     return false;
   }
   if(!opts.noSnapshot) snapshot();
@@ -1116,7 +1271,7 @@ board.addEventListener('pointerdown', e=>{
   if(portEl){
     pd = {nid:portEl.dataset.node, dir:portEl.dataset.dir, port:+portEl.dataset.port};
   }else if(!bodyEl && !wireEl){
-    const near = nearestAnyPort(w0.x, w0.y, Math.min(30, 26/Math.min(1, view.z)));
+    const near = nearestAnyPort(w0.x, w0.y, 26/Math.min(1, view.z));
     if(near) pd = near;
   }
 
@@ -1127,13 +1282,10 @@ board.addEventListener('pointerdown', e=>{
     }else{
       const exist = state.wires.find(w=>w.to.node===nid && w.to.port===port);
       if(exist){
-        // つまみ直し: 配線を外して、元の出力からのゴム線を持つ
+        // つまみ直しの候補。実際に配線を外すのはドラッグが始まってから。
+        // （押した瞬間に外すと、軽く触れただけでも配線とLEDが一瞬消えて戻るちらつきになる）
         gesture = {...base, kind:'rewire', wireId:exist.id, fromNid:exist.from,
-                   prevTo:{node:nid, port}, snap:cloneState(state)};
-        state.wires = state.wires.filter(w=>w.id!==exist.id);
-        lastValues = evaluate(state.nodes, state.wires);
-        render();
-        drawRubberFrom(nodeById(exist.from), w0);
+                   prevTo:{node:nid, port}, snap:cloneState(state), detached:false};
       }else{
         gesture = {...base, kind:'tap-in-port', nid, port};
       }
@@ -1165,7 +1317,9 @@ function pinchMove(e){
 }
 
 const trashEl = $('trash');
-function hideTrash(){ trashEl.classList.remove('show','hot'); }
+const TRASH_DEFAULT_MSG = '🗑 ここで離すと削除';
+const TRASH_LOCKED_MSG = '🔒 これは消せない部品だよ';
+function hideTrash(){ trashEl.classList.remove('show','hot','locked'); }
 
 board.addEventListener('pointermove', e=>{
   if(pinch){ pinchMove(e); return; }
@@ -1185,9 +1339,16 @@ board.addEventListener('pointermove', e=>{
     if(!gesture.snapTaken){
       snapshot(); gesture.snapTaken = true;
       const n0 = nodeById(gesture.nid);
-      if(n0 && !n0.preset){ trashEl.classList.add('show'); gesture.canTrash = true; }
+      if(n0){
+        hideToastNow(); // 直前の「削除したよ」等が次の操作のヒントに被らないよう即座に隠す
+        trashEl.textContent = n0.preset ? TRASH_LOCKED_MSG : TRASH_DEFAULT_MSG;
+        trashEl.classList.toggle('locked', !!n0.preset);
+        trashEl.classList.add('show');
+        gesture.canTrash = true;
+      }
     }
     const n = nodeById(gesture.nid);
+    if(!n){ gesture = null; hideTrash(); render(); return; } // undo等でノードが消えた場合の保険
     n.x = Math.round(gesture.ox + (w.x - gesture.wx));
     n.y = Math.round(gesture.oy + (w.y - gesture.wy));
     liveUpdateNode(n);
@@ -1199,6 +1360,13 @@ board.addEventListener('pointermove', e=>{
     }
   }
   else if(gesture.kind==='wire-from-out' || gesture.kind==='rewire'){
+    if(gesture.kind==='rewire' && !gesture.detached){
+      // ここで初めて配線を外す（ドラッグが確定した瞬間）
+      gesture.detached = true;
+      state.wires = state.wires.filter(w2=>w2.id!==gesture.wireId);
+      lastValues = evaluate(state.nodes, state.wires);
+      render();
+    }
     const srcNid = gesture.kind==='rewire' ? gesture.fromNid : gesture.nid;
     drawRubberFrom(nodeById(srcNid), w, true);
   }
@@ -1290,11 +1458,19 @@ function liveUpdateNode(n){
   }
 }
 
+// ピンチ中に片方の指だけ離れたとき、残った指をそのままパン操作に引き継ぐ。
+// （両指が完全同時に離れることはまず無いので、これが無いと残った指が無反応になる）
+function endPinchPointer(e){
+  if(e.pointerId!==pinch.id1 && e.pointerId!==pinch.id2) return;
+  const first = e.pointerId===pinch.id1;
+  const keep = {pid: first?pinch.id2:pinch.id1, x: first?pinch.x2:pinch.x1, y: first?pinch.y2:pinch.y1};
+  pinch = null;
+  gesture = {kind:'pan', pid:keep.pid, px:keep.x, py:keep.y, lx:keep.x, ly:keep.y,
+             wx:0, wy:0, moved:true, vx:view.x, vy:view.y};
+}
+
 board.addEventListener('pointerup', e=>{
-  if(pinch){
-    if(e.pointerId===pinch.id1 || e.pointerId===pinch.id2) pinch = null;
-    return;
-  }
+  if(pinch){ endPinchPointer(e); return; }
   if(!gesture || e.pointerId!==gesture.pid) return;
   const g = gesture; gesture = null;
   const w = toWorld(e.clientX, e.clientY);
@@ -1321,12 +1497,18 @@ board.addEventListener('pointerup', e=>{
     }else{
       hideTrash();
       picked = null; // 移動で終わったジェスチャはタップ配線の途中状態を引き継がない
-      if(g.canTrash && g.overTrash && n && !n.preset){
-        // ゴミ箱へドロップ → 削除（undo用snapshotはドラッグ開始時に取得済み）
-        state.nodes = state.nodes.filter(x=>x.id!==g.nid);
-        state.wires = state.wires.filter(w2=>w2.from!==g.nid && w2.to.node!==g.nid);
-        if(selection && selection.kind==='node' && selection.id===g.nid) selection = null;
-        toast('部品を削除したよ');
+      if(g.canTrash && g.overTrash && n){
+        if(n.preset){
+          // 問題の一部は消せない仕様。無反応にせず、はっきり伝える
+          shakeNode(g.nid);
+          toast('この部品は問題の一部なので消せないよ');
+        }else{
+          // ゴミ箱へドロップ → 削除（undo用snapshotはドラッグ開始時に取得済み）
+          state.nodes = state.nodes.filter(x=>x.id!==g.nid);
+          state.wires = state.wires.filter(w2=>w2.from!==g.nid && w2.to.node!==g.nid);
+          if(selection && selection.kind==='node' && selection.id===g.nid) selection = null;
+          toast('部品を削除したよ');
+        }
       }
       commit(); // 移動/削除の確定（snapshotはmove開始時に済み）
     }
@@ -1384,9 +1566,17 @@ board.addEventListener('pointerup', e=>{
     return;
   }
   if(g.kind==='rewire'){
-    // state は既に配線を外した状態。undo用スナップショットは g.snap
+    // ドラッグしていれば state は配線を外した状態。undo用スナップショットは g.snap
     picked = null;
-    const cand = g.moved ? nearestInPort(w.x, w.y, g.fromNid) : null;
+    if(!g.moved){
+      // 動かさずに離した = つまみ直しではなく「その配線を選ぶ」操作として扱う
+      if(g.detached){ state = g.snap; commit(false); }
+      selection = {kind:'wire', id:g.wireId};
+      render(); updateStatus();
+      setHint('この配線を選んだよ。ドラッグでつなぎ直し、「削除」で消せる');
+      return;
+    }
+    const cand = nearestInPort(w.x, w.y, g.fromNid);
     if(cand){
       const existing = state.wires.find(x=>x.to.node===cand.nid && x.to.port===cand.port);
       const cyc = wouldCycle(g.fromNid, cand.nid);
@@ -1399,13 +1589,7 @@ board.addEventListener('pointerup', e=>{
       }
       // 無効な接続先 → 元の配線を復元して終了（下の削除パスへ落とさない）
       if(existing) toast('その入力は接続済みだよ');
-      else toast('ループになる配線は作れません');
-      state = g.snap;
-      commit(false);
-      return;
-    }
-    if(!g.moved){
-      // 動かさず離した → 何もせず元に戻す（誤タップ保護）
+      else toast('ループになる配線は作れないよ');
       state = g.snap;
       commit(false);
       return;
@@ -1420,20 +1604,35 @@ board.addEventListener('pointerup', e=>{
 });
 
 board.addEventListener('pointercancel', e=>{
-  if(pinch){
-    if(e.pointerId===pinch.id1 || e.pointerId===pinch.id2) pinch = null;
-    return;
-  }
+  if(pinch){ endPinchPointer(e); return; }
   if(!gesture || e.pointerId!==gesture.pid) return;
   const g = gesture; gesture = null;
   picked = null;
   hideTrash();
   const rub = board.querySelector('#rubber');
   if(rub) rub.setAttribute('d','');
-  if(g.kind==='rewire'){ state = g.snap; commit(false); return; }
+  if(g.kind==='rewire'){ if(g.detached){ state = g.snap; commit(false); } else render(); return; }
   if(g.kind==='node' && g.snapTaken){ commit(); return; }
   render();
 });
+
+// ブラウザ/OSの通知やアプリ切替でpointerup/pointercancelが発火しないまま
+// ポインタ捕捉が失われることがあるための保険。放置すると盤面が無反応のまま固まる。
+function resetStuckGestures(){
+  if(palDrag){ if(palDrag.ghost) palDrag.ghost.remove(); palDrag = null; }
+  pinch = null;
+  if(!gesture) return;
+  const g = gesture; gesture = null;
+  picked = null;
+  hideTrash();
+  const rub = board.querySelector('#rubber');
+  if(rub) rub.setAttribute('d','');
+  if(g.kind==='rewire'){ if(g.detached){ state = g.snap; commit(false); } else render(); return; }
+  if(g.kind==='node' && g.snapTaken){ commit(); return; }
+  render();
+}
+window.addEventListener('blur', resetStuckGestures);
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) resetStuckGestures(); });
 
 /* ---------- ズーム ---------- */
 function zoomAt(factor, cx, cy){
@@ -1453,37 +1652,85 @@ board.addEventListener('wheel', e=>{
   e.preventDefault();
   zoomAt(e.deltaY<0 ? 1.15 : 1/1.15, e.clientX, e.clientY);
 }, {passive:false});
-window.addEventListener('resize', applyView);
+window.addEventListener('resize', ()=>{ applyView(); updatePaletteFade(); });
 
 /* ---------- ステータスバー ---------- */
 let hintTimer = null;
 function setHint(msg){
-  $('statusmsg').textContent = msg;
+  const el = $('statusmsg');
+  el.classList.remove('title'); // ヒントは折り返してでも全文見せる
+  setText(el, msg);
   clearTimeout(hintTimer);
   hintTimer = setTimeout(updateStatus, 4000);
 }
 function updateStatus(){
   clearTimeout(hintTimer);
-  if(mode==='ch' && curCh){
-    $('statusmsg').textContent = `Q${curCh.no} ${curCh.title} ${'★'.repeat(curCh.stars)}`;
-  }else{
-    const sw = state.nodes.filter(n=>n.type==='SW').length;
-    if(!state.nodes.length) $('statusmsg').textContent = 'パレットから部品をドラッグして置いてスタート';
-    else if(!state.wires.length) $('statusmsg').textContent = '●出力ポートと◯入力ポートをドラッグでつなごう（タップ→タップでもOK）';
-    else $('statusmsg').textContent = `スイッチをタップでON/OFF切替（入力${sw}個）`;
+  const el = $('statusmsg');
+  if(picked){
+    // タップ配線待ちは4秒経っても終わらない状態なので、ヒントの自動消去後も
+    // 案内文言を picked に合わせて出し続ける（ポートは点滅したままなのに文言だけ消えるのを防ぐ）
+    el.classList.remove('title');
+    setText(el, picked.dir==='out'
+      ? 'つなぎ先の入力ポート◯をタップ（もう一度押すと解除）'
+      : 'つなぎ元の出力ポート●をタップ（もう一度押すと解除）');
+    return;
   }
+  if(mode==='ch' && curCh){
+    el.classList.add('title'); // 長いタイトルでバーが2行に伸びないよう1行省略
+    setText(el, `Q${curCh.no} ${curCh.title} ${'★'.repeat(curCh.stars)}`);
+  }else{
+    el.classList.remove('title');
+    const sw = state.nodes.filter(n=>n.type==='SW').length;
+    if(!state.nodes.length) setText(el, 'パレットから部品をドラッグして置いてスタート');
+    else if(!state.wires.length) setText(el, '●出力ポートと◯入力ポートをドラッグでつなごう（タップ→タップでもOK）');
+    else setText(el, `スイッチをタップでON/OFF切替（入力${sw}個）`);
+  }
+}
+
+/* ---------- モーダル共通（シート / クリア演出） ---------- */
+let modalReturnFocus = null;
+function focusablesIn(root){
+  return [...root.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+    .filter(el=>!el.disabled && el.getClientRects().length); // 非表示のものは対象外
+}
+// 開いているモーダル（クリア演出はシートより手前）
+function activeModal(){
+  if($('clearov').classList.contains('show')) return $('clearov');
+  if($('sheet').classList.contains('show')) return $('sheet');
+  return null;
+}
+// Tabをモーダル内でループさせる（背後のヘッダー/キャンバス/パレットへ逃がさない）
+function trapTab(modal, e){
+  const f = focusablesIn(modal);
+  if(!f.length) return;
+  const first = f[0], last = f[f.length-1];
+  if(!modal.contains(document.activeElement)){ e.preventDefault(); first.focus(); }
+  else if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+}
+function restoreFocus(){
+  const back = modalReturnFocus; modalReturnFocus = null;
+  if(back && typeof back.focus==='function' && back.getClientRects && back.getClientRects().length){ back.focus(); return; }
+  // 戻り先が消えている場合（クリア演出→一覧→閉じる等）はヘッダー付近へ逃がす
+  const fb = $('helpbtn');
+  if(fb && fb.getClientRects().length) fb.focus();
 }
 
 /* ---------- シート ---------- */
 function openSheet(title, bodyHtml){
+  if(!activeModal()) modalReturnFocus = document.activeElement; // モーダル間の移動では最初の戻り先を保つ
   $('sheettitle').textContent = title;
   $('sheetbody').innerHTML = bodyHtml;
   $('sheet').classList.add('show');
   $('scrim').classList.add('show');
+  void $('sheet').offsetHeight; // 表示を確定させてからフォーカスする（visibility:hiddenのままだと乗らない）
+  $('sheetclose').focus();
 }
 function closeSheet(){
+  if(!$('sheet').classList.contains('show')) return;
   $('sheet').classList.remove('show');
   $('scrim').classList.remove('show');
+  restoreFocus();
 }
 $('sheetclose').addEventListener('click', closeSheet);
 $('scrim').addEventListener('click', closeSheet);
@@ -1495,10 +1742,10 @@ function ttHtml(withTarget){
   const tt = m ? m.tt : buildTruthTable();
   const leds = tt.leds;
   const curBits = sws.map(s=>s.value ?? 0);
-  let h = '<table class="tt"><tr>';
-  for(const s of tt.sws) h += `<th>${s.label}</th>`;
-  leds.forEach((l,i)=>{ h += `<th class="${i===0?'outcol':''}">${l.label}</th>`; });
-  if(m) leds.forEach((l,i)=>{ h += `<th class="${i===0?'outcol':''}" style="color:var(--accent-ink)">目標${l.label}</th>`; });
+  let h = `<table class="tt"><caption class="vh">${withTarget ? '目標と現在の出力の比較表' : '入力の全組み合わせと出力の真理値表'}</caption><tr>`;
+  for(const s of tt.sws) h += `<th scope="col">${escapeHtml(s.label)}</th>`;
+  leds.forEach((l,i)=>{ h += `<th scope="col" class="${i===0?'outcol':''}">${escapeHtml(l.label)}</th>`; });
+  if(m) leds.forEach((l,i)=>{ h += `<th scope="col" class="${i===0?'outcol':''}" style="color:var(--accent-ink)">目標${escapeHtml(l.label)}</th>`; });
   h += '</tr>';
   tt.rows.forEach((row,ri)=>{
     const isCur = row.inputs.every((b,i)=>b===curBits[i]);
@@ -1577,8 +1824,15 @@ $('helpbtn').addEventListener('click', ()=>{
     <ul><li>スイッチをタップすると0/1が切り替わって、信号が流れた配線は色が変わる</li>
     <li>背景ドラッグで画面移動、<b>2本指ピンチで拡大縮小</b>（PCはホイール）</li>
     <li>「真理値表」で全パターンの結果を自動生成</li></ul>
+    <h3>キーボードだけで操作する</h3>
+    <ul><li>Tabでパレットの部品へ移動して<b>Enter</b>で盤面に置く。もう一度Tabで<b>盤面</b>へ</li>
+    <li>盤面では<b>矢印キー</b>で部品を選び、<b>Enter</b>でスイッチの0/1切替</li>
+    <li><b>c</b>キーで配線開始 → つなぎ先を矢印で選んで<b>Enter</b>で接続</li>
+    <li><b>w</b>キーで配線を順に選べる（<b>Delete</b>でその配線だけ外せる）</li>
+    <li><b>Shift+矢印</b>で部品を移動、<b>Delete</b>で削除、<b>Ctrl+Z</b>で元に戻す、<b>Esc</b>で解除</li></ul>
     <h3>チャレンジ</h3>
     <ul><li>目標の真理値表と完全一致すればクリア！「目標」でどの行が違うか確認できる</li>
+    <li>ステータスバーの「一致 n/m行」は、真理値表の何行が目標と合っているかだよ</li>
     <li>回路はこの端末に自動保存されるよ</li></ul>
   </div>`);
 });
@@ -1612,27 +1866,202 @@ $('tab-ch').addEventListener('click', ()=>{
 });
 
 /* クリア演出のボタン */
-$('nextbtn').addEventListener('click', ()=>{
+function closeClearOv(restore){
+  if(!$('clearov').classList.contains('show')) return;
   $('clearov').classList.remove('show');
+  if(restore) restoreFocus();
+}
+$('nextbtn').addEventListener('click', ()=>{
+  closeClearOv(false);
   const idx = CHALLENGES.findIndex(c=>c.id===curCh.id);
   if(idx < CHALLENGES.length-1) setMode('ch', CHALLENGES[idx+1].id);
+  $('listbtn').focus(); // 次の問題へ進んだら盤面近くへフォーカスを戻す
 });
 $('tolistbtn').addEventListener('click', ()=>{
-  $('clearov').classList.remove('show');
+  closeClearOv(false);
   openChallengeList();
 });
-$('staybtn').addEventListener('click', ()=>$('clearov').classList.remove('show'));
+$('staybtn').addEventListener('click', ()=>closeClearOv(true));
+
+/* ---------- キーボードだけで回路を作る ----------
+   ポインタ操作の状態(selection / picked)をそのまま使うので、見た目のルールは共通。
+     矢印        … 選択を隣の部品へ移す
+     Shift+矢印  … 選択中の部品を動かす
+     Enter/Space … スイッチの0/1切替（配線待ちなら接続を確定）
+     c           … 配線を始める / つなぎ先へ確定
+     Delete      … 選択中の部品・配線を削除（既存のハンドラ）              */
+let kbMoveSnapAt = -1e9;   // 連続移動をひとつのundoにまとめるための時刻
+let kbMoveSnapNode = null; // そのとき動かしていた部品（変わったらundoを区切る）
+function nodeCenter(n){ const s = nodeSize(n); return {x:n.x+s.w/2, y:n.y+s.h/2}; }
+function readingOrder(){ return [...state.nodes].sort((a,b)=>(a.x-b.x)||(a.y-b.y)); }
+// 進行方向にある部品のうち、まっすぐ近いものを選ぶ
+function pickNextNode(cur, dx, dy){
+  const c = nodeCenter(cur);
+  let best = null, bd = Infinity;
+  for(const n of state.nodes){
+    if(n.id===cur.id) continue;
+    const p = nodeCenter(n);
+    const along  = (p.x-c.x)*dx + (p.y-c.y)*dy;
+    const across = Math.abs((p.x-c.x)*dy - (p.y-c.y)*dx);
+    if(along <= 1) continue;
+    const d = along + across*2;
+    if(d < bd){ bd = d; best = n; }
+  }
+  return best;
+}
+// 方向に候補が無いときは並び順で巡回して、行き止まりを作らない
+function cycleNode(cur, step){
+  const list = readingOrder();
+  const i = list.findIndex(n=>n.id===cur.id);
+  if(i<0) return list[0] || null;
+  return list[(i + step + list.length) % list.length];
+}
+function describeNode(n){
+  const base = nodeAxName(n);
+  if(n.type==='SW')  return `${base} を選択中。Enterで切替`;
+  if(n.type==='LED') return `${base} を選択中`;
+  return `${base} を選択中。cキーで配線を始められる`;
+}
+function firstFreeInPort(nid){
+  const n = nodeById(nid);
+  if(!n) return -1;
+  const ins = portsOf(n).ins;
+  for(let i=0;i<ins.length;i++){
+    if(!state.wires.some(w=>w.to.node===nid && w.to.port===i)) return i;
+  }
+  return -1;
+}
+function kbSelected(){ return (selection && selection.kind==='node') ? nodeById(selection.id) : null; }
+function kbMoveSelection(dx, dy){
+  if(!state.nodes.length){ setHint('まだ部品が無いよ。パレットの部品をEnterで置けるよ'); return; }
+  // 配線を選んでいるときは、その配線の出力元を起点にして部品の巡回へ移る
+  // （いきなり左上の部品へ飛ばず、いま見ている場所の近くから続けられるように）
+  let cur = kbSelected();
+  if(!cur && selection && selection.kind==='wire'){
+    const w = state.wires.find(x=>x.id===selection.id);
+    if(w) cur = nodeById(w.from) || null;
+  }
+  const next = cur ? (pickNextNode(cur, dx, dy) || cycleNode(cur, (dx+dy)>0 ? 1 : -1)) : readingOrder()[0];
+  if(!next) return;
+  selection = {kind:'node', id:next.id};
+  render();
+  ensureVisible(next);
+  setHint(describeNode(next));
+}
+function kbMoveSelectedNode(dx, dy){
+  const n = kbSelected();
+  if(!n){ setHint('先に矢印キーで部品を選んでね'); return; }
+  const now = performance.now();
+  // 押しっぱなしの移動は1回のundoにまとめる。ただし対象の部品が変わったら必ず区切る
+  // （別々の部品の移動が1つのundoに混ざると、Ctrl+Zで両方戻ってしまうため）
+  if(now - kbMoveSnapAt > 700 || kbMoveSnapNode !== n.id) snapshot();
+  kbMoveSnapAt = now;
+  kbMoveSnapNode = n.id;
+  n.x = Math.round(n.x + dx*8);
+  n.y = Math.round(n.y + dy*8);
+  commit();
+  ensureVisible(n);
+}
+function kbConnect(){
+  const n = kbSelected();
+  if(!n){ setHint('矢印キーで部品を選んでから c キーを押してね'); return; }
+  if(picked){
+    if(picked.nodeId===n.id){ picked = null; render(); updateStatus(); setHint('配線をやめたよ'); return; }
+    if(picked.dir==='in'){
+      // 入力ポート側から始まった配線待ち（マウスで空きポートをタップした場合など）。
+      // 向きが逆なので、選んだ部品の出力を picked のポートへつなぐ
+      if(!portsOf(n).outs.length){ setHint('LEDからは配線を始められないよ。つなぎ元の部品を選んでね'); return; }
+      if(tryConnect(n.id, picked.nodeId, picked.port)) setHint('つないだよ');
+      return;
+    }
+    const port = firstFreeInPort(n.id);
+    if(port < 0){ shakeNode(n.id); toast('その部品の入力はもう全部つながってるよ'); return; }
+    if(tryConnect(picked.nodeId, n.id, port)) setHint('つないだよ');
+    return;
+  }
+  if(!portsOf(n).outs.length){ setHint('LEDからは配線を始められないよ。つなぎ元の部品を選んでね'); return; }
+  picked = {nodeId:n.id, dir:'out', port:0};
+  render();
+  setHint('つなぎ先の部品を矢印キーで選んで Enter（cキーで解除）');
+}
+// 配線はポインタでしか選べなかったので、キーボードでも順に選べるようにする
+// （選べれば既存のDelete/「削除」ボタンがそのまま配線の取り外しに使える）
+function kbCycleWire(){
+  if(!state.wires.length){ setHint('配線がまだ無いよ。cキーでつなげるよ'); return; }
+  const cur = (selection && selection.kind==='wire')
+    ? state.wires.findIndex(w=>w.id===selection.id) : -1;
+  const ni = (cur + 1) % state.wires.length;
+  const w = state.wires[ni];
+  selection = {kind:'wire', id:w.id};
+  picked = null;
+  render();
+  const a = nodeById(w.from), b = nodeById(w.to.node);
+  if(a) ensureVisible(a);
+  setHint(`配線 ${ni+1}/${state.wires.length}（${a?nodeAxName(a):'？'} → ${b?nodeAxName(b):'？'}）を選択中。Deleteで外せる`);
+}
+function kbPrimary(){
+  if(picked){ kbConnect(); return; }
+  const n = kbSelected();
+  if(!n){ setHint('矢印キーで部品を選んでね'); return; }
+  if(n.type==='SW'){
+    n.value = (n.value ?? 0) ^ 1;
+    commit();
+    setHint(`スイッチ${n.label}を${n.value}にしたよ`);
+    return;
+  }
+  kbConnect(); // ゲート/LEDのEnterは配線の開始・確定にあてる
+}
+// 盤面をさわった直後にDeleteや矢印キーが効くよう、フォーカスも盤面へ移す。
+// ただしpointerdownの既定動作は止めてあるので、そのまま focus() するとブラウザが
+// 「キーボード由来のフォーカス」と見なして盤面全体に枠を描いてしまう。
+// data-ptr を立てて、ポインタ由来のときだけ枠を抑止する。
+board.addEventListener('pointerdown', ()=>{
+  board.setAttribute('data-ptr','');
+  if(document.activeElement!==board){ try{ board.focus({preventScroll:true}); }catch(err){} }
+});
+window.addEventListener('keydown', ()=>board.removeAttribute('data-ptr'), true);
+board.addEventListener('focus', ()=>{
+  // キーボードで到達したときだけ操作方法を案内する（タップでの移動時は出さない）
+  if(!board.hasAttribute('data-ptr')) setHint('矢印で部品を選択、Enterで切替、cで配線、wで配線を選択、Shift+矢印で移動');
+});
 
 /* キーボード（PC） */
 window.addEventListener('keydown', e=>{
   if(e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+  if(e.isComposing) return; // IME変換中のキーは拾わない
+  // モーダル表示中はTabを閉じ込め、Escapeで閉じる。
+  // 盤面のショートカット(削除/undo)は背後で効かせない（見えない部品が消える事故を防ぐ）
+  const modal = activeModal();
+  if(modal){
+    if(e.key==='Tab'){ trapTab(modal, e); }
+    else if(e.key==='Escape'){ e.preventDefault(); modal===$('clearov') ? closeClearOv(true) : closeSheet(); }
+    return;
+  }
+  // ポインタ操作(ドラッグ/配線/ピンチ等)進行中はショートカットを無視。
+  // 途中のstateにundo/redoが割り込むとスタックが壊れるため。
+  if(gesture || pinch || palDrag) return;
+  // 盤面にフォーカスがあるときだけ、矢印/Enter/cを回路操作にあてる
+  // （パレットやボタンにフォーカスがある間は、そちらの既定動作を邪魔しない）
+  if((document.activeElement===board || document.activeElement===document.body)
+     && !e.ctrlKey && !e.metaKey && !e.altKey){
+    const dir = {ArrowLeft:[-1,0], ArrowRight:[1,0], ArrowUp:[0,-1], ArrowDown:[0,1]}[e.key];
+    if(dir){
+      e.preventDefault();
+      if(e.shiftKey) kbMoveSelectedNode(dir[0], dir[1]);
+      else kbMoveSelection(dir[0], dir[1]);
+      return;
+    }
+    if(e.key==='Enter' || e.key===' '){ e.preventDefault(); kbPrimary(); return; }
+    if(e.key==='c' || e.key==='C'){ e.preventDefault(); kbConnect(); return; }
+    if(e.key==='w' || e.key==='W'){ e.preventDefault(); kbCycleWire(); return; }
+  }
   if((e.key==='Delete' || e.key==='Backspace') && selection){
     e.preventDefault();
     if(selection.kind==='wire') removeWire(selection.id);
     else removeNode(selection.id);
   }else if((e.ctrlKey||e.metaKey) && e.key==='z' && !e.shiftKey){ e.preventDefault(); undo(); }
   else if((e.ctrlKey||e.metaKey) && (e.key==='y' || (e.key==='z'&&e.shiftKey))){ e.preventDefault(); redo(); }
-  else if(e.key==='Escape'){ picked=null; selection=null; render(); updateStatus(); closeSheet(); }
+  else if(e.key==='Escape'){ picked=null; selection=null; render(); updateStatus(); }
 });
 
 /* ---------- 自己テスト（コンソールから window.__selfTest() で実行） ---------- */
@@ -1685,11 +2114,30 @@ window.__selfTest = function(){
 
 /* ---------- 起動 ---------- */
 (function init(){
-  const lastMode = store.get('lastMode', null);
-  if(lastMode==='ch'){
-    setMode('ch', store.get('lastCh', CHALLENGES[0].id));
-  }else{
-    setMode('free');
+  try{
+    const lastMode = store.get('lastMode', null);
+    if(lastMode==='ch'){
+      setMode('ch', store.get('lastCh', CHALLENGES[0].id));
+    }else{
+      setMode('free');
+    }
+  }catch(e){
+    // validCircuitをすり抜ける想定外のデータが来ても、白紙のまま固まらせない最後の砦。
+    // いきなり全消しにはせず「自由制作で開く」→ それも駄目なら初期化、の順で諦める。
+    console.error('保存データの読み込みに失敗:', e);
+    idSeq = 1; selection = null; picked = null; undoStack = []; redoStack = [];
+    try{
+      setMode('free');
+      toast('保存データの一部が読めなかったので自由制作で開いたよ', 3600);
+    }catch(e2){
+      console.error('自由制作の復帰にも失敗したため保存データを初期化します:', e2);
+      try{ store.reset(); }catch(e3){}
+      idSeq = 1;
+      try{
+        setMode('free');
+        toast('保存データが読めなかったので、まっさらな状態で始めるよ', 3600);
+      }catch(e3){ console.error(e3); }
+    }
   }
   if(!store.get('visited', false)){
     store.set('visited', true);
