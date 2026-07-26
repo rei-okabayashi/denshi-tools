@@ -1,0 +1,3602 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>基本情報 科目B 実践演習｜本試験形式・数値が変わる12問</title>
+<meta name="description" content="基本情報技術者試験（FE）科目Bの本試験（公開問題）と同じ外形のオリジナル12問。擬似言語9問＋セキュリティ3問。数値や変種がシードで毎回変わるので暗記が効かず、実践力が鍛えられます。スマホだけでトレースできる道具（コード固定表示・トレース表・専用キーパッド）つき。">
+<meta name="theme-color" content="#F1EEE5">
+<meta property="og:title" content="基本情報 科目B 実践演習｜本試験形式・数値が変わる12問">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nerunerunerure-hue.github.io/denshi-tools/fe-kamoku-b-jissen.html">
+<meta property="og:description" content="科目B本試験（公開問題）と同じ外形のオリジナル12問。数値・変種がシードで毎回変わるので暗記が効かない。スマホだけでトレースできる道具つき。">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme:light;
+    --bg:#F1EEE5; --ground:#E6E1D4; --surface:#FCFBF7; --surface2:#F2EFE6; --surface3:#EAE4D5;
+    --accent:#BE5A38; --accent-dim:#D69B81; --accent-soft:#F3E5DA; --accent-line:#E6C3B0; --accent-ink:#A54E31;
+    --ink:#211F1A; --ink-dim:#716C61;
+    --blue:#4A6FA5; --blue-soft:#E3EAF3; --blue-ink:#46699D;
+    --green:#4f6b3a; --green-soft:#E7EDDC;
+    --warn:#9a5a22; --warn-soft:#F5E8D4;
+    --border:#E2DCCD;
+    --sans:'Hanken Grotesk','Hiragino Kaku Gothic ProN','Meiryo','Yu Gothic',system-ui,sans-serif;
+    --mono:'JetBrains Mono','SFMono-Regular','Consolas',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{background:var(--bg)}
+  @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+  }
+  body{font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.85;
+    padding:0 14px calc(48px + env(safe-area-inset-bottom));-webkit-font-smoothing:antialiased}
+  .wrap{max-width:780px;margin:0 auto}
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(241,238,229,.93);backdrop-filter:blur(8px);
+    margin:0 -14px;padding:10px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+  .topbar a{color:var(--accent-ink);text-decoration:none;font-weight:600;font-size:.86rem}
+  .topbar .crumb{font-size:.86rem;color:var(--ink-dim)}
+  .topbar .prog{margin-left:auto;font-size:.8rem;color:var(--ink-dim);background:var(--surface);
+    border:1px solid var(--border);border-radius:99px;padding:2px 12px;font-weight:600;white-space:nowrap}
+  .topbar .prog b{color:var(--green)}
+  .hero{padding:26px 4px 6px}
+  .hero .eyebrow{color:var(--accent-ink);font-weight:700;font-size:.8rem;letter-spacing:.08em}
+  .hero h1{font-size:1.5rem;font-weight:700;margin:4px 0 8px}
+  .hero p.lead{color:var(--ink-dim);font-size:.9rem}
+  .lead a{color:var(--accent-ink);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+  .toc{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0 8px;scroll-margin-top:56px}
+  .toc a{font-size:.76rem;text-decoration:none;color:var(--ink);background:var(--surface);
+    border:1px solid var(--border);border-radius:99px;padding:4px 11px;transition:.12s}
+  .toc a:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
+  main{display:flex;flex-direction:column;gap:18px;margin-top:14px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    padding:22px 20px;scroll-margin-top:64px;box-shadow:0 1px 2px rgba(50,38,24,.04)}
+  .card h2{font-size:1.13rem;margin-bottom:6px}
+  .card>p{font-size:.9rem;margin:8px 0}
+  .card p.sub{font-size:.85rem;color:var(--ink-dim)}
+  .card ul,.card ol{font-size:.9rem;padding-left:1.5em;margin:8px 0}
+  .card li{margin:4px 0}
+  .card a{color:var(--accent-ink)}
+  .mini{font-size:.78rem;color:var(--ink-dim)}
+  .hidden{display:none}
+  .btn{border:none;border-radius:11px;padding:12px 18px;font-family:var(--sans);font-weight:700;
+    font-size:.9rem;cursor:pointer;transition:.12s}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn-main{background:var(--accent-ink);color:#fff}
+  .btn-main:hover{background:#A84C2E}
+  .btn-main:focus-visible{box-shadow:inset 0 0 0 2px rgba(255,255,255,.9)}
+  .btn-sub{background:var(--surface2);color:var(--ink);border:1px solid var(--border)}
+  .btn-sub:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
+  .btn-sub:focus-visible{box-shadow:inset 0 0 0 2px var(--accent-dim)}
+  .btn-sm{padding:9px 16px;font-size:.84rem}
+  /* ── 問題一覧 ── */
+  .plist{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .prow{display:flex;align-items:center;gap:10px;background:#FFFEFB;border:1px solid var(--border);
+    border-radius:12px;padding:10px 12px;flex-wrap:wrap}
+  .prow .pcat{font-size:.7rem;font-weight:700;color:var(--blue-ink);background:var(--blue-soft);
+    border-radius:6px;padding:1px 7px;white-space:nowrap}
+  .prow .pcat.sec{color:var(--warn);background:var(--warn-soft)}
+  .prow .pt{font-weight:700;font-size:.9rem;min-width:0;flex:1 1 160px}
+  .prow .pmeta{font-size:.74rem;color:var(--ink-dim);white-space:nowrap}
+  .prow .pstat{font-size:.74rem;font-weight:700;color:var(--ink-dim);white-space:nowrap}
+  .prow .pstat.done{color:var(--green)}
+  .prow .pstat.mid{color:var(--accent-ink)}
+  .prow .btn{margin-left:auto}
+  /* ── 出題 ── */
+  #arena{scroll-margin-top:56px}
+  .qhead{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;margin-bottom:6px}
+  .qhead .tag{font-size:.74rem;color:var(--ink-dim);letter-spacing:.03em;font-weight:600}
+  .qhead .tag b{color:var(--accent-ink)}
+  .qhead .timer{margin-left:auto;font-family:var(--mono);font-size:.82rem;color:var(--ink-dim);
+    background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:2px 11px;font-weight:600}
+  .qp{font-size:.92rem;margin:10px 0;line-height:1.9}
+  .qnote{font-size:.84rem;color:var(--ink-dim);border-left:3px solid var(--border);padding:2px 0 2px 10px;margin:10px 0}
+  .qbox{margin:12px 0}
+  .qbox-b{border:1.5px solid var(--ink-dim);border-radius:4px;padding:10px 16px;font-size:.9rem;line-height:1.85;background:var(--surface)}
+  .qbox-b ul{margin:2px 0;padding-left:1.5em}
+  .qbox-b li{margin:3px 0}
+  .qbox-t{text-align:center;font-size:.8rem;font-weight:700;margin-top:6px}
+  .qtblwrap{overflow-x:auto;margin:10px 0;-webkit-overflow-scrolling:touch}
+  .qtbl{border-collapse:collapse;font-size:.85rem;margin:2px 0}
+  .qtbl th,.qtbl td{border:1px solid var(--border);padding:4px 12px;background:var(--surface);text-align:center}
+  .qtbl th{background:var(--surface3);font-size:.77rem}
+  .qtbl td.l,.qtbl th.l{text-align:left}
+  .fig{margin:12px 0;text-align:center}
+  .figscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .fig svg{max-width:100%;height:auto}
+  .fig figcaption{font-size:.78rem;color:var(--ink-dim);margin-top:4px}
+  .sethint{display:none;font-size:.72rem;color:var(--ink-dim);margin:2px 0 0}
+  @media (max-width:640px){
+    .figscroll svg{min-width:560px}
+    .sethint{display:block}
+  }
+  /* コード（行番号・行タップ・固定） */
+  .codewrap{margin:12px 0}
+  .codehead{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .codehead .clabel{font-size:.84rem;font-weight:700}
+  .btn-pin{margin-left:auto;background:var(--surface2);border:1px solid var(--border);border-radius:99px;
+    color:var(--ink-dim);font-family:var(--sans);font-size:.74rem;font-weight:700;padding:5px 12px;cursor:pointer;transition:.12s}
+  .btn-pin:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
+  .btn-pin:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn-pin[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-ink)}
+  .codebox{font-family:var(--mono);font-size:.84rem;line-height:1.7;background:var(--surface2);
+    border:1px solid var(--border);border-radius:10px;padding:10px 8px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .codebox.pinned{position:sticky;top:50px;z-index:40;max-height:42vh;overflow:auto;background:#FBF8F0;
+    border-color:var(--accent-dim);box-shadow:0 10px 22px rgba(50,38,24,.16)}
+  .cl{display:flex;white-space:pre;min-width:max-content;border-radius:6px;padding:1px 4px;cursor:pointer}
+  .cl .ln{flex-shrink:0;width:2em;text-align:right;margin-right:10px;color:var(--ink-dim);opacity:.65;user-select:none;font-size:.76rem;line-height:1.9}
+  .cl.cur{background:var(--accent-soft);box-shadow:inset 2.5px 0 0 var(--accent-ink)}
+  .cl u{text-decoration-thickness:1px;text-underline-offset:3px}
+  .blank{display:inline-block;min-width:2.3em;text-align:center;border:1.5px solid var(--accent-ink);
+    border-radius:6px;background:var(--accent-soft);color:var(--accent-ink);font-weight:700;padding:0 5px;margin:0 2px;font-family:var(--sans)}
+  .cw{display:inline-block;font-size:.72rem;font-weight:700;color:var(--accent-ink);border:1px solid var(--accent-line);
+    background:var(--accent-soft);border-radius:5px;padding:0 5px;margin-right:2px;font-family:var(--sans)}
+  /* 設問・選択肢 */
+  .qt{font-size:.98rem;font-weight:700;line-height:1.8;margin:14px 0 4px}
+  .choices{display:flex;flex-direction:column;gap:8px;margin:12px 0 2px}
+  .choice{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;
+    background:var(--surface2);border:1px solid var(--border);border-radius:11px;padding:11px 14px;
+    font-family:var(--sans);font-size:.92rem;line-height:1.6;color:var(--ink);cursor:pointer;transition:.12s}
+  .choice:hover{border-color:var(--accent-dim)}
+  .choice:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .choice .kn{font-weight:700;color:var(--accent-ink);flex-shrink:0}
+  .choice .cv{min-width:0;overflow-wrap:anywhere}
+  .choice .cv.cm{font-family:var(--mono);font-size:.87rem}
+  .choice:disabled{cursor:default;opacity:.55}
+  .choice.correct,.choice.correct:disabled{background:var(--green-soft);border-color:#C2D0AE;color:var(--green);opacity:1}
+  .choice.correct .kn{color:var(--green)}
+  .choice.wrong,.choice.wrong:disabled{background:var(--warn-soft);border-color:#E8D3B0;color:var(--warn);opacity:1}
+  .choice.wrong .kn{color:var(--warn)}
+  /* ヒント */
+  .hintline{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0}
+  .btn-hint{background:var(--blue-soft);color:var(--blue-ink);border:1px solid #C9D6E8;border-radius:99px;
+    padding:7px 14px;font-size:.8rem;font-weight:700;font-family:var(--sans);cursor:pointer;transition:.12s}
+  .btn-hint:hover{filter:brightness(.97)}
+  .btn-hint:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hintbox{font-size:.85rem;background:var(--blue-soft);border:1px dashed #A8BBD6;border-radius:10px;
+    padding:9px 12px;margin:8px 0 0;line-height:1.75}
+  .hintbox b{color:var(--blue-ink)}
+  /* 解答後 */
+  .ansbox{border-top:1px dashed var(--border);margin-top:14px;padding-top:12px}
+  .verdict{font-size:1.05rem;font-weight:700}
+  .verdict.good{color:var(--green)}
+  .verdict.bad{color:var(--warn)}
+  .statline{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.82rem;color:var(--ink-dim);font-weight:600;margin:8px 0}
+  .statline b{color:var(--accent-ink)}
+  .statline .g{color:var(--green)}
+  .exp{font-size:.87rem;color:var(--ink);margin-top:10px;line-height:1.85}
+  .exp p{margin:8px 0}
+  .exp ul{padding-left:1.4em;margin:6px 0;font-size:.86rem}
+  .exp code{font-family:var(--mono);font-size:.85em;background:var(--surface2);border-radius:5px;padding:0 4px}
+  .exp pre{font-family:var(--mono);font-size:.82rem;line-height:1.65;background:var(--surface2);
+    border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin:8px 0;
+    overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:pre}
+  .ttracewrap{overflow-x:auto;margin:8px 0;-webkit-overflow-scrolling:touch}
+  .ttrace{border-collapse:collapse;font-size:.82rem}
+  .ttrace th,.ttrace td{border:1px solid var(--border);padding:3px 10px;text-align:center;background:var(--surface)}
+  .ttrace th{background:var(--surface3);font-size:.75rem}
+  .origin{font-size:.76rem;color:var(--ink-dim);margin-top:10px}
+  .nextline{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .nextline .btn{flex:1;min-width:140px}
+  /* ── トレースツール ── */
+  details.ttool{margin:12px 0;border:1px solid var(--border);border-radius:12px;background:var(--surface2)}
+  details.ttool summary{cursor:pointer;font-weight:700;font-size:.86rem;padding:11px 14px;user-select:none;border-radius:12px}
+  details.ttool summary:hover{color:var(--accent-ink)}
+  details.ttool summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .ttool-body{padding:2px 12px 12px}
+  .ttool-body .mini{margin:2px 0 8px}
+  .ttwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+  table.tt{border-collapse:collapse}
+  table.tt th,table.tt td{border:1px solid var(--border);padding:0;background:var(--surface)}
+  table.tt th{background:var(--surface3)}
+  table.tt input{border:none;background:transparent;font-family:var(--mono);font-size:16px;
+    width:5.2em;padding:7px 6px;text-align:center;color:var(--ink);min-height:24px}
+  table.tt th input{font-family:var(--sans);font-weight:700;font-size:.8rem;color:var(--ink)}
+  table.tt input:focus{outline:none;background:var(--accent-soft)}
+  table.tt input:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  table.tt input.sel{background:var(--accent-soft);outline:2px solid var(--accent);outline-offset:-2px}
+  table.tt td.rowdel{padding:0}
+  table.tt .rowdel button{border:none;background:none;color:var(--ink-dim);font-size:.9rem;cursor:pointer;
+    padding:6px 9px;min-width:24px;min-height:24px;font-family:var(--sans)}
+  table.tt .rowdel button:hover{color:var(--warn)}
+  table.tt .rowdel button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .ttctl{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .ttctl .btn{padding:8px 14px;font-size:.8rem}
+  .ttmemo{width:100%;margin-top:10px;font-family:var(--mono);font-size:16px;line-height:1.7;color:var(--ink);
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 11px;min-height:72px;resize:vertical}
+  .ttmemo:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  /* キーパッド */
+  .kpad{position:fixed;left:0;right:0;bottom:0;z-index:90;background:rgba(252,251,247,.98);
+    border-top:1px solid var(--border);box-shadow:0 -6px 18px rgba(50,38,24,.12);
+    padding:8px 10px calc(8px + env(safe-area-inset-bottom))}
+  .kpad-inner{max-width:440px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .kpad button{border:1px solid var(--border);border-radius:9px;background:var(--surface);color:var(--ink);
+    font-family:var(--mono);font-size:1.05rem;font-weight:600;padding:10px 0;min-height:42px;cursor:pointer}
+  .kpad button:active{background:var(--accent-soft)}
+  .kpad button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  .kpad button.kfn{font-family:var(--sans);font-size:.8rem;color:var(--accent-ink);background:var(--accent-soft);border-color:var(--accent-line)}
+  /* 早見表・リンク ── */
+  details.gd{border:1px solid var(--border);border-radius:12px;background:var(--surface2);margin:10px 0}
+  details.gd summary{cursor:pointer;font-weight:700;font-size:.9rem;padding:12px 14px;user-select:none;border-radius:12px}
+  details.gd summary:hover{color:var(--accent-ink)}
+  details.gd summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  details.gd .gd-body{padding:2px 14px 14px}
+  .ttbl{border-collapse:collapse;font-family:var(--sans);font-size:.84rem;margin:10px 0}
+  .ttbl th,.ttbl td{border:1px solid var(--border);padding:3px 14px;text-align:center;background:var(--surface)}
+  .ttbl th{background:var(--surface3);font-size:.76rem}
+  .ttbl td:first-child{font-family:var(--mono)}
+  .point{background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:12px;
+    padding:12px 16px;margin:14px 0 2px;font-size:.88rem}
+  .point .tt{font-weight:700;color:var(--accent-ink);font-size:.84rem;display:block;margin-bottom:4px}
+  .related{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .related a{flex:1;min-width:200px;display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;
+    background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:11px 14px;
+    font-size:.84rem;font-weight:600;transition:.12s}
+  .related a:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
+  .pager{display:flex;justify-content:space-between;gap:12px;margin-top:6px}
+  .pager a{flex:1;text-decoration:none;background:var(--surface);border:1px solid var(--border);
+    border-radius:13px;padding:13px 16px;color:var(--ink);font-size:.86rem;font-weight:600;transition:.12s}
+  .pager a:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
+  .pager a.next{text-align:right}
+  .pager .dir{display:block;font-size:.7rem;color:var(--ink-dim);font-weight:500}
+  footer{text-align:center;color:var(--ink-dim);font-size:.72rem;margin-top:26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="topbar">
+  <a href="fe-kamoku-b.html">‹ 科目B反復</a>
+  <span class="crumb">科目B実践</span>
+  <span class="prog">攻略 <b id="p-done">0</b>/<span id="p-total">12</span></span>
+</header>
+
+<div class="hero">
+  <div class="eyebrow">KAMOKU-B JISSEN</div>
+  <h1>🏋️ 科目B 実践演習 — 本試験形式</h1>
+  <p class="lead">IPAの公開問題と同じ外形（前書き→プログラム→設問→解答群）で作ったオリジナル12問。<b>数値や処理の変種がシードで毎回変わる</b>ので、答えの暗記が効きません。<a href="fe-kamoku-b.html">反復トレーニング（80問）</a>で型を身につけたあと、ここで本番の重さに慣れるのがおすすめです。スマホしか無くてもトレースできる道具つき。</p>
+  <nav class="toc" aria-label="ページ内目次">
+    <a href="#howto">📖 使い方</a>
+    <a href="#plist-card">🎯 問題一覧</a>
+    <a href="#mobile-guide">📱 スマホでトレース</a>
+    <a href="#cheat">🔣 記号早見表</a>
+    <a href="#links">🔗 復習リンク</a>
+  </nav>
+</div>
+
+<main>
+
+<section class="card" id="howto">
+  <h2>📖 使い方 — 本番のつもりで1問ずつ</h2>
+  <ul>
+    <li>一覧から1問選んで<b>「挑戦する」</b>。タイマーが回り始めます（本試験の感覚：科目Bは<b>20問100分</b>。ここの12問は重めの構成で目安合計 約100分）。</li>
+    <li>紙とペンがあるなら<b>紙でトレース</b>が本番同様で最強。スマホだけなら<b>🧮トレースツール</b>（下の<a href="#mobile-guide">説明</a>）を使ってください。</li>
+    <li>詰まったら💡ヒント（着眼点→組み立ての2段階）。それでも無理なら答えを見て、<b>解説のトレース表を自分の手で再現</b>してください。</li>
+    <li>解き終わったら<b>「🎲 数値を変えてもう一度」</b>。<b>別の数値で2回正解すると「攻略」</b>です。数値が変わっても解けて初めて、その型が身についたことになります。</li>
+  </ul>
+</section>
+
+<section class="card" id="plist-card">
+  <h2>🎯 問題一覧 — 擬似言語9問＋セキュリティ3問</h2>
+  <p class="sub">どの問題も公開問題の「型」を踏襲したオリジナルです。順番どおりでなくてOK。苦手分野から着手するなら、先に<a href="fe-algo.html">アルゴリズム解説</a>で該当項目を読み直してから挑むと効率的です。</p>
+  <div class="plist" id="plist"></div>
+</section>
+
+<section class="card" id="arena-card" hidden>
+  <div id="arena"></div>
+</section>
+
+<section class="card" id="mobile-guide">
+  <h2>📱 スマホでのトレースのしかた</h2>
+  <ol>
+    <li><b>📌 コードを固定</b> — プログラム右上のピンを押すと、コードが画面上部に貼り付いて、下の設問や選択肢を読んでいる間も見え続けます（コード自体は中でスクロール可）。</li>
+    <li><b>🧮 トレースツールを開く</b> — 変数の列があらかじめ入ったトレース表が出ます。セルをタップすると<b>専用キーパッド</b>（画面下）が出て、数字をすばやく入力できます。列の見出しも書き換え・追加OK。</li>
+    <li><b>行マーカー</b> — コードの行をタップすると「いま実行している行」に印が付きます。どこまで進めたか迷子にならないように。</li>
+    <li>文字を入れたいセルは、キーパッドの <b>⌨️ 自由入力</b> でスマホのキーボードに切り替えられます。メモ欄（自由記入）もあります。</li>
+  </ol>
+  <div class="point"><span class="tt">⚡ ポイント</span>
+    <ul>
+      <li>トレース表は<b>1周＝1行</b>が基本。ループのたびに「＋行」で足していきましょう。</li>
+      <li>本番はPC画面＋<b>紙のメモ用紙</b>です。ここで型を作り、直前には紙でも1回練習しておくと安心。</li>
+    </ul>
+  </div>
+</section>
+
+<section class="card" id="cheat">
+  <h2>🔣 擬似言語の記号 早見表</h2>
+  <details class="gd">
+    <summary>記号が読めなくなったらここを開く</summary>
+    <div class="gd-body">
+      <table class="ttbl">
+        <thead><tr><th scope="col">記号</th><th scope="col">意味</th></tr></thead>
+        <tbody>
+          <tr><td>←</td><td>右の値を左の変数に入れる（代入）</td></tr>
+          <tr><td>≦ ≧ ≠</td><td>以下・以上・等しくない</td></tr>
+          <tr><td>mod</td><td>割った余り（7 mod 3 は 1）</td></tr>
+          <tr><td>÷ … の商</td><td>割り算の整数部分（13 ÷ 10 の商 は 1）</td></tr>
+          <tr><td>and / or / not</td><td>かつ・または・〜でない</td></tr>
+          <tr><td>{1, 2, 3}</td><td>配列。要素番号は<b>1始まりが基本</b>（注記を確認）</td></tr>
+          <tr><td>a[i]</td><td>配列aのi番目の要素</td></tr>
+          <tr><td>/* … */</td><td>コメント。<b>プログラムの目的が書いてある宝の山</b></td></tr>
+          <tr><td>○ f(引数)</td><td>関数・手続きの定義</td></tr>
+          <tr><td>return</td><td>呼び出し元に値を返して終わる</td></tr>
+          <tr><td>大域:</td><td>どの関数からも読み書きできる変数</td></tr>
+          <tr><td>obj.member</td><td>オブジェクトobjのメンバ（フィールドやメソッド）</td></tr>
+        </tbody>
+      </table>
+      <p class="mini">文法の全体像は <a href="fe-algo.html#al-2">9-2 擬似言語の読み方①</a>・<a href="fe-algo.html#al-3">9-3 読み方②</a> へ。</p>
+    </div>
+  </details>
+</section>
+
+<section class="card" id="links">
+  <h2>🔗 復習リンク</h2>
+  <div class="related">
+    <a href="fe-kamoku-b.html">🔁 科目B 反復トレーニング<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">短い80問で型を作る。実践演習の前段</span></a>
+    <a href="fe-algo.html">🧩 科目B アルゴリズム解説<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">擬似言語の文法からトレースまで全18項目</span></a>
+    <a href="fe-security.html">🔒 セキュリティ解説<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">ケース問題の知識のベース</span></a>
+    <a href="https://www.ipa.go.jp/shiken/mondai-kaiotu/sg_fe/koukai/2025r07.html" target="_blank" rel="noopener">📄 IPA 公開問題（2025年度）<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">本物の過去問。仕上げに必ず解く</span></a>
+  </div>
+</section>
+
+</main>
+
+<nav class="pager">
+  <a href="fe-kamoku-b.html"><span class="dir">‹ もどる</span>科目B 反復トレーニング</a>
+  <a href="fe-cram.html" class="next"><span class="dir">つぎへ ›</span>直前対策ドリル</a>
+</nav>
+
+<footer>基本情報 学習ノート ─ 科目B 実践演習（本試験形式）</footer>
+<div id="kpad-spacer" hidden aria-hidden="true" style="height:235px"></div>
+</div>
+
+<div class="kpad hidden" id="kpad" role="group" aria-label="トレース表用キーパッド">
+  <div class="kpad-inner">
+    <button type="button" data-k="7">7</button><button type="button" data-k="8">8</button><button type="button" data-k="9">9</button>
+    <button type="button" class="kfn" data-k="bs" aria-label="1文字消す">⌫</button><button type="button" class="kfn" data-k="clr">クリア</button>
+    <button type="button" data-k="4">4</button><button type="button" data-k="5">5</button><button type="button" data-k="6">6</button>
+    <button type="button" class="kfn" data-k="next">→ 次</button><button type="button" class="kfn" data-k="row">＋行</button>
+    <button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button>
+    <button type="button" class="kfn" data-k="free">⌨️ 自由入力</button><button type="button" class="kfn" data-k="close">閉じる</button>
+    <button type="button" data-k="0">0</button><button type="button" data-k="-">−</button><button type="button" data-k=",">,</button>
+    <button type="button" class="kfn" data-k="sp" aria-label="空白">空白</button><button type="button" class="kfn" data-k="undef">未定義</button>
+  </div>
+</div>
+
+<script>
+/*__B2_CONTRACT_START__*/
+'use strict';
+/* ============================================================
+ * 科目B 実践問題集 — テンプレート共通ヘルパ (B2H)
+ * browser: window.B2H / node: module.exports
+ * テンプレートは gen(rng) の中でこのヘルパだけを使う。
+ * Date.now() / Math.random() の使用は禁止（決定性が壊れる）。
+ * ============================================================ */
+(function (root, factory) {
+  if (typeof module !== 'undefined' && module.exports) { module.exports = factory(); }
+  else { root.B2H = factory(); }
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  const H = {};
+
+  /* ── 乱数（mulberry32・シード決定的） ── */
+  H.makeRng = function (seed) {
+    let a = seed >>> 0;
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  };
+  H.ri = (rng, min, max) => min + Math.floor(rng() * (max - min + 1));   // 両端含む整数
+  H.pick = (rng, arr) => arr[Math.floor(rng() * arr.length)];
+  H.shuffle = (rng, arr) => {                                            // 非破壊
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(rng() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  };
+  H.take = (rng, arr, k) => H.shuffle(rng, arr).slice(0, k);             // 重複なしk個
+
+  /* ── HTML ── */
+  H.esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  H.blank = ch => '<span class="blank">' + ch + '</span>';               // 穴埋めの空欄（a, b…）
+  H.kana = ['ア', 'イ', 'ウ', 'エ', 'オ', 'カ', 'キ', 'ク', 'ケ', 'コ'];
+  H.stripTags = s => String(s).replace(/<[^>]*>/g, '');
+
+  /* ── 解答群ビルダー ──
+   * 数値解答群: 正解値 + 誤答候補[{v,why}] → 重複除去し昇順（IPAの数値解答群は昇順が通例）。
+   * 戻り値 notes には「実際に表示された誤答」だけが残る（解説文の組み立てに使う）。 */
+  H.numOptions = function (rng, correct, cands, opts) {
+    opts = opts || {};
+    const count = opts.count || 5;
+    const seen = new Set([String(correct)]);
+    const notes = [];
+    for (const c of cands) {
+      if (notes.length >= count - 1) break;
+      const key = String(c.v);
+      if (seen.has(key)) continue;
+      seen.add(key); notes.push(c);
+    }
+    const vals = [{ v: correct, correct: true }].concat(notes.map(n => ({ v: n.v })));
+    vals.sort((x, y) => x.v - y.v);
+    return {
+      options: vals.map(o => ({ html: H.esc(o.v), mono: true })),
+      answer: vals.findIndex(o => o.correct),
+      notes
+    };
+  };
+
+  /* 一般解答群: 正解{h,why?} + 誤答候補[{h,why}] → 重複除去してシャッフル。
+   * h はHTML文字列（テンプレート側で esc 済みにすること）。 */
+  H.listOptions = function (rng, correct, cands, opts) {
+    opts = opts || {};
+    const count = opts.count || 6;
+    const norm = s => H.stripTags(String(s)).replace(/\s+/g, ' ').trim();
+    const seen = new Set([norm(correct.h)]);
+    const notes = [];
+    for (const c of cands) {
+      if (notes.length >= count - 1) break;
+      const key = norm(c.h);
+      if (seen.has(key)) continue;
+      seen.add(key); notes.push(c);
+    }
+    let arr = [{ h: correct.h, correct: true }].concat(notes.map(n => ({ h: n.h })));
+    arr = (opts.shuffle === false) ? arr : H.shuffle(rng, arr);
+    return {
+      options: arr.map(o => ({ html: o.h, mono: !!opts.mono })),
+      answer: arr.findIndex(o => o.correct),
+      notes
+    };
+  };
+
+  /* 数列（出力列など）を解答用テキストに */
+  H.seq = arr => arr.join(', ');
+
+  /* 空欄2つの組合せ選択肢 1行分: pair('x ＋ 1', 'i ← i − 1') */
+  H.pair = (a, b) => '<span class="cw">a</span> <code>' + a + '</code>　<span class="cw">b</span> <code>' + b + '</code>';
+
+  /* 解説用トレース表（横スクロールの受け皿つき） */
+  H.traceTable = function (heads, rows) {
+    let s = '<div class="ttracewrap"><table class="ttrace"><thead><tr>' + heads.map(h => '<th>' + H.esc(h) + '</th>').join('') + '</tr></thead><tbody>';
+    for (const r of rows) s += '<tr>' + r.map(c => '<td>' + H.esc(c) + '</td>').join('') + '</tr>';
+    return s + '</tbody></table></div>';
+  };
+
+  return H;
+});
+
+/*__B2_CONTRACT_END__*/
+</script>
+<script>
+'use strict';
+window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[def.id] = def; } };
+</script>
+<script>
+/*__B2_TEMPLATES_START__*/
+/* ---- jb01 ---- */
+'use strict';
+/* ============================================================
+ * jb01: 文法・トレース — 重み付きチェックディジット
+ * 型の出典: 令和4年サンプル問題 問1（整数のけた分解を while で回すトレース）の型
+ * 乱数化: num(4けた) / 重みの開始値(1か3) / 仕上げ規則(1の位 or 10−1の位)
+ * ============================================================ */
+(function (root) {
+  const H = (typeof module !== 'undefined' && module.exports) ? require('./contract.js') : root.B2H;
+
+  const def = {
+    id: 'jb01', cat: 'bas', type: 'trace',
+    title: '重み付きチェックディジットの計算',
+    est: 5, ref: 'fe-algo.html#al-4',
+    origin: '令和4年サンプル問題 問1（整数のけた分解トレース）の型',
+
+    gen(rng) {
+      /* ── パラメータ抽選 ── */
+      const w0 = H.pick(rng, [1, 3]);        // 最下位のけたの重み
+      const w1 = 4 - w0;
+      const ruleB = rng() < 0.5;             // false: 1の位 / true: 10−1の位
+      let digits, num, models;
+
+      /* 4けたの数字。誤答モデルの値は「差が常に偶数」の構造で同パリティに固まりやすい
+       * （0〜9のうち実質5値しか取れない）ため，パリティを破るモデル(skip)を混ぜた上で
+       * 60回まで引き直し，最も値がばらけたドローを採用する */
+      let best = null;
+      for (let attempt = 0; attempt < 60; attempt++) {
+        const dg = [H.ri(rng, 0, 9), H.ri(rng, 0, 9), H.ri(rng, 0, 9), H.ri(rng, 1, 9)]; // d0(最下位)〜d3
+        const nm = dg[3] * 1000 + dg[2] * 100 + dg[1] * 10 + dg[0];
+
+        const wsum = ws => dg.reduce((s, d, i) => s + d * ws[i % 2], 0); // ws=[最下位の重み, 次の重み]
+        const finish = (s, b) => { const m = s % 10; return b ? (m === 0 ? 0 : 10 - m) : m; };
+
+        const sumMain = wsum([w0, w1]);
+        if (sumMain < 10) continue;          // mod が効かない自明ケースは避ける
+        const md = {
+          correct: finish(sumMain, ruleB),
+          rev:  { v: finish(wsum([w1, w0]), ruleB), why: '重みを最上位のけたから順に掛けてしまった場合の値' },
+          flip: { v: finish(sumMain, !ruleB), why: ruleB ? '10 から引く処理を忘れ，合計の 1 の位のままとした場合の値' : '合計の 1 の位を 10 から引いてしまった（定義の読み違え）場合の値' },
+          skip: { v: finish(sumMain - dg[3] * w1, ruleB), why: '最上位のけたの処理を忘れ，下 3 けた分だけで仕上げた場合の値' },
+          noT:  { v: finish(dg.reduce((s, d) => s + d * w0, 0), ruleB), why: 'w ← 4 − w の切り替えを見落とし，全部のけたに重み ' + w0 + ' を掛けた場合の値' },
+          noW:  { v: finish(dg.reduce((a, b) => a + b, 0), ruleB), why: '重みを掛けず，単なる各けたの合計として計算した場合の値' },
+          raw:  { v: sumMain, why: '重み付き合計のまま，endwhile より下の仕上げの処理を忘れた場合の値' }
+        };
+        const uniq = new Set([md.correct, md.rev.v, md.flip.v, md.skip.v, md.noT.v, md.noW.v, md.raw.v]);
+        if (!best || uniq.size > best.uniq) best = { uniq: uniq.size, dg, nm, md };
+        if (uniq.size >= 6) break;           // 正解+誤答5種が確保できたら即採用
+      }
+      digits = best.dg; num = best.nm; models = best.md;
+
+      /* ── 問題文 ── */
+      const wListLow = w0 + '，' + w1 + '，' + w0 + '，' + w1;
+      const ruleText = ruleB
+        ? '重み付き合計の 1 の位の数字を 10 から引いた値とする。ただし，重み付き合計の 1 の位が 0 の場合は 0 とする'
+        : '重み付き合計の 1 の位の数字とする';
+      const intro = [
+        { t: 'p', html: '次のプログラム中の関数 checkDigit は，4けたの正の整数 num を受け取り，誤入力を検査するための数字（チェックディジット）を返す。チェックディジットを求めるには，まず，num の各けたの数字に，最下位のけたから順に ' + wListLow + ' の重みを掛けて合計する（以下，この合計を重み付き合計という）。チェックディジットは，' + ruleText + '。' },
+        {
+          t: 'code', lines: (function () {
+            const L = [];
+            L.push('○整数型: checkDigit(整数型: num)');
+            L.push('  整数型: s ← 0');
+            L.push('  整数型: w ← ' + w0 + '  /* 最下位のけたに掛ける重み */');
+            L.push('  while (num が 0 より大きい)');
+            L.push('    s ← s ＋ (num mod 10) × w');
+            L.push('    w ← 4 − w  /* 重みを ' + w0 + ' と ' + w1 + ' とで交互に切り替える */');
+            L.push('    num ← num ÷ 10 の商');
+            L.push('  endwhile');
+            L.push('  s ← s mod 10');
+            if (ruleB) {
+              L.push('  if (s が 0 と等しくない)');
+              L.push('    s ← 10 − s');
+              L.push('  endif');
+            }
+            L.push('  return s');
+            return L.map(H.esc);
+          })()
+        }
+      ];
+
+      /* ── 解答群 ── */
+      const built = H.numOptions(rng, models.correct,
+        [models.rev, models.flip, models.skip, models.noT, models.noW, models.raw], { count: 5 });
+
+      /* ── 解説（トレース表つき） ── */
+      const rows = [];
+      let s = 0, w = w0, n = num, step = 0;
+      rows.push(['（初期値）', String(n), '0', String(w)]);
+      while (n > 0) {
+        step++;
+        const d = n % 10;
+        s += d * w;
+        const wNext = 4 - w;
+        n = Math.floor(n / 10);
+        rows.push([step + '周目', String(n), s + '（+' + d + '×' + w + '）', String(wNext)]);
+        w = wNext;
+      }
+      const mod10 = s % 10;
+      const finishText = ruleB
+        ? 's ← s mod 10 で ' + mod10 + '，' + (mod10 === 0 ? '1 の位が 0 なので if の中は実行されず 0' : 'if で 10 − ' + mod10 + ' = ' + (10 - mod10)) + ' が戻り値'
+        : 's ← s mod 10 で ' + mod10 + ' が戻り値';
+      let exp = '「コンピュータのふり」で while を全周回します。各周の終わりの値：'
+        + H.traceTable(['周', 'num', 's', 'w（次の周で使う値）'], rows)
+        + '<p>重み付き合計は s = ' + s + '。仕上げは ' + H.esc(finishText) + '。'
+        + '検算：' + digits.map((d, i) => d + '×' + (i % 2 === 0 ? w0 : w1)).join(' + ') + ' = ' + s + ' ✓</p>';
+      if (built.notes.length) {
+        exp += '<p><b>誤答の作られ方</b>（本試験の誤答は「ありがちなミス」から逆算されています）：</p><ul>'
+          + built.notes.map(nte => '<li><code>' + H.esc(nte.v) + '</code> … ' + H.esc(nte.why) + '</li>').join('')
+          + '</ul>';
+      }
+
+      return {
+        intro,
+        question: '関数 checkDigit を checkDigit(' + num + ') として呼び出したとき，戻り値はどれか。解答群の中から選べ。',
+        options: built.options,
+        answer: built.answer,
+        hints: [
+          'w は「4 − w」で ' + w0 + '→' + w1 + '→' + w0 + '…と交互に切り替わります。num の下のけたから順に、(num mod 10)×w をトレース表に1行ずつ書いて s に足し込んでいきましょう。',
+          'endwhile を抜けたあとに s がどう変化するかも、トレース表の最終行として最後まで書き切ってから、解答群と照合しましょう。'
+        ],
+        exp,
+        traceVars: ['num', 's', 'w']
+      };
+    }
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = def;
+  else root.B2.register(def);
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+/* ---- jb02 ---- */
+'use strict';
+/* ============================================================
+ * jb02: 配列 — 1次元配列の要素移動（空欄a×bの組合せ）
+ * 型の出典: 令和8年度 公開問題 問1（配列の回転・for の制御記述を選ぶ）＋
+ *           令和4年サンプル問題 問2（配列の逆順・両端の入替え）の型
+ * 乱数化: 変種(右回転/左回転/逆順) / 例示配列(5〜6要素の相異なる値) /
+ *         解答群に載せる空欄a・空欄bの候補の顔ぶれと個数（＝行数・並び・正解位置）
+ * 一意性: 空欄a候補7種 × 空欄b候補5種 の全35組合せを実際に実行し，
+ *         仕様どおりの結果になる組合せが1つだけになるドローだけを採用する。
+ * ============================================================ */
+(function (root) {
+  const H = (typeof module !== 'undefined' && module.exports) ? require('./contract.js') : root.B2H;
+
+  /* ── 空欄a（for の制御記述）の候補プール ── */
+  const A_POOL = [
+    { key: 'half', txt: 'i を 1 から n ÷ 2 の商 まで 1 ずつ増やす', from: n => 1, to: n => Math.floor(n / 2), step: 1 },
+    { key: 'f1n1', txt: 'i を 1 から n − 1 まで 1 ずつ増やす', from: n => 1, to: n => n - 1, step: 1 },
+    { key: 'f1n', txt: 'i を 1 から n まで 1 ずつ増やす', from: n => 1, to: n => n, step: 1 },
+    { key: 'f2n', txt: 'i を 2 から n まで 1 ずつ増やす', from: n => 2, to: n => n, step: 1 },
+    { key: 'bn1', txt: 'i を n から 1 まで 1 ずつ減らす', from: n => n, to: n => 1, step: -1 },
+    { key: 'bn2', txt: 'i を n から 2 まで 1 ずつ減らす', from: n => n, to: n => 2, step: -1 },
+    { key: 'bn11', txt: 'i を n − 1 から 1 まで 1 ずつ減らす', from: n => n - 1, to: n => 1, step: -1 }
+  ];
+  /* ── 空欄b（参照する要素番号）の候補プール ── */
+  const B_POOL = [
+    { key: 'im1', txt: 'i − 1', f: (i, n) => i - 1 },
+    { key: 'ip1', txt: 'i ＋ 1', f: (i, n) => i + 1 },
+    { key: 'nmi', txt: 'n − i', f: (i, n) => n - i },
+    { key: 'nmi1', txt: 'n − i ＋ 1', f: (i, n) => n - i + 1 },
+    { key: 'nmi2', txt: 'n − i ＋ 2', f: (i, n) => n - i + 2 }
+  ];
+  /* 正解候補と紛らわしい「1つずれ」の相手（高い確率で誤答へ入れるが，必ずではない） */
+  const TWIN_A = { half: 'f1n', f1n1: 'f1n', f1n: 'f1n1', f2n: 'f1n1', bn1: 'bn2', bn2: 'bn1', bn11: 'bn1' };
+  const TWIN_B = { im1: 'ip1', ip1: 'im1', nmi: 'nmi1', nmi1: 'nmi', nmi2: 'nmi1' };
+
+  /* ── 解答群の並び ──
+   * 候補の顔ぶれ（集合）だけから決まる整列。同じ顔ぶれなら常に同じ並びになり，
+   * 顔ぶれが変われば並びも変わるので，「正解はいつも同じ行」という位置バレが起きない。
+   * rng は使わない（並びはシードではなく候補集合の関数）。 */
+  const fnv = s => {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+    return h >>> 0;
+  };
+  const arrange = list => {
+    const sig = list.map(x => x.txt).slice().sort().join('|');
+    return list.slice().sort((x, y) =>
+      (fnv(sig + '#' + x.txt) - fnv(sig + '#' + y.txt)) || (x.txt < y.txt ? -1 : 1));
+  };
+
+  const VARIANTS = {
+    right: {
+      fn: 'rotateRight',
+      spec: '全ての要素を一つずつ後ろへずらし，末尾にあった要素を先頭に移した配列を返す',
+      pre: n => 'tmp ← data[n]', post: '  data[1] ← tmp',
+      target: a => [a[a.length - 1]].concat(a.slice(0, a.length - 1))
+    },
+    left: {
+      fn: 'rotateLeft',
+      spec: '全ての要素を一つずつ前へずらし，先頭にあった要素を末尾に移した配列を返す',
+      pre: n => 'tmp ← data[1]', post: '  data[n] ← tmp',
+      target: a => a.slice(1).concat([a[0]])
+    },
+    rev: {
+      fn: 'reverseArray',
+      spec: '要素の並びを逆順にした配列を返す',
+      pre: null, post: null,
+      target: a => a.slice().reverse()
+    }
+  };
+
+  /* 空欄a・bに候補を入れたときのプログラムを実際に走らせる。
+   * 配列の領域外を参照したら null（＝そもそも成立しない組合せ）を返す。 */
+  function simulate(vk, A, B, src) {
+    const n = src.length;
+    const d = src.slice();                 // d[k-1] が擬似言語の data[k]
+    if (n <= 1) return d;
+    let tmp;
+    if (vk === 'right') tmp = d[n - 1];
+    if (vk === 'left') tmp = d[0];
+    const to = A.to(n), st = A.step;
+    for (let i = A.from(n); st > 0 ? i <= to : i >= to; i += st) {
+      const j = B.f(i, n);
+      if (i < 1 || i > n || j < 1 || j > n) return null;
+      if (vk === 'rev') { const t = d[i - 1]; d[i - 1] = d[j - 1]; d[j - 1] = t; }
+      else d[i - 1] = d[j - 1];
+    }
+    if (vk === 'right') d[0] = tmp;
+    if (vk === 'left') d[n - 1] = tmp;
+    return d;
+  }
+  const same = (x, y) => x !== null && y !== null && x.join(',') === y.join(',');
+
+  const def = {
+    id: 'jb02', cat: 'arr', type: 'fill',
+    title: '1次元配列の要素移動',
+    est: 8, ref: 'fe-algo.html#al-5',
+    origin: '令和8年度 公開問題 問1（配列の回転・for の制御記述）／令和4年サンプル問題 問2（配列の逆順）の型',
+
+    gen(rng) {
+      const vk = H.pick(rng, ['right', 'left', 'rev']);
+      const V = VARIANTS[vk];
+      const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+      /* ── ドロー（最大60回引き直し）──
+       * 条件: 例示配列だけで全35組合せのうち仕様どおりになるのが1つ，
+       *       かつその1つが長さの異なる検証用配列でも仕様どおりに動くこと。 */
+      let best = null;
+      for (let attempt = 0; attempt < 60; attempt++) {
+        const nEx = H.ri(rng, 5, 6);
+        const ex = H.take(rng, digits, nEx);
+        const probes = [H.take(rng, digits, 5), H.take(rng, digits, 6), H.take(rng, digits, 7)];
+
+        const hits = [];
+        for (const A of A_POOL) for (const B of B_POOL) {
+          if (same(simulate(vk, A, B, ex), V.target(ex))) hits.push({ A, B });
+        }
+        const okAll = hits.length === 1 &&
+          probes.every(p => same(simulate(vk, hits[0].A, hits[0].B, p), V.target(p)));
+        if (okAll) { best = { ex, A: hits[0].A, B: hits[0].B }; break; }
+      }
+      /* 条件を満たすドローが引けなかったら黙って誤答を正解にせず，失敗させる（fail-loud） */
+      if (!best) throw new Error('jb02: 一意な正解をもつ例示配列を引けませんでした（60回）');
+      const ex = best.ex, Ac = best.A, Bc = best.B, n = ex.length;
+
+      /* ── 解答群に載せる候補を選ぶ（正解＋抽選した誤答。顔ぶれはシードで動く） ── */
+      const shape = H.pick(rng, [[2, 3], [3, 2], [3, 3]]);
+      const pickCands = (pool, cor, twin, cnt) => {
+        const rest = H.shuffle(rng, pool.filter(x => x.key !== cor.key));
+        const tw = twin[cor.key] && twin[cor.key] !== cor.key
+          ? rest.find(x => x.key === twin[cor.key]) : null;
+        /* 「1つずれ」の相手は良い誤答なので出やすくするが，毎回は入れない */
+        const order = (tw && rng() < 0.6) ? [tw].concat(rest.filter(x => x !== tw)) : rest;
+        return arrange([cor].concat(order.slice(0, cnt - 1)));   // 並びは顔ぶれから決まる
+      };
+      const aList = pickCands(A_POOL, Ac, TWIN_A, shape[0]);
+      const bList = pickCands(B_POOL, Bc, TWIN_B, shape[1]);
+
+      const options = [], rows = [];
+      for (const A of aList) for (const B of bList) {
+        rows.push({ A, B, correct: A.key === Ac.key && B.key === Bc.key });
+        options.push({ html: H.pair(H.esc(A.txt), H.esc(B.txt)) });
+      }
+      const answer = rows.findIndex(r => r.correct);
+
+      /* ── 〔プログラム〕 ── */
+      const cmt = '  /* 要素が 1 個以下のときは並びは変わらない */';
+      const lines = [];
+      lines.push(H.esc('○整数型の配列: ' + V.fn + '(整数型の配列: data)'));
+      lines.push(H.esc('  整数型: i'));
+      lines.push(H.esc('  整数型: n ← dataの要素数'));
+      if (V.pre) lines.push(H.esc('  整数型: tmp'));
+      lines.push(H.esc('  if (n が 1 以下)' + cmt));
+      lines.push(H.esc('    return data'));
+      lines.push(H.esc('  endif'));
+      if (V.pre) lines.push(H.esc('  ' + V.pre(n)));
+      lines.push(H.esc('  for (') + H.blank('a') + H.esc(')'));
+      if (vk === 'rev') lines.push(H.esc('    data[i]とdata[') + H.blank('b') + H.esc(']の値を入れ替える'));
+      else lines.push(H.esc('    data[i] ← data[') + H.blank('b') + H.esc(']'));
+      lines.push(H.esc('  endfor'));
+      if (V.post) lines.push(H.esc(V.post));
+      lines.push(H.esc('  return data'));
+
+      const arr = a => '{' + a.join(', ') + '}';
+      const intro = [
+        {
+          t: 'p', html: '関数 ' + H.esc(V.fn) + ' は，引数で与えられた整数型の配列 data の' + V.spec
+            + '。なお，関数は引数で受け取った配列そのものを書き換える。'
+        },
+        {
+          t: 'p', html: '例えば，data が ' + H.esc(arr(ex)) + ' のとき，戻り値は '
+            + H.esc(arr(V.target(ex))) + ' となる。'
+        },
+        { t: 'code', lines }
+      ];
+
+      /* ── 解説：正解を入れたときのトレース ── */
+      const tr = [];
+      const d = ex.slice();
+      let tmp = null;
+      if (vk === 'right') { tmp = d[n - 1]; tr.push(['for の前', 'tmp ← data[' + n + ']（tmp は ' + tmp + '）', arr(d)]); }
+      if (vk === 'left') { tmp = d[0]; tr.push(['for の前', 'tmp ← data[1]（tmp は ' + tmp + '）', arr(d)]); }
+      if (vk === 'rev') tr.push(['for の前', '（初期状態）', arr(d)]);
+      const to = Ac.to(n), st = Ac.step;
+      for (let i = Ac.from(n); st > 0 ? i <= to : i >= to; i += st) {
+        const j = Bc.f(i, n);
+        let act;
+        if (vk === 'rev') { act = 'data[' + i + '] と data[' + j + '] を入れ替える'; const t = d[i - 1]; d[i - 1] = d[j - 1]; d[j - 1] = t; }
+        else { act = 'data[' + i + '] ← data[' + j + ']（' + d[j - 1] + '）'; d[i - 1] = d[j - 1]; }
+        tr.push(['i = ' + i, act, arr(d)]);
+      }
+      if (vk === 'right') { d[0] = tmp; tr.push(['for の後', 'data[1] ← tmp（' + tmp + '）', arr(d)]); }
+      if (vk === 'left') { d[n - 1] = tmp; tr.push(['for の後', 'data[' + n + '] ← tmp（' + tmp + '）', arr(d)]); }
+
+      /* ── 解説：表示された誤答が例示配列でどう外れるかを実測して書く ── */
+      const fail = (A, B) => {
+        const r = simulate(vk, A, B, ex);
+        return r === null
+          ? '配列の領域外（要素番号 0 又は ' + (n + 1) + '）を参照してしまいます'
+          : '戻り値が ' + arr(r) + ' となり、例と一致しません';
+      };
+      const aBad = aList.filter(A => A.key !== Ac.key)
+        .map(A => '<li>a が <code>' + H.esc(A.txt) + '</code> だと、' + H.esc(fail(A, Bc)) + '。</li>').join('');
+      const bBad = bList.filter(B => B.key !== Bc.key)
+        .map(B => '<li>b が <code>' + H.esc(B.txt) + '</code> だと、' + H.esc(fail(Ac, B)) + '。</li>').join('');
+
+      let exp = '<p>正解は '
+        + H.pair(H.esc(Ac.txt), H.esc(Bc.txt))
+        + ' です。data が ' + H.esc(arr(ex)) + ' の場合を、正解の組合せで最後まで動かすと次のようになります。</p>'
+        + H.traceTable(['場所', '実行される処理', '処理後の data'], tr)
+        + '<p>最後の data は ' + H.esc(arr(d)) + ' で、前書きの例（' + H.esc(arr(V.target(ex))) + '）と一致します ✓</p>'
+        + '<p><b>誤答の作られ方</b>（片方だけ合っていても不正解になるのが組合せ問題です）：</p>'
+        + '<p>空欄 a を差し替えると（b は正解のまま）：</p><ul>' + aBad + '</ul>'
+        + '<p>空欄 b を差し替えると（a は正解のまま）：</p><ul>' + bBad + '</ul>'
+        + '<p>要素番号が 0 や ' + (n + 1) + ' になる組合せは、配列の領域外を参照するので、動かすまでもなく消せます。'
+        + '残りは要素番号 1 と ' + n + '（両端）で試すと、早く見分けが付きます。</p>';
+
+      /* ── ヒント（解かずに読んでも選択肢は絞れない粒度にする） ── */
+      const hint1 = (vk === 'rev')
+        ? '入れ替える相手の要素番号をどう書くかが鍵です。例示された配列を見ながら、「1 番目の要素は最後にどこにあるか、2 番目はどこか」という移動先の対応表を先に作りましょう。'
+        : 'for の前後にある 2 行（値の退避と書き戻し）が、配列のどちらの端を扱っているかを最初に確認しましょう。for の中の代入は「どの要素の値を、どの要素へ写すか」だけなので、写す向きと、for が要素番号をたどる向きの関係がここで決まります。';
+      const hint2 = '組合せを全部試す前に、b を1つ仮に決めて、i が 1 のときと ' + n
+        + ' のときに何が起きるかだけを見ましょう。要素番号が 0 や ' + (n + 1)
+        + ' になる組合せはその場で消えます。残った組合せは、例示された配列を実際に 1 行ずつ書き換えていき、前書きの戻り値と一致するかを確かめましょう。';
+
+      return {
+        intro,
+        question: '次のプログラム中の ' + H.blank('a') + ' と ' + H.blank('b')
+          + ' に入れる正しい答えの組合せを，解答群の中から選べ。ここで，配列の要素番号は 1 から始まる。',
+        options,
+        answer,
+        hints: [hint1, hint2],
+        exp
+      };
+    }
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = def;
+  else root.B2.register(def);
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+/* ---- jb03 ---- */
+'use strict';
+/* ============================================================
+ * jb03: 文字列・ビット — ビット列の集計（穴埋め）
+ * 型の出典: 令和4年サンプル問題 問2（ビット操作の穴埋め）の型
+ * 乱数化: 仕様バリアント(1の個数/偶数パリティ) / 例示の入力値 / 候補の並び順
+ * 一意性: 全候補組合せを複数入力でシミュレートし正解だけが仕様を満たすことをassert
+ * 設計メモ: 「8回固定ループ」だと 0を数える実装と 1を数えて8から引く実装が
+ *   両方正しくなり組合せの一意性が壊れる → while(x>0) 型で構造的に回避
+ * ============================================================ */
+(function (root) {
+  const H = (typeof module !== 'undefined' && module.exports) ? require('./contract.js') : root.B2H;
+
+  const popcount = x => { let c = 0; while (x > 0) { c += x % 2; x = Math.floor(x / 2); } return c; };
+
+  const def = {
+    id: 'jb03', cat: 'str', type: 'fill',
+    title: 'ビット列の集計',
+    est: 8, ref: 'fe-algo.html#al-3',
+    origin: '令和4年サンプル問題 問2（ビット操作の穴埋め）の型',
+
+    gen(rng) {
+      const parity = rng() < 0.5;                    // false: 1の個数 / true: 偶数パリティ
+      const fname = parity ? 'parity' : 'bitCount';
+
+      /* 例示用の入力値: 表示がそれらしくなる範囲で抽選 */
+      let ex;
+      for (let i = 0; i < 40; i++) {
+        ex = H.ri(rng, 64, 255);
+        const pc = popcount(ex);
+        if (pc >= 3 && pc <= 6) break;
+      }
+      const exBin = ex.toString(2).padStart(8, '0');
+      const exPc = popcount(ex);
+      const exRet = parity ? exPc % 2 : exPc;
+
+      /* ── 候補 ──
+       * a は正解+誤答2種（4種のプールから抽選）。表示順は文字列の決定的整列
+       * （実物の解答群はランダム順ではない）。正解の位置は「どの誤答を引いたか」で
+       * 動き、b 側は変種で動くので、6肢のどこにも正解が来得る */
+      const A_POOL = [
+        { key: 'mod2', t: 'x mod 2' },
+        { key: 'yori', t: 'x ÷ 2 の余り' },
+        { key: 'minus1', t: 'x − 1' },
+        { key: 'minus2', t: 'x − 2' },
+      ];
+      const aCands = H.take(rng, A_POOL, 2).concat([{ key: 'div', t: 'x ÷ 2 の商' }]);
+      aCands.sort((s, u) => s.t < u.t ? -1 : 1);
+      const bCands = [
+        { key: 'cnt', t: 'cnt' },
+        { key: 'mod', t: 'cnt mod 2' },
+      ];
+      const bOk = parity ? 'mod' : 'cnt';
+
+      /* ── 一意性の機械検証: 全6組合せ × テスト入力で正解だけが仕様と一致 ── */
+      const spec = x => (parity ? popcount(x) % 2 : popcount(x));
+      const tests = [0, 1, 2, 3, 4, 7, 8, 96, 128, 170, 255];
+      for (let i = 0; i < 20; i++) tests.push(H.ri(rng, 5, 254));
+      let okCount = 0;
+      for (const a of aCands) for (const b of bCands) {
+        const pass = tests.every(x => {
+          /* runComboを使わずここで素直に実行（mod2の特殊挙動を正確に） */
+          let xx = x, cnt = 0, g = 0, dead = false;
+          while (xx > 0) {
+            if (++g > 64) { dead = true; break; }
+            if (xx % 2 === 1) cnt++;
+            xx = a.key === 'div' ? Math.floor(xx / 2)
+              : a.key === 'minus1' ? xx - 1
+              : a.key === 'minus2' ? xx - 2
+              : xx % 2;                              /* mod2 / yori */
+          }
+          if (dead) return false;
+          const ret = b.key === 'cnt' ? cnt : cnt % 2;
+          return ret === spec(x);
+        });
+        if (pass) okCount++;
+        if (pass && !(a.key === 'div' && b.key === bOk))
+          throw new Error('一意性違反: ' + a.key + '/' + b.key + ' も仕様を満たす');
+      }
+      if (okCount !== 1) throw new Error('一意性検証失敗: okCount=' + okCount);
+
+      /* ── 問題文 ── */
+      const specText = parity
+        ? '2進数で表したときの 1 のビットの個数が偶数のとき 0 を，奇数のとき 1 を返す。この値は，通信でのビット誤りの検出に使う検査ビット（偶数パリティ）である'
+        : '2進数で表したときの 1 のビットの個数を返す';
+      const exText = parity
+        ? '例えば，x が ' + ex + ' の場合，x の2進数表現は ' + exBin + ' であり，1 のビットは ' + exPc + ' 個（' + (exPc % 2 === 0 ? '偶数' : '奇数') + '）なので戻り値は ' + exRet + ' である。'
+        : '例えば，x が ' + ex + ' の場合，x の2進数表現は ' + exBin + ' であり，1 のビットは ' + exPc + ' 個なので戻り値は ' + exRet + ' である。';
+
+      const intro = [
+        { t: 'p', html: '関数 ' + fname + ' は，8ビットの符号なし整数 x（0 以上 255 以下）を受け取り，x を' + specText + '。' + exText },
+        {
+          t: 'code', lines: [
+            '○整数型: ' + fname + '(整数型: x)',
+            '  整数型: cnt ← 0',
+            '  while (x が 0 より大きい)',
+            '    if (x mod 2 が 1 と等しい)',
+            '      cnt ← cnt ＋ 1',
+            '    endif',
+            '    x ← @a@',
+            '  endwhile',
+            '  return @b@',
+          ].map(s => H.esc(s).replace('@a@', H.blank('a')).replace('@b@', H.blank('b')))
+        },
+      ];
+
+      /* ── 解答群（直積・候補の表示順） ── */
+      const whyA = {
+        div: null,
+        minus1: 'x − 1 は x を 1 ずつ減らすだけで、2進数のけたを 1 つずつ送り出せない',
+        minus2: 'x − 2 は x を 2 ずつ減らすだけで、2進数のけたを 1 つずつ送り出せない',
+        mod2: 'x が奇数のときは x が 1 のまま変わらず、while が終わらない（無限ループになる）。x が偶数のときも 1 周で x が 0 になり、残りのけたを調べられない',
+        yori: 'x ÷ 2 の余り は x mod 2 と同じ値。x が奇数のときは x が 1 のまま変わらず、while が終わらない（無限ループになる）',
+      };
+      const options = []; const notes = [];
+      let answer = -1; let idx = 0;
+      for (const a of aCands) for (const b of bCands) {
+        options.push({ html: H.pair(H.esc(a.t), H.esc(b.t)), mono: false });
+        const isOk = a.key === 'div' && b.key === bOk;
+        if (isOk) answer = idx;
+        else {
+          const why = whyA[a.key] || (parity
+            ? 'cnt（1 のビットの個数そのもの）を返しており，偶数のとき 0 という定義に合わない'
+            : 'cnt mod 2 は個数の偶奇であり，個数そのものという定義に合わない');
+          notes.push({ label: H.kana[idx], a: a.t, b: b.t, why });
+        }
+        idx++;
+      }
+
+      /* ── 解説 ── */
+      const rows = [];
+      let xx = ex, cnt = 0, step = 0;
+      rows.push(['（初期値）', String(xx) + '（' + exBin + '）', '0']);
+      while (xx > 0) {
+        step++;
+        const bit = xx % 2;
+        cnt += bit;
+        xx = Math.floor(xx / 2);
+        rows.push([step + '周目', String(xx), cnt + (bit ? '（+1）' : '（そのまま）')]);
+      }
+      let exp = '<p>このループは「x mod 2 で最下位ビットを調べ，x ÷ 2 の商 でけたを 1 つ右に送る」の繰返しです。'
+        + 'a に <code>x ÷ 2 の商</code> を入れたときだけ，全部のけたを 1 回ずつ調べて while が終わります。'
+        + '例の x = ' + ex + '（' + exBin + '）でトレースすると：</p>'
+        + H.traceTable(['周', 'x（実行後）', 'cnt'], rows)
+        + '<p>cnt には 1 のビットの個数（' + exPc + '）が数え上がるので，b は'
+        + (parity ? 'その偶奇 <code>cnt mod 2</code>（= ' + exRet + '）' : '個数そのもの <code>cnt</code>（= ' + exRet + '）')
+        + 'が定義と一致します。検算：' + exBin + ' の 1 は ' + exPc + ' 個 ✓</p>'
+        + '<p><b>誤答の消し方</b>：</p><ul>'
+        + notes.slice(0, 4).map(n => '<li><b>' + n.label + '</b>（a=' + H.esc(n.a) + '／b=' + H.esc(n.b) + '）… ' + H.esc(n.why) + '</li>').join('')
+        + (notes.length > 4 ? '<li>（残りも同じ理由の組合せです）</li>' : '')
+        + '</ul>';
+
+      return {
+        intro,
+        question: '次のプログラム中の ' + H.blank('a') + ' と ' + H.blank('b') + ' に入れる正しい答えの組合せを，解答群の中から選べ。',
+        options, answer,
+        hints: [
+          'a の候補それぞれについて、x = 5 くらいの小さい値で while を数周だけ回してみましょう。全部のけたを 1 回ずつ調べて正しく止まる更新式はどれか、で a が決まります（止まらなくなる候補もあります）。',
+          'b は関数の定義文（何を返すか）で決まります。a を決めたトレースで cnt に何が数え上がっているかを確かめてから、定義（個数そのものか、偶奇か）に合う式を選びましょう。',
+        ],
+        exp,
+        traceVars: ['x', 'cnt'],
+      };
+    }
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = def;
+  else root.B2.register(def);
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+/* ---- jb04 ---- */
+'use strict';
+/* ============================================================
+ * jb04: 関数・再帰 — 二分岐再帰のトレース
+ * 型の出典: 2022年12月公開サンプル問題セット 問7（階乗の再帰）／
+ *           令和8年度公開問題 問3（再帰と反復の等価変換）の型
+ * 乱数化: 減算幅(p, q) / 基底の2値(a0, a1) / 呼出し引数 N /
+ *         設問（戻り値 or 関数 f の呼出し回数）/ 表示する誤答の組合せ
+ * ============================================================ */
+(function (root) {
+  const H = (typeof module !== 'undefined' && module.exports) ? require('./contract.js') : root.B2H;
+
+  const def = {
+    id: 'jb04', cat: 'fnc', type: 'trace',
+    title: '再帰関数の呼出しと戻り値',
+    est: 8, ref: 'fe-algo.html#al-7',
+    origin: '2022年12月公開サンプル問題セット 問7（再帰関数のトレース）の型',
+
+    gen(rng) {
+      /* 設問の種類は最初に確定させる（誤答モデルの集合が変わるため） */
+      const modeCnt = rng() < 0.5;              // true: 呼出し回数 / false: 戻り値
+      // (p, q) は p < q。共通因数をもつ組（2,4 など）は木が退化するので入れない
+      const PAIRS = [[1, 2], [1, 3], [2, 3], [1, 4], [3, 4]];
+
+      /* ── シミュレータ群（いずれも n の小さい順のボトムアップ） ──
+       * 正しい定義: n が 0 なら a0，0 < n < q なら a1，そうでなければ f(n−p) + f(n−q) */
+      function tables(p, q, a0, a1, NMAX) {
+        const f = [], T = [], L = [], D = [];   // 戻り値 / 呼出し総数 / 葉（基底ケース）の数 / 深さ
+        for (let i = 0; i <= NMAX; i++) {
+          if (i < q) { f[i] = (i === 0 ? a0 : a1); T[i] = 1; L[i] = 1; D[i] = 0; }
+          else {
+            f[i] = f[i - p] + f[i - q];
+            T[i] = 1 + T[i - p] + T[i - q];
+            L[i] = L[i - p] + L[i - q];
+            D[i] = 1 + Math.max(D[i - p], D[i - q]);
+          }
+        }
+        return { f, T, L, D };
+      }
+      // 基底条件を「n が q 以下」と読み違えた場合（木は必ず小さくなる）
+      function tablesLe(p, q, a0, a1, NMAX) {
+        const f = [], T = [];
+        for (let i = 0; i <= NMAX; i++) {
+          if (i <= q) { f[i] = (i === 0 ? a0 : a1); T[i] = 1; }
+          else { f[i] = f[i - p] + f[i - q]; T[i] = 1 + T[i - p] + T[i - q]; }
+        }
+        return { f, T };
+      }
+      // 基底ケースの戻り値を差し替えた場合（2値の取違え／elseif の見落とし）
+      function tablesBase(p, q, b0, b1, NMAX) {
+        const f = [];
+        for (let i = 0; i <= NMAX; i++) f[i] = (i < q) ? (i === 0 ? b0 : b1) : f[i - p] + f[i - q];
+        return f;
+      }
+      // 二つの再帰呼出しの引数をどちらも n − p と読み違えた場合（木は必ず大きくなる）
+      function tablesPP(p, q, a0, a1, NMAX) {
+        const f = [], T = [];
+        for (let i = 0; i <= NMAX; i++) {
+          if (i < q) { f[i] = (i === 0 ? a0 : a1); T[i] = 1; }
+          else { f[i] = 2 * f[i - p]; T[i] = 1 + 2 * T[i - p]; }
+        }
+        return { f, T };
+      }
+      // 片側だけをたどった場合（step ずつ引き続ける鎖）
+      function chain(step, q, a0, a1, N) {
+        let x = N, c = 1;
+        while (x >= q) { x -= step; c++; }
+        return { cnt: c, val: (x === 0 ? a0 : a1), end: x };
+      }
+      // 引数の値が同じ呼出しをまとめて 1 回と数えた場合
+      function distinctArgs(p, q, N) {
+        const seen = new Set(); const st = [N];
+        while (st.length) {
+          const x = st.pop();
+          if (seen.has(x)) continue;
+          seen.add(x);
+          if (x >= q) { st.push(x - p); st.push(x - q); }
+        }
+        return seen.size;
+      }
+
+      /* ── パラメータ抽選（ベストドロー保持つき引き直し） ──
+       * 呼出し回数は必ず奇数（T = 2×内部節 + 1）で，葉の数 L と内部節 T−L が 1 違いに
+       * 固まるなど誤答値が縮退しやすい。性質の違うモデルを 9〜10 個用意した上で
+       * 最大60回引き直し，最も値がばらけたドローを採用する。
+       * また，基底条件の読み違えは構造上「木が小さくなる」側にしか転ばないため，
+       * 引数の読み違え（n − q を n − p と読む）と数え方の ±1 を「正解より大きい」誤答として
+       * 別に用意し，正解が常に最大値（＝常に最後の選択肢）になるのを防ぐ。 */
+      let best = null;
+      for (let attempt = 0; attempt < 60; attempt++) {
+        const pq = H.pick(rng, PAIRS);
+        const p = pq[0], q = pq[1];
+        const a0 = H.ri(rng, 1, 3);
+        const a1 = H.ri(rng, 1, 3);
+        if (a0 === a1) continue;                       // 基底の 2 値は必ず異なる値に（elseif を意味のある分岐にする）
+        const NMAX = q + 9;
+        const t0 = tables(p, q, a0, a1, NMAX);
+        const okN = [];
+        for (let i = q + 1; i <= NMAX; i++) if (t0.T[i] >= 7 && t0.T[i] <= 15) okN.push(i);
+        if (!okN.length) continue;                     // 手で追える量（呼出し 7〜15 回）に収める
+        const N = H.pick(rng, okN);
+
+        const ex = t0.f[q];                            // 前書きの例 f(q) の戻り値
+        const correct = modeCnt ? t0.T[N] : t0.f[N];
+        if (!modeCnt && correct === ex) continue;      // 前書きの例と正解が同値になるのは避ける
+
+        const tLe = tablesLe(p, q, a0, a1, NMAX);
+        const tPP = tablesPP(p, q, a0, a1, NMAX);
+        const chP = chain(p, q, a0, a1, N);
+        const chQ = chain(q, q, a0, a1, N);
+        const fSwap = tablesBase(p, q, a1, a0, NMAX);  // 基底の 2 値を取り違え
+        const fAll0 = tablesBase(p, q, a0, a0, NMAX);  // elseif を見落とし，基底は常に a0
+        const dcnt = distinctArgs(p, q, N);
+
+        let pool;
+        if (modeCnt) {
+          /* T−1（最初を数えず）と T+1（1 回余計）は同時に出すと正解が「連続 3 整数の
+           * 真ん中」という見た目の手掛かりになるため，シードでどちらか一方に絞る */
+          const pm1 = rng() < 0.5
+            ? { v: t0.T[N] - 1, why: '最初の呼出しを数に入れず，再帰によって行われた呼出しだけを数えた場合の値' }
+            : { v: t0.T[N] + 1, why: 'T(n) = 1 + T(n − ' + p + ') + T(n − ' + q + ') の先頭の 1 に最初の呼出しが既に含まれていることに気付かず，最後にもう 1 回分を足した場合の値' };
+          pool = [
+            pm1,
+            { v: tPP.T[N], why: 'f(n − ' + q + ') を f(n − ' + p + ') と読み違え，二つの再帰呼出しの引数をどちらも n − ' + p + ' として数えた場合の値' },
+            { v: t0.L[N], why: '基底ケースに到達して値を直接返した呼出しだけを数え，途中の呼出しを数え落とした場合の値' },
+            { v: t0.T[N] - t0.L[N], why: '再帰呼出しを行った呼出しだけを数え，基底ケースで返った呼出しを数え落とした場合の値' },
+            { v: t0.T[N] + t0.L[N], why: '基底ケースで返った呼出しを誤って二重に数えた場合の値' },
+            { v: chP.cnt, why: 'f(n − ' + p + ') 側だけをたどり，f(n − ' + q + ') 側で行われる呼出しを数えなかった場合の値' },
+            { v: dcnt, why: '引数の値が同じ呼出しをまとめて 1 回と数えた場合の値（実際には毎回改めて呼び出される）' },
+            { v: tLe.T[N], why: '基底ケースの条件を「n が ' + q + ' 以下」と読み違えた場合の値' },
+            { v: t0.D[N] + 1, why: '呼出しの回数ではなく，呼出しの入れ子の深さ（段数）を数えた場合の値' }
+          ];
+        } else {
+          pool = [
+            { v: fSwap[N], why: '基底ケースの二つの戻り値を取り違え，n が 0 のときに ' + a1 + '，n が 0 でないときに ' + a0 + ' を返すとした場合の値' },
+            { v: tPP.f[N], why: 'f(n − ' + q + ') を f(n − ' + p + ') と読み違え，二つの項をどちらも f(n − ' + p + ') として計算した場合の値' },
+            { v: t0.f[N - p], why: 'f(n − ' + q + ') の項を足し忘れ，f(' + (N - p) + ') の値だけを答えた場合の値' },
+            { v: t0.f[N - q], why: 'f(n − ' + p + ') の項を足し忘れ，f(' + (N - q) + ') の値だけを答えた場合の値' },
+            { v: correct + a0, why: '呼出しの木の葉を合計するときに，f(0)（値 ' + a0 + '）を 1 個余計に数えた場合の値' },
+            { v: correct + a1, why: '呼出しの木の葉を合計するときに，n が 0 でない基底ケース（値 ' + a1 + '）を 1 個余計に数えた場合の値' },
+            { v: t0.T[N], why: '戻り値ではなく，関数 f が呼び出される回数を答えた場合の値' },
+            { v: tLe.f[N], why: '基底ケースの条件を「n が ' + q + ' 以下」と読み違えた場合の値' },
+            { v: fAll0[N], why: 'elseif の行を見落とし，n が ' + q + ' より小さいときは常に ' + a0 + ' を返すとした場合の値' }
+          ];
+        }
+
+        /* 桁違いの肢は見ただけで捨てられるので，正解の 0.4〜2.5 倍に絞る
+         * （絞りすぎて候補が 3 種を切るときだけ緩和）。その上でシャッフルし，
+         * 正解より大きい誤答を k 個だけ先頭に置いて正解の並び位置を回す */
+        let poolF = pool.filter(c => c.v >= Math.max(1, Math.round(correct * 0.4)) && c.v <= Math.round(correct * 2.5) && c.v !== correct);
+        if (new Set(poolF.map(c => c.v)).size < 4) poolF = pool.filter(c => c.v !== correct);
+        const sOver = H.shuffle(rng, poolF.filter(c => c.v > correct));
+        const sUnder = H.shuffle(rng, poolF.filter(c => c.v < correct));
+        const k = sOver.length ? H.ri(rng, 0, Math.min(4, sOver.length)) : 0;
+        const cands = sOver.slice(0, k).concat(sUnder, sOver.slice(k));
+
+        const uniq = new Set([correct].concat(cands.map(c => c.v)));
+        const draw = { uniq: uniq.size, p, q, a0, a1, N, ex, t0, correct, cands };
+        if (!best || draw.uniq > best.uniq) best = draw;
+        if (draw.uniq >= 6) break;                     // 正解 + 誤答 5 種が確保できたら即採用
+      }
+      const p = best.p, q = best.q, a0 = best.a0, a1 = best.a1, N = best.N;
+      const t0 = best.t0, correct = best.correct, ex = best.ex;
+
+      /* ── 問題文 ── */
+      const intro = [
+        {
+          t: 'p', html: '次のプログラム中の関数 f は，0 以上の整数 n を引数として受け取る再帰関数である。'
+            + '関数 f は，n が ' + q + ' より小さいときは再帰呼出しを行わずに値を返し，そうでないときは自分自身を 2 回呼び出して，その二つの戻り値の和を返す。'
+            + '関数 f は計算の途中結果を保存しないので，同じ値を引数とする呼出しが何度も行われることがある。'
+        },
+        {
+          t: 'p', html: '例えば，関数 f を f(' + q + ') として呼び出すと，関数 f の中で f(' + (q - p) + ') と f(0) が呼び出され，戻り値は ' + ex + ' となる。'
+        },
+        {
+          t: 'code', lines: [
+            '○整数型: f(整数型: n)',
+            '  /* n は 0 以上の整数である */',
+            '  if (n が 0 と等しい)',
+            '    return ' + a0,
+            '  elseif (n が ' + q + ' より小さい)',
+            '    return ' + a1,
+            '  endif',
+            '  return f(n − ' + p + ') ＋ f(n − ' + q + ')'
+          ].map(H.esc)
+        }
+      ];
+
+      /* ── 解答群 ── */
+      const built = H.numOptions(rng, correct, best.cands, { count: 5 });
+
+      /* ── 解説 ── */
+      // (1) ボトムアップの表
+      const rows = [];
+      for (let i = 0; i <= N; i++) {
+        if (modeCnt) {
+          rows.push(i < q
+            ? [String(i), '基底ケースなので，行われる呼出しは自分自身の 1 回だけ', '1']
+            : [String(i), '1 + T(' + (i - p) + ') + T(' + (i - q) + ') = 1 + ' + t0.T[i - p] + ' + ' + t0.T[i - q], String(t0.T[i])]);
+        } else {
+          rows.push(i === 0
+            ? ['0', 'n が 0 と等しいので ' + a0, String(a0)]
+            : (i < q
+              ? [String(i), 'n が ' + q + ' より小さいので ' + a1, String(a1)]
+              : [String(i), 'f(' + (i - p) + ') + f(' + (i - q) + ') = ' + t0.f[i - p] + ' + ' + t0.f[i - q], String(t0.f[i])]));
+        }
+      }
+      const heads = modeCnt
+        ? ['n', 'T(n)（f(n) を 1 回呼び出したときの呼出し総数）の求め方', 'T(n)']
+        : ['n', 'f(n) の求め方', 'f(n)'];
+
+      // (2) 呼出しの木（テキスト表現。呼出し回数の問いでは前順に番号を振る）
+      const treeLines = [];
+      let ordinal = 0, leaf0 = 0, leafOther = 0;
+      (function walk(x, d) {
+        ordinal++;
+        const pad = '  '.repeat(d);
+        if (x < q) { if (x === 0) leaf0++; else leafOther++; }
+        treeLines.push(modeCnt
+          ? pad + '(' + ordinal + ') f(' + x + ')' + (x < q ? '  ← 基底ケース' : '')
+          : pad + 'f(' + x + ') = ' + t0.f[x] + (x < q ? '  ← 基底ケース' : ''));
+        if (x >= q) { walk(x - p, d + 1); walk(x - q, d + 1); }
+      })(N, 0);
+
+      const leavesN = t0.L[N], innerN = t0.T[N] - t0.L[N];
+      let exp;
+      if (modeCnt) {
+        exp = '<p>呼出しの木を全部描いても数えられますが、「f(n) を 1 回呼び出したときに行われる呼出しの総数」を T(n) と置いて、'
+          + 'n の小さい順に積み上げるほうが確実です。基底ケースでは自分自身の 1 回だけなので T(n) = 1、'
+          + 'そうでない n では自分自身の 1 回に両側の分を足して T(n) = 1 + T(n − ' + p + ') + T(n − ' + q + ') になります。</p>'
+          + H.traceTable(heads, rows)
+          + '<p>実際の呼出しの木は次のとおりです（左の枝が f(n − ' + p + ')、右の枝が f(n − ' + q + ')。番号は左の枝から順にたどったときの通し番号で、数えるための便宜的なものです）。</p>'
+          + '<pre class="ptree">' + H.esc(treeLines.join('\n')) + '</pre>'
+          + '<p>木の節は全部で ' + correct + ' 個、つまり f(' + N + ') の呼出しで関数 f が呼び出される回数は ' + correct + ' 回です。'
+          + '検算：基底ケースで返る呼出しが ' + leavesN + ' 回、再帰呼出しを行う呼出しが ' + innerN + ' 回で '
+          + leavesN + ' + ' + innerN + ' = ' + correct + '。再帰呼出しを行う呼出しは必ず 2 回の呼出しを生むので、'
+          + '最初の 1 回と合わせて 2 × ' + innerN + ' + 1 = ' + correct + ' ✓</p>';
+      } else {
+        exp = '<p>f(' + N + ') を上から展開していくと同じ呼出しを何度も書くことになります。'
+          + '再帰は基底ケースから積み上げるほうが速いので、n の小さい順に f(0)、f(1)、… と表を伸ばします。</p>'
+          + H.traceTable(heads, rows)
+          + '<p>よって f(' + N + ') = ' + correct + ' です。呼出しの木で確かめると次のようになります'
+          + '（左の枝が f(n − ' + p + ')、右の枝が f(n − ' + q + ')）。</p>'
+          + '<pre class="ptree">' + H.esc(treeLines.join('\n')) + '</pre>'
+          + '<p>この関数は足し算しかしないので、戻り値は葉（基底ケースで返った呼出し）の値の合計に一致します。'
+          + '検算：葉は ' + leavesN + ' 個あり、内訳は n が 0 のものが ' + leaf0 + ' 個、n が 0 でないものが ' + leafOther + ' 個なので、'
+          + a0 + ' × ' + leaf0 + ' + ' + a1 + ' × ' + leafOther + ' = ' + correct + ' ✓</p>';
+      }
+      if (built.notes.length) {
+        exp += '<p><b>誤答の作られ方</b>（本試験の誤答は「ありがちなミス」から逆算されています）：</p><ul>'
+          + built.notes.map(nte => '<li><code>' + H.esc(nte.v) + '</code> … ' + H.esc(nte.why) + '</li>').join('')
+          + '</ul>';
+      }
+
+      /* ── 設問・ヒント ── */
+      const question = modeCnt
+        ? '関数 f を f(' + N + ') として呼び出したとき，関数 f が呼び出される回数はどれか。ここで，最初の呼出しも回数に含める。解答群の中から選べ。'
+        : '関数 f を f(' + N + ') として呼び出したとき，戻り値はどれか。解答群の中から選べ。';
+
+      const hints = modeCnt
+        ? [
+          '1 回の呼出しの中で何回の呼出しが起こるかに注目しましょう。基底ケースに入った呼出しはそこで止まり、そうでない呼出しは必ず 2 回の呼出しを行います。'
+          + '呼出しの木を紙に描くか、「f(n) を 1 回呼んだときの呼出し総数」を n の小さい順に表にしていくのが確実です。',
+          'その総数を T(n) と置くと、基底ケースでは T(n) = 1（自分自身の 1 回）、そうでない n では T(n) = 1 + T(n − ' + p + ') + T(n − ' + q + ') と書けます。'
+          + 'この先頭の 1 が自分自身の分で、最初の呼出しもここに含まれます。n = 0 の行から順に、目的の n の行まで表を伸ばしてから解答群と照合しましょう。'
+        ]
+        : [
+          'f(n) は f(n − ' + p + ') と f(n − ' + q + ') が決まらないと求まりません。'
+          + '呼出しを上から展開すると同じ計算を何度も繰り返すことになるので、まず n が ' + q + ' より小さい範囲（基底ケース）の値を書き出し、'
+          + 'n の小さい順に f(0)、f(1)、f(2)、… と 1 行ずつ表を伸ばしていきましょう。',
+          '表の各行は f(n) = f(n − ' + p + ') + f(n − ' + q + ') の形なので、すでに埋めた 2 行の値を足すだけで済みます。'
+          + '基底ケースは n が 0 のときとそれ以外とで戻り値が違う点に注意して、目的の n の行まで埋めてから解答群と照合しましょう。'
+        ];
+
+      return {
+        intro,
+        question,
+        options: built.options,
+        answer: built.answer,
+        hints,
+        exp,
+        traceVars: modeCnt ? ['n', 'T(n)'] : ['n', 'f(n)']
+      };
+    }
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = def;
+  else root.B2.register(def);
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+/* ---- jb05 ---- */
+'use strict';
+/* ============================================================
+ * jb05: データ構造 — 優先度付きキューの操作列（取出し順のトレース）
+ * 型の出典: 令和4年12月公開 科目Bサンプル問題セット 問8
+ *           （クラス PrioQueue を使い，出力される値の順を問う）の型
+ * 乱数化: 優先度の向き（数値が大きい／小さいほど高優先）／
+ *         操作列（enqueue 5〜6 回・dequeue 4 回の並び，全9〜10操作）／各要素の優先度(1〜3)
+ * ============================================================ */
+(function (root) {
+  const H = (typeof module !== 'undefined' && module.exports) ? require('./contract.js') : root.B2H;
+
+  const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+
+  /* キューの中身を「値(優先度)」の並びで表す（追加順） */
+  const snapOf = q => q.length ? q.map(e => e.v + '(' + e.p + ')').join('，') : '（空）';
+
+  /* 優先度付きキューのシミュレータ
+   * opt.high    : true=数値が大きいほど優先度が高い / false=小さいほど高い
+   * opt.ignore  : true=優先度を無視する（ただのキュー／スタック）
+   * opt.tieLast : true=同じ優先度なら後から追加した方を取り出す
+   * opt.byValue : 'min'|'max'=優先度ではなく要素の値のアルファベット順で取り出す（誤答モデル用） */
+  function simulate(ops, opt) {
+    const q = [], out = [], steps = [];
+    let t = 0;
+    for (const op of ops) {
+      if (op.k === 'E') {
+        t++;
+        q.push({ v: op.v, p: op.p, t: t });
+        steps.push({ k: 'E', v: op.v, p: op.p, snap: snapOf(q) });
+      } else {
+        const before = snapOf(q);
+        const sizeBefore = q.length;
+        let b = 0;
+        for (let i = 1; i < q.length; i++) {
+          if (opt.byValue) {
+            if (opt.byValue === 'max' ? (q[i].v > q[b].v) : (q[i].v < q[b].v)) b = i;
+            continue;
+          }
+          if (!opt.ignore) {
+            const hi = opt.high ? (q[i].p > q[b].p) : (q[i].p < q[b].p);
+            const lo = opt.high ? (q[i].p < q[b].p) : (q[i].p > q[b].p);
+            if (hi) { b = i; continue; }
+            if (lo) continue;
+          }
+          if (opt.tieLast) b = i;          // 同順位（優先度無視なら常に）は後の要素で上書き
+        }
+        const chosen = q[b];
+        const tied = opt.ignore ? [chosen.v] : q.filter(e => e.p === chosen.p).map(e => e.v);
+        q.splice(b, 1);
+        out.push(chosen.v);
+        steps.push({ k: 'D', v: chosen.v, p: chosen.p, tied: tied, sizeBefore: sizeBefore, snapBefore: before, snap: snapOf(q) });
+      }
+    }
+    return { out: out, steps: steps, rest: snapOf(q) };
+  }
+
+  /* 誤答モデル「操作の順序を無視して，全部 enqueue してから取り出した」 */
+  function simAllFirst(ops, high, nDeq) {
+    const items = ops.filter(o => o.k === 'E').map((o, i) => ({ v: o.v, p: o.p, t: i }));
+    items.sort((a, b) => (high ? b.p - a.p : a.p - b.p) || (a.t - b.t));
+    return items.slice(0, nDeq).map(e => e.v);
+  }
+
+  /* 操作列の生成。末尾は必ず dequeue，同時に並ぶ要素は maxSize 個まで。
+   * nEnq > nDeq なので途中で行き詰まることはない（必ず配列を返す）。 */
+  function makeOps(rng, nEnq, nDeq, maxSize) {
+    const ops = [];
+    let e = 0, d = 0, size = 0;
+    const dHead = nDeq - 1;                 // 最後の1回は末尾に確保しておく
+    while (e + d < nEnq + dHead) {
+      const canE = e < nEnq && size < maxSize;
+      const canD = d < dHead && size > 0;
+      const doE = (canE && canD) ? (rng() < 0.55) : canE;
+      if (doE) { ops.push({ k: 'E' }); e++; size++; }
+      else { ops.push({ k: 'D' }); d++; size--; }
+    }
+    ops.push({ k: 'D' });
+    return ops;
+  }
+
+  const def = {
+    id: 'jb05', cat: 'dat', type: 'trace',
+    title: '優先度付きキューの取出し順',
+    est: 8, ref: 'fe-algo.html#al-8',
+    origin: '令和4年12月公開 科目Bサンプル問題セット 問8（クラス PrioQueue の出力順）の型',
+
+    gen(rng) {
+      /* ── パラメータ抽選 ── */
+      const dirHigh = rng() < 0.5;          // true: 数値が大きいほど優先度が高い
+      const dirWord = dirHigh ? '数値が大きい' : '数値が小さい';
+      const nDeq = 4;
+
+      /* ── 操作列の抽選（誤答モデルどうしが識別できるまで引き直し） ──
+       * 優先度を無視した並び・向きを逆にした並びなどは，操作列によっては正解と一致して
+       * しまう（＝出題として成立しない）。ベストドローを保持しつつ最大60回引き直す。 */
+      let best = null;
+      for (let attempt = 0; attempt < 60; attempt++) {
+        const nEnq = H.ri(rng, 5, 6);
+        const ops = makeOps(rng, nEnq, nDeq, 4);
+        /* 値は A〜H から nEnq 個をランダムな順で使う。追加順＝アルファベット順にすると
+         * 「並びがきれいな選択肢＝優先度を無視した誤答」と見た目で当てられてしまい，
+         * 解答群を辞書順に並べたときの正解の位置も偏るため。 */
+        const vals = H.take(rng, LETTERS, nEnq);
+        let ei = 0;
+        for (const o of ops) if (o.k === 'E') { o.v = vals[ei++]; o.p = H.ri(rng, 1, 3); }
+
+        const correct = simulate(ops, { high: dirHigh });
+        const m = {
+          fifo: simulate(ops, { ignore: true }).out,
+          revPrio: simulate(ops, { high: !dirHigh }).out,
+          lifoTie: simulate(ops, { high: dirHigh, tieLast: true }).out,
+          allFirst: simAllFirst(ops, dirHigh, nDeq),
+          stack: simulate(ops, { ignore: true, tieLast: true }).out,
+          revLifo: simulate(ops, { high: !dirHigh, tieLast: true }).out,
+          /* 解答群は辞書順に並ぶので，値の順で取り出したこの2種は必ず解答群の端に来る。
+           * 正解が中央（ウ・エ）に寄るのを防ぐ役をこの2つが担う。 */
+          alphaMin: simulate(ops, { byValue: 'min' }).out,
+          alphaMax: simulate(ops, { byValue: 'max' }).out
+        };
+        const key = a => a.join('');
+        const cs = key(correct.out);
+        const uniq = new Set([cs].concat(Object.keys(m).map(k => key(m[k]))));
+        /* 必須条件: 優先度が効いていること・同順位の決め方が効いていること・向きが効いていること */
+        const hard = key(m.fifo) !== cs && key(m.lifoTie) !== cs && key(m.revPrio) !== cs;
+        /* トレースが薄いドロー（キューに2個しか並ばないまま取り出すだけ）を減らすため，
+         * 3要素以上並んだ状態での dequeue が2回以上あるドローを優遇する。 */
+        const rich = correct.steps.filter(s => s.k === 'D' && s.sizeBefore >= 3).length;
+        const score = (hard ? 100 : 0) + (rich >= 2 ? 20 : 0) + uniq.size;
+        if (!best || score > best.score) best = { score: score, ops: ops, nEnq: nEnq, correct: correct, m: m };
+        if (hard && rich >= 2 && uniq.size === 9) break;
+      }
+      const ops = best.ops, nEnq = best.nEnq, correct = best.correct, m = best.m;
+
+      /* ── 問題文 ── */
+      const th = ['コンストラクタ又はメソッド', '戻り値', '説明'];
+      const trows = [
+        ['PrioQueue()', 'なし', '空の優先度付きキューを生成する。'],
+        ['enqueue(文字列型: s, 整数型: prio)', 'なし', '優先度付きキューに，文字列 s を要素として，優先度 prio で追加する。'],
+        ['dequeue()', '文字列型',
+          '優先度付きキューの中で最も優先度の高い要素を一つ取り出して返す。取り出した要素は，優先度付きキューから取り除かれる。最も優先度の高い要素が複数あるときは，そのうち最も先に追加された要素を取り出して返す。優先度付きキューが空のときは，未定義の値を返す。']
+      ];
+      const tableHtml = '<table><caption>表　クラス PrioQueue の説明</caption><thead><tr>'
+        + th.map(h => '<th>' + H.esc(h) + '</th>').join('') + '</tr></thead><tbody>'
+        + trows.map(r => '<tr>' + r.map(c => '<td>' + H.esc(c) + '</td>').join('') + '</tr>').join('')
+        + '</tbody></table>';
+
+      const intro = [
+        {
+          t: 'p', html: '次のプログラムは，優先度付きキューを使って値の追加と取出しを行う手続 prioTest である。'
+            + '優先度付きキューは，格納した要素を，追加した順ではなく優先度の高い順に取り出すことができるデータ構造である。'
+            + 'ここで用いるクラス PrioQueue の説明を表に示す。'
+        },
+        {
+          t: 'p', html: '優先度には 1 から 3 までの整数を指定し，' + dirWord + 'ほど優先度が高いものとする。'
+            + 'また，PrioQueue 型の変数は，クラス PrioQueue のインスタンスの参照を格納するものとする。'
+        },
+        { t: 'table', html: tableHtml },
+        {
+          t: 'code', lines: (function () {
+            const L = [];
+            L.push('○prioTest()');
+            L.push('  PrioQueue: prioQueue ← PrioQueue()');
+            for (const o of ops) {
+              if (o.k === 'E') L.push('  prioQueue.enqueue("' + o.v + '", ' + o.p + ')');
+              else L.push('  prioQueue.dequeue() の戻り値を出力');
+            }
+            return L.map(H.esc);
+          })()
+        }
+      ];
+
+      /* ── 解答群（IPA 流に辞書順で並べる） ── */
+      const seqText = a => '“' + a.join('”，“') + '”';
+      const correctH = H.esc(seqText(correct.out));
+      const pool = [
+        { h: H.esc(seqText(m.fifo)), why: '優先度を無視して，追加した順にそのまま取り出した場合の並び（普通のキューの動作）' },
+        { h: H.esc(seqText(m.revPrio)), why: '優先度の数値の向きを逆に読み，' + (dirHigh ? '数値が小さい' : '数値が大きい') + 'ほど優先度が高いとして取り出した場合の並び' },
+        { h: H.esc(seqText(m.lifoTie)), why: '同じ優先度の要素が並んだときに，先に追加された方ではなく後から追加された方を取り出した場合の並び' },
+        { h: H.esc(seqText(m.allFirst)), why: '操作の順序を読み違え，' + nEnq + ' 回の enqueue を全て済ませてから ' + nDeq + ' 回続けて dequeue したものとして考えた場合の並び' },
+        { h: H.esc(seqText(m.stack)), why: '優先度を無視して，後から追加した要素から取り出した場合の並び（スタックの動作）' },
+        { h: H.esc(seqText(m.revLifo)), why: '優先度の向きを逆に読み，さらに同じ優先度では後から追加された方を取り出した場合の並び' },
+        { h: H.esc(seqText(m.alphaMin)), why: '優先度を要素の値の順と取り違え，値がアルファベット順で最も小さい要素から取り出した場合の並び' },
+        { h: H.esc(seqText(m.alphaMax)), why: '優先度を要素の値の順と取り違え，値がアルファベット順で最も大きい要素から取り出した場合の並び' }
+      ];
+      /* 解答群は辞書順に並べるので，正解より前に来る肢の数がそのまま正解の位置になる。
+       * 母集団を「正解より前に並ぶ型」と「後ろに並ぶ型」に分け，前に並ぶ型を何個混ぜるかを
+       * シードで抽選する（そのまま5種採ると，正解が中央のウ・エに寄ってしまう）。 */
+      const seenH = new Set([correctH]);
+      const preOpt = [], postOpt = [];
+      for (const c of H.shuffle(rng, pool)) {
+        if (seenH.has(c.h)) continue;
+        seenH.add(c.h);
+        (c.h < correctH ? preOpt : postOpt).push(c);
+      }
+      const kLo = Math.max(0, 5 - postOpt.length);
+      const kHi = Math.max(kLo, Math.min(5, preOpt.length));
+      const pickedOpt = preOpt.slice(0, H.ri(rng, kLo, kHi));
+      const built = H.listOptions(rng, { h: correctH },
+        pickedOpt.concat(postOpt.slice(0, 5 - pickedOpt.length)),
+        { count: 6, shuffle: false, mono: true });
+      const flagged = built.options.map((o, i) => ({ o: o, correct: i === built.answer }));
+      flagged.sort((x, y) => (x.o.html < y.o.html ? -1 : (x.o.html > y.o.html ? 1 : 0)));
+      const options = flagged.map(x => x.o);
+      const answer = flagged.findIndex(x => x.correct);
+
+      /* ── 解説（トレース表つき） ── */
+      const rows = [['（初期状態）', '（空）', '']];
+      for (const st of correct.steps) {
+        if (st.k === 'E') rows.push(['enqueue("' + st.v + '", ' + st.p + ')', st.snap, '']);
+        else rows.push(['dequeue()', st.snap, st.v]);
+      }
+      const dec = [];
+      let n = 0;
+      for (const st of correct.steps) {
+        if (st.k !== 'D') continue;
+        n++;
+        const head = n + ' 回目の取出し：キューの中身は ' + st.snapBefore + '。';
+        const body = (st.tied.length > 1)
+          ? '優先度が最も高い（' + dirWord + '）要素は ' + st.tied.join('，') + ' の ' + st.tied.length + ' 個です。同じ優先度なので、先に追加された ' + st.v + ' を取り出します。'
+          : '優先度が最も高いのは ' + st.v + '(' + st.p + ') だけなので、' + st.v + ' を取り出します。';
+        dec.push('<li>' + H.esc(head + body) + '</li>');
+      }
+      let exp = '<p>優先度付きキューでは、取り出される要素を決めるのは追加した順ではなく優先度です（この問題では'
+        + H.esc(dirWord) + 'ほど優先度が高い）。上から1行ずつ実行して、キューの中身を書き出します。かっこ内は優先度です。</p>'
+        + H.traceTable(['操作', 'キューの中身（追加順に並べたもの）', '出力'], rows)
+        + '<p>取出しのたびの判断は、次のとおりです。</p><ul>' + dec.join('') + '</ul>'
+        + '<p>出力された値を順に並べると <code>' + H.esc(seqText(correct.out)) + '</code> です。'
+        + '検算：取り出した ' + nDeq + ' 個はキューから取り除かれるので、最後にキューに残るのは '
+        + H.esc(correct.rest) + ' の ' + (nEnq - nDeq) + ' 個です ✓</p>';
+      if (built.notes.length) {
+        exp += '<p><b>誤答の作られ方</b>（本試験の誤答は「ありがちなミス」から逆算されています）：</p><ul>'
+          + built.notes.map(nte => '<li><code>' + nte.h + '</code> … ' + H.esc(nte.why) + '</li>').join('')
+          + '</ul>';
+      }
+
+      return {
+        intro: intro,
+        question: '手続 prioTest を呼び出したとき，出力される値を順に並べたものはどれか。解答群の中から選べ。',
+        options: options,
+        answer: answer,
+        hints: [
+          '優先度付きキューは、追加した順ではなく優先度によって取り出す要素が決まります。まずキューの中身を書き留める欄を作り、enqueue の行が来たら「値と優先度」の組を1つずつ書き足していきましょう。',
+          'dequeue の行では、その時点でキューに残っている組だけを見て、(1) 優先度の高さの決め方、(2) 同じ優先度が並んだときの決め方、という2つの規則（前書きと表に書かれています）を順に当てはめて1組を選び、その組を消してから次の行へ進みます。取り出した値を左から書き足していけば、そのまま並びができあがります。'
+        ],
+        exp: exp,
+        traceVars: ['キューの中身', '出力']
+      };
+    }
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = def;
+  else root.B2.register(def);
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+/* ---- jb06 ---- */
+'use strict';
+/* ============================================================
+ * jb06: データ構造及びアルゴリズム — 単方向リストの操作（穴埋め）
+ * 型の出典: 令和4年4月サンプル問題 問3（単方向リストへの追加／クラスListElement）＋
+ *           令和4年12月サンプル問題セット 問10（単方向リストからの削除）の型
+ * 乱数化: 操作2種（末尾に追加／指定値の削除）× 空欄の置き場所（計4プラン）
+ *         × 手続名 × リストの長さ・値・削除位置 × 解答群に載せる候補の顔ぶれ
+ * 正答保証: 空欄に正解を入れた擬似コードをJSで実行し，全テストケースで仕様どおりの
+ *           最終リストになることを検査（correct-check）。さらに解答群の全組合せを
+ *           例のリストで実行し，正解以外は必ず別の結果になること（一意性）を確認してから出題。
+ * ============================================================ */
+(function (root) {
+  const H = (typeof module !== 'undefined' && module.exports) ? require('./contract.js') : root.B2H;
+
+  /* ── 単方向リストのミニ実行系（未定義 = null） ── */
+  const build = vals => { let h = null; for (let i = vals.length - 1; i >= 0; i--) h = { v: vals[i], n: h }; return h; };
+  const dump = h => {
+    const o = []; let p = h, g = 0;
+    while (p !== null) { if (++g > 30) return '循環'; o.push(p.v); p = p.n; }
+    return o.length ? o.join(',') : '空';
+  };
+  const NX = p => { if (p === null) throw new Error('nil'); return p.n; };
+  const VL = p => { if (p === null) throw new Error('nil'); return p.v; };
+
+  /* ── 擬似コードの行を組み立てる小道具（blank は esc しない） ── */
+  const E = s => H.esc(s);
+  const EB = (pre, ch, post) => H.esc(pre) + H.blank(ch) + H.esc(post || '');
+
+  /* ============================================================
+   * 出題プラン（操作 × 空欄の置き場所）
+   *  - poolA / poolB の先頭が正解。why は誤答の作られ方（解説で使う）
+   *  - exec(vals, q, a, b) は空欄に a, b を入れたプログラムの実行結果
+   * ============================================================ */
+  const PLANS = [
+    /* ---- 末尾に追加 / 空欄 = if の条件と，つなぐ相手 ---- */
+    {
+      key: 'T1', op: 'tail', vars: ['prev', 'curr'],
+      poolA: [
+        { id: 'undef', txt: '未定義' },
+        { id: 'ndef', txt: '未定義でない', why: 'リストが空のときだけ listHead 自体を書き換える、という条件を逆に読んだ場合の答え。リストが空でないときに先頭を新しい要素で置き換えてしまい、元のリストがまるごと失われます。' }
+      ],
+      poolB: [
+        { id: 'curr', txt: 'curr' },
+        { id: 'currn', txt: 'curr.next', why: 'つなぐ相手を、追加する要素そのものではなくその next と取り違えた場合の答え。curr.next はまだ未定義なので、末尾要素の next が未定義のままになり、何も追加されません。' },
+        { id: 'lh', txt: 'listHead', why: '末尾に先頭要素をつないでしまった場合の答え。末尾から先頭へ戻る輪（循環）ができ、リストの終わりが無くなります。' },
+        { id: 'prev', txt: 'prev', why: '末尾の要素が自分自身を次の要素として指すことになり、その場で輪（循環）ができてしまいます。' }
+      ],
+      lines: nm => [
+        E('大域: ListElement: listHead  // リストの先頭要素が格納されている'),
+        '',
+        E('○' + nm + '(整数型: qVal)'),
+        E('  ListElement: prev, curr'),
+        E('  curr ← ListElement(qVal)'),
+        EB('  if (listHead が ', 'a', ')'),
+        E('    listHead ← curr'),
+        E('  else'),
+        E('    prev ← listHead'),
+        E('    while (prev.next が 未定義でない)'),
+        E('      prev ← prev.next'),
+        E('    endwhile'),
+        EB('    prev.next ← ', 'b'),
+        E('  endif')
+      ],
+      exec(vals, q, a, b) {
+        let lh = build(vals);
+        const curr = { v: q, n: null };
+        const cond = (a === 'undef') ? (lh === null) : (lh !== null);
+        if (cond) { lh = curr; }
+        else {
+          let prev = lh, g = 0;
+          while (NX(prev) !== null) { prev = NX(prev); if (++g > 30) return '循環'; }
+          prev.n = (b === 'curr') ? curr : (b === 'currn') ? curr.n : (b === 'lh') ? lh : prev;
+        }
+        return dump(lh);
+      }
+    },
+    /* ---- 末尾に追加 / 空欄 = while の条件と，つなぎ替えの文 ---- */
+    {
+      key: 'T2', op: 'tail', vars: ['prev', 'curr'],
+      poolA: [
+        { id: 'pn_ndef', txt: 'prev.next が 未定義でない' },
+        { id: 'pn_undef', txt: 'prev.next が 未定義', why: '繰返しを続ける条件と、繰返しを終える条件を取り違えた場合の答え。prev が先頭から動かないまま繰返しを抜けます。' },
+        { id: 'p_ndef', txt: 'prev が 未定義でない', why: '末尾かどうかの判定を prev 自身で行った場合の答え。prev がリストの外（未定義）まで進んでしまい、その後の参照が成り立ちません。' }
+      ],
+      poolB: [
+        { id: 'pn_curr', txt: 'prev.next ← curr' },
+        { id: 'cn_pn', txt: 'curr.next ← prev.next', why: 'つなぎ替えの向きを逆にした場合の答え。新しい要素の next を書き換えただけなので、元のリストから新しい要素へはたどれません。' },
+        { id: 'p_curr', txt: 'prev ← curr', why: '手続の中の変数 prev を書き換えただけで、リストの要素の next は何も変わりません。' },
+        { id: 'lh_curr', txt: 'listHead ← curr', why: '末尾ではなく先頭を新しい要素で置き換えてしまい、元のリストがまるごと失われます。' }
+      ],
+      lines: nm => [
+        E('大域: ListElement: listHead  // リストの先頭要素が格納されている'),
+        '',
+        E('○' + nm + '(整数型: qVal)'),
+        E('  ListElement: prev, curr'),
+        E('  curr ← ListElement(qVal)'),
+        E('  if (listHead が 未定義)'),
+        E('    listHead ← curr'),
+        E('  else'),
+        E('    prev ← listHead'),
+        EB('    while (', 'a', ')'),
+        E('      prev ← prev.next'),
+        E('    endwhile'),
+        '    ' + H.blank('b'),
+        E('  endif')
+      ],
+      exec(vals, q, a, b) {
+        let lh = build(vals);
+        const curr = { v: q, n: null };
+        if (lh === null) { lh = curr; return dump(lh); }
+        let prev = lh, g = 0;
+        const cond = () => (a === 'pn_ndef') ? NX(prev) !== null : (a === 'pn_undef') ? NX(prev) === null : prev !== null;
+        while (cond()) { prev = NX(prev); if (++g > 30) return '循環'; }
+        if (b === 'pn_curr') { if (prev === null) throw new Error('nil'); prev.n = curr; }
+        else if (b === 'cn_pn') { curr.n = NX(prev); }
+        else if (b === 'p_curr') { prev = curr; }
+        else { lh = curr; }
+        return dump(lh);
+      }
+    },
+    /* ---- 指定値の削除 / 空欄 = if の条件と，つなぎ先 ---- */
+    {
+      key: 'D1', op: 'del', vars: ['prev'],
+      poolA: [
+        { id: 'h_eq', txt: 'listHead.val が qVal と等しい' },
+        { id: 'h_ne', txt: 'listHead.val が qVal と等しくない', why: '先頭を特別扱いする条件を逆に読んだ場合の答え。削除したい要素が先頭にないときに、先頭の要素を消してしまいます。' },
+        { id: 'h_undef', txt: 'listHead が 未定義', why: 'リストが空かどうかの判定と、削除する要素が先頭かどうかの判定を取り違えた場合の答え。' },
+        { id: 'h2_eq', txt: 'listHead.next.val が qVal と等しい', why: '先頭ではなく2番目の要素の値を調べてしまった場合の答え。判定が当たったときに消えるのは先頭の要素です。' }
+      ],
+      poolB: [
+        { id: 'pnn', txt: 'prev.next.next' },
+        { id: 'pn', txt: 'prev.next', why: '書き換える前と同じ参照を代入しているので、リストは何も変わりません。' },
+        { id: 'p', txt: 'prev', why: '一つ前の要素が自分自身を指すことになり、その場で輪（循環）ができてしまいます。' },
+        { id: 'lhn', txt: 'listHead.next', why: 'つなぎ先を、削除する要素の次ではなく、先頭の次の要素と取り違えた場合の答え。' }
+      ],
+      lines: nm => [
+        E('大域: ListElement: listHead  // リストの先頭要素が格納されている'),
+        '',
+        E('○' + nm + '(整数型: qVal)'),
+        E('  ListElement: prev'),
+        EB('  if (', 'a', ')'),
+        E('    listHead ← listHead.next'),
+        E('  else'),
+        E('    prev ← listHead'),
+        E('    while (prev.next.val が qVal と等しくない)'),
+        E('      prev ← prev.next'),
+        E('    endwhile'),
+        EB('    prev.next ← ', 'b'),
+        E('  endif')
+      ],
+      exec(vals, q, a, b) {
+        let lh = build(vals);
+        const cond = (a === 'h_eq') ? VL(lh) === q
+          : (a === 'h_ne') ? VL(lh) !== q
+            : (a === 'h_undef') ? lh === null
+              : VL(NX(lh)) === q;
+        if (cond) { lh = NX(lh); }
+        else {
+          let prev = lh, g = 0;
+          while (VL(NX(prev)) !== q) { prev = NX(prev); if (++g > 30) return '循環'; }
+          prev.n = (b === 'pnn') ? NX(NX(prev)) : (b === 'pn') ? NX(prev) : (b === 'p') ? prev : NX(lh);
+        }
+        return dump(lh);
+      }
+    },
+    /* ---- 指定値の削除 / 空欄 = while の条件と，つなぎ先 ---- */
+    {
+      key: 'D2', op: 'del', vars: ['prev'],
+      poolA: [
+        { id: 'pnv_ne', txt: 'prev.next.val が qVal と等しくない' },
+        { id: 'pnv_eq', txt: 'prev.next.val が qVal と等しい', why: '繰返しを続ける条件と、繰返しを終える条件を取り違えた場合の答え。prev が止まる位置が1つずれます。' },
+        { id: 'pv_ne', txt: 'prev.val が qVal と等しくない', why: '一つ前の要素ではなく prev 自身の値で止まる位置を決めた場合の答え。prev が削除したい要素そのものまで進んでしまいます。' },
+        { id: 'pn_ndef', txt: 'prev.next が 未定義でない', why: '値が一致したかどうかではなく、末尾かどうかで繰返しを止めてしまった場合の答え。prev がリストの末尾まで進んでしまいます。' }
+      ],
+      poolB: [
+        { id: 'pnn', txt: 'prev.next.next' },
+        { id: 'pn', txt: 'prev.next', why: '書き換える前と同じ参照を代入しているので、リストは何も変わりません。' },
+        { id: 'p', txt: 'prev', why: '一つ前の要素が自分自身を指すことになり、その場で輪（循環）ができてしまいます。' },
+        { id: 'lhn', txt: 'listHead.next', why: 'つなぎ先を、削除する要素の次ではなく、先頭の次の要素と取り違えた場合の答え。' }
+      ],
+      lines: nm => [
+        E('大域: ListElement: listHead  // リストの先頭要素が格納されている'),
+        '',
+        E('○' + nm + '(整数型: qVal)'),
+        E('  ListElement: prev'),
+        E('  if (listHead.val が qVal と等しい)'),
+        E('    listHead ← listHead.next'),
+        E('  else'),
+        E('    prev ← listHead'),
+        EB('    while (', 'a', ')'),
+        E('      prev ← prev.next'),
+        E('    endwhile'),
+        EB('    prev.next ← ', 'b'),
+        E('  endif')
+      ],
+      exec(vals, q, a, b) {
+        let lh = build(vals);
+        if (VL(lh) === q) { lh = NX(lh); return dump(lh); }
+        let prev = lh, g = 0;
+        const cond = () => (a === 'pnv_ne') ? VL(NX(prev)) !== q
+          : (a === 'pnv_eq') ? VL(NX(prev)) === q
+            : (a === 'pv_ne') ? VL(prev) !== q
+              : NX(prev) !== null;
+        while (cond()) { prev = NX(prev); if (++g > 30) return '循環'; }
+        prev.n = (b === 'pnn') ? NX(NX(prev)) : (b === 'pn') ? NX(prev) : (b === 'p') ? prev : NX(lh);
+        return dump(lh);
+      }
+    }
+    /* 「先頭に追加」（空欄＝2つの文の順序）のプランは，2文を並べ替えるだけで
+     * 1〜2分で解け，このテンプレートの est 10分と釣り合わないため外してある。 */
+  ];
+
+  const NAMES = {
+    tail: ['append', 'addLast', 'addTail'],
+    del: ['delValue', 'removeVal', 'deleteVal']
+  };
+
+  /* ── 解答群の並び ──
+   * 候補の顔ぶれ（集合）だけから決まる整列。同じ顔ぶれなら常に同じ並びになり，
+   * 顔ぶれが変われば並びも変わるので，「正解はいつも同じ行」という位置バレが起きない。
+   * rng は使わない（並びはシードではなく候補集合の関数）。 */
+  const fnv = s => {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+    return h >>> 0;
+  };
+  const arrange = list => {
+    const sig = list.map(x => x.txt).slice().sort().join('|');
+    return list.slice().sort((x, y) =>
+      (fnv(sig + '#' + x.txt) - fnv(sig + '#' + y.txt)) || (x.txt < y.txt ? -1 : 1));
+  };
+
+  /* リストのテキスト図: [37|●]→[12|●]→[64|／] */
+  const figOf = vals => vals.length
+    ? vals.map((v, i) => '[' + v + '|' + (i === vals.length - 1 ? '／' : '●') + ']').join('→')
+    : '（空のリスト）';
+  const code = s => '<code>' + H.esc(s) + '</code>';
+
+  const def = {
+    id: 'jb06', cat: 'dat', type: 'fill',
+    title: '単方向リストの操作',
+    est: 10, ref: 'fe-algo.html#al-9',
+    origin: '令和4年サンプル問題 問3・令和4年12月サンプル問題セット 問10（単方向リストの挿入・削除）の型',
+
+    gen(rng) {
+      /* ── 乱数の小道具 ── */
+      const distinctVals = n => {
+        const s = [];
+        while (s.length < n) { const v = H.ri(rng, 10, 99); if (s.indexOf(v) < 0) s.push(v); }
+        return s;
+      };
+      const outsideVal = vals => { let v; do { v = H.ri(rng, 10, 99); } while (vals.indexOf(v) >= 0); return v; };
+
+      /* 例のリスト（表示する）＋ 正解の一般妥当性を確かめる追加ケース */
+      const makeCases = op => {
+        if (op === 'del') {
+          const len = H.ri(rng, 3, 5);
+          const tpos = H.ri(rng, 2, len);          // 例では先頭以外を削除（else 側を必ず通す）
+          const exVals = distinctVals(len);
+          const ex = { vals: exVals, q: exVals[tpos - 1] };
+          const c1 = distinctVals(4), c2 = distinctVals(5), c3 = distinctVals(3);
+          return { ex, all: [ex, { vals: c1, q: c1[0] }, { vals: c2, q: c2[4] }, { vals: c3, q: c3[1] }] };
+        }
+        const len = H.ri(rng, 3, 5);
+        const exVals = distinctVals(len);
+        const ex = { vals: exVals, q: outsideVal(exVals) };
+        const c1 = distinctVals(1), c2 = distinctVals(4);
+        return {
+          ex, all: [ex, { vals: [], q: H.ri(rng, 10, 99) },
+            { vals: c1, q: outsideVal(c1) }, { vals: c2, q: outsideVal(c2) }]
+        };
+      };
+
+      /* 仕様が定める最終リスト（＝正答の定義。擬似コードとは独立に計算する） */
+      const expectOf = (op, vals, q) => {
+        const r = (op === 'tail') ? vals.concat([q]) : vals.filter(v => v !== q);
+        return r.length ? r.join(',') : '空';
+      };
+
+      /* ── 抽選: 正解が仕様どおり、かつ他の全組合せが例のリストで別結果になるまで引き直す ── */
+      let D = null;
+      for (let attempt = 0; attempt < 80 && !D; attempt++) {
+        const plan = H.pick(rng, PLANS);
+        const name = H.pick(rng, NAMES[plan.op]);
+        const cs = makeCases(plan.op);
+        const corrA = plan.poolA[0], corrB = plan.poolB[0];
+        const run = (c, a, b) => { try { return plan.exec(c.vals, c.q, a, b); } catch (e) { return '実行時エラー'; } };
+
+        /* (1) 正解を入れたプログラムが，全ケースで仕様どおりか */
+        if (!cs.all.every(c => run(c, corrA.id, corrB.id) === expectOf(plan.op, c.vals, c.q))) continue;
+
+        /* (2) 例のリストで，正解以外の組合せが必ず別結果になる候補だけを残す */
+        const exRes = run(cs.ex, corrA.id, corrB.id);
+        const differs = (a, b) => run(cs.ex, a, b) !== exRes;
+        /* a 欄と b 欄に同じ文が並ぶ肢は「読むまでもなく変」なので作らない。
+         * まず a 側から b の正解と同一文の候補を除き，次に b 側から a で採用した文を除く。 */
+        const safeA = plan.poolA.slice(1)
+          .filter(x => x.txt !== corrB.txt && plan.poolB.every(y => differs(x.id, y.id)));
+        const poolB2 = plan.poolB.slice(1).filter(y => differs(corrA.id, y.id));
+
+        const shapes = [];
+        for (let na = 2; na <= Math.min(3, 1 + safeA.length); na++) {
+          for (let nb = 2; nb <= Math.min(4, 1 + poolB2.length); nb++) {
+            if (na * nb >= 4 && na * nb <= 10) shapes.push([na, nb]);
+          }
+        }
+        if (!shapes.length) continue;
+        const sh = H.pick(rng, shapes);
+        const selA = arrange([corrA].concat(H.take(rng, safeA, sh[0] - 1)));
+        const aTxts = selA.map(x => x.txt);
+        const safeB = poolB2.filter(y => aTxts.indexOf(y.txt) < 0);
+        if (1 + safeB.length < sh[1]) continue;
+        const selB = arrange([corrB].concat(H.take(rng, safeB, sh[1] - 1)));
+        D = { plan, name, cs, corrA, corrB, selA, selB, run, exRes };
+      }
+
+      const plan = D.plan, name = D.name, ex = D.cs.ex, op = plan.op;
+      const before = ex.vals, after = expectOf(op, ex.vals, ex.q).split(',').map(Number);
+
+      /* ── 問題文 ── */
+      const purpose = {
+        tail: '引数 qVal で与えられた値を要素の値としてもつ新しい要素を，単方向リストの末尾に追加する手続である',
+        del: '引数 qVal と等しい値をもつ要素を，単方向リストから削除する手続である'
+      }[op];
+      const cond = (op === 'del')
+        ? 'ここで，qVal と等しい値をもつ要素は，リストの中にちょうど一つ存在するものとする。'
+        : 'リストが空のときは，listHead は未定義である。';
+      /* コンストラクタの表が要るのは要素を新しく作る操作（末尾に追加）だけ */
+      const twoTables = (op !== 'del');
+
+      const intro = [
+        {
+          t: 'p', html: '手続 ' + code(name) + ' は，' + H.esc(purpose) + '。単方向リストの各要素は，クラス '
+          + code('ListElement') + ' を用いて表現する。クラス ' + code('ListElement')
+          + (twoTables ? ' の説明を表1及び表2に示す。' : ' の説明を表に示す。')
+          + code('ListElement') + ' 型の変数はクラス ' + code('ListElement')
+          + ' のインスタンスの参照を格納するものとする。大域変数 ' + code('listHead')
+          + ' には，リストの先頭要素の参照があらかじめ格納されている。' + H.esc(cond)
+        },
+        {
+          t: 'table', html:
+            '<table class="qtbl"><caption>' + H.esc(twoTables ? '表1　クラス ListElement のメンバ変数の説明' : '表　クラス ListElement のメンバ変数の説明') + '</caption>'
+            + '<thead><tr><th>メンバ変数</th><th>型</th><th class="l">説明</th></tr></thead><tbody>'
+            + '<tr><td><code>val</code></td><td>整数型</td><td class="l">要素の値</td></tr>'
+            + '<tr><td><code>next</code></td><td><code>ListElement</code></td><td class="l">次の要素の参照<br>次の要素がないときの状態は未定義</td></tr>'
+            + '</tbody></table>'
+        }
+      ];
+      if (twoTables) {
+        intro.push({
+          t: 'table', html:
+            '<table class="qtbl"><caption>表2　クラス ListElement のコンストラクタの説明</caption>'
+            + '<thead><tr><th>コンストラクタ</th><th class="l">説明</th></tr></thead><tbody>'
+            + '<tr><td><code>ListElement(整数型: qVal)</code></td><td class="l">引数 qVal でメンバ変数 val を初期化する。メンバ変数 next は未定義とする。</td></tr>'
+            + '</tbody></table>'
+        });
+      }
+      intro.push({
+        t: 'note', html: '注記　本問では，リストの内容を，先頭の要素から順に [要素の値|次の要素への参照] と並べて表す。'
+          + '次の要素がないこと（next が未定義であること）は ／ で表す。'
+      });
+      intro.push({
+        t: 'p', html: '例えば，リストの内容が ' + code(figOf(before)) + ' のとき，手続 ' + code(name)
+          + ' を ' + code(name + '(' + ex.q + ')') + ' として呼び出すと，リストの内容は '
+          + code(figOf(after)) + ' となる。'
+      });
+      intro.push({ t: 'code', lines: plan.lines(name) });
+
+      /* ── 解答群（空欄a×空欄b の直積表。IPA流に a の値でまとめて並べる） ── */
+      const options = [];
+      let answer = -1;
+      for (const a of D.selA) {
+        for (const b of D.selB) {
+          if (a.id === D.corrA.id && b.id === D.corrB.id) answer = options.length;
+          options.push({ html: H.pair(H.esc(a.txt), H.esc(b.txt)) });
+        }
+      }
+
+      /* ── 解説 ── */
+      const traceAppend = () => {
+        const rows = [];
+        const cell = i => (i + 1 < before.length) ? '値 ' + before[i + 1] + ' の要素' : '未定義';
+        const judge = i => (i + 1 < before.length) ? '真 → 繰返しを続ける' : '偽 → 繰返しを終了';
+        rows.push(['prev ← listHead の直後', String(before[0]), cell(0), judge(0)]);
+        for (let i = 1; i < before.length; i++) rows.push([i + ' 回目の繰返しの後', String(before[i]), cell(i), judge(i)]);
+        return H.traceTable(['時点', 'prev が指す要素の値', 'prev.next', 'while の判定'], rows);
+      };
+      const traceDelete = () => {
+        const pos = before.indexOf(ex.q);       // 0始まり。pos ≧ 1
+        const rows = [];
+        const judge = i => (before[i + 1] === ex.q) ? '偽 → 繰返しを終了' : '真 → 繰返しを続ける';
+        rows.push(['prev ← listHead の直後', String(before[0]), String(before[1]), judge(0)]);
+        for (let i = 1; i < pos; i++) rows.push([i + ' 回目の繰返しの後', String(before[i]), String(before[i + 1]), judge(i)]);
+        return H.traceTable(['時点', 'prev が指す要素の値', 'prev.next が指す要素の値', 'while の判定'], rows);
+      };
+      const delPos = before.indexOf(ex.q);
+      const finish = {
+        tail: '繰返しを終えた時点で prev はリストの末尾の要素（値 ' + before[before.length - 1]
+          + '）を指しています。その next に新しい要素をつなぐと、リストは ' + figOf(after) + ' になります ✓',
+        del: '繰返しを終えた時点で prev は、削除したい要素の一つ前の要素（値 ' + before[delPos - 1]
+          + '）を指しています。その next を「一つ飛ばした先」に付け替えると、値 ' + ex.q
+          + ' の要素はどこからも参照されなくなり、リストは ' + figOf(after) + ' になります ✓'
+      }[op];
+      const point = {
+        tail: '単方向リストの末尾に足せるのは「末尾の要素の next を付け替える」ときだけなので、まず prev を末尾まで進めるのがこの手続の骨格です。ただしリストが空のときは付け替える相手そのものが無いので、listHead を直接書き換える経路が別に要ります。',
+        del: '単方向リストから要素を外すのは「一つ前の要素の next を、外す要素の次へ付け替える」操作です。先頭の要素には「一つ前」が存在しないので、listHead を直接書き換える経路が別に要ります。'
+      }[op];
+
+      let exp = '<p>空欄に正解を入れて、前書きの例（リストの内容が ' + code(figOf(before)) + ' の状態で '
+        + code(name + '(' + ex.q + ')') + ' を呼び出す）を動かします。</p>'
+        + (op === 'tail' ? traceAppend() : traceDelete())
+        + '<p>' + H.esc(finish) + '</p>'
+        + '<p><b>ここが勘所</b>：' + H.esc(point) + '</p>';
+
+      const notes = [];
+      for (const a of D.selA) if (a.why) notes.push('空欄 a に ' + code(a.txt) + ' … ' + H.esc(a.why));
+      for (const b of D.selB) if (b.why) notes.push('空欄 b に ' + code(b.txt) + ' … ' + H.esc(b.why));
+      if (notes.length) {
+        exp += '<p><b>誤答の作られ方</b>（本試験の誤答は「ありがちなミス」から逆算されています）：</p><ul>'
+          + notes.map(n => '<li>' + n + '</li>').join('') + '</ul>'
+          + '<p>組合せの問題は、片方だけ合っていても不正解です。a と b を必ずセットで確かめましょう。</p>';
+      }
+
+      return {
+        intro,
+        question: '次のプログラム中の ' + H.blank('a') + ' と ' + H.blank('b')
+          + ' に入れる正しい答えの組合せを，解答群の中から選べ。',
+        options,
+        answer,
+        hints: [
+          'リストの各要素がもっているのは「値 val」と「次の要素への参照 next」の2つだけです。'
+          + 'まず前書きの例のリストを ' + figOf(before) + ' の形で紙に書き写し、'
+          + plan.vars.concat(['listHead']).join('、') + ' が'
+          + 'どの要素を指しているのかを矢印で書き込むところから始めましょう。図にすると、'
+          + 'どの参照を書き換えれば目的のリストになるかが見えてきます。',
+          '空欄が2つある問題は a と b の組合せで答えるので、片方だけ合っていても不正解です。'
+          + '解答群の1行を選んだら、その2つをプログラムに入れて例のリストで最後まで実行し、'
+          + '実行し終えた後のリストを書き出す——これを上の行から順に繰り返します。'
+          + '前書きに書かれたリストにならなかった行を消していけば、残るのは1行だけです。'
+        ],
+        exp
+      };
+    }
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = def;
+  else root.B2.register(def);
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+/* ---- jb07 ---- */
+'use strict';
+/* ============================================================
+ * jb07: データ構造 — 配列で表した2分木の走査（再帰）
+ * 型の出典: 令和4年 科目Bサンプル問題セット 問9
+ *           （大域の配列に木を持たせ，再帰手続で走査した出力順を問う）の型
+ * 乱数化: 節数(5〜10。偶数なら「左の子だけを持つ節」が現れる) /
+ *         出力行の位置(先行順・中間順・後行順) / 各節の値(相異なる2けたの整数) / 解答群に出す誤答モデル
+ * 図は付けない。「節 n の子は 2×n と 2×n＋1」という規則から木を組み立てるところが問題の核心。
+ * ============================================================ */
+(function (root) {
+  const H = (typeof module !== 'undefined' && module.exports) ? require('./contract.js') : root.B2H;
+
+  /* 節の値の候補（2けた＝節番号 1〜7 と見分けが付く） */
+  const POOL = (function () { const a = []; for (let v = 11; v <= 98; v++) a.push(v); return a; })();
+
+  const MODES = ['pre', 'in', 'post'];
+  const MODE_NAME = {
+    pre: '先行順（行きがけ順。親 → 左 → 右）',
+    in: '中間順（通りがけ順。左 → 親 → 右）',
+    post: '後行順（帰りがけ順。左 → 右 → 親）'
+  };
+  const MODE_SHORT = { pre: '先行順（親 → 左 → 右）', in: '中間順（左 → 親 → 右）', post: '後行順（左 → 右 → 親）' };
+  const OUT_POS = { pre: '二つの if より前', in: '二つの if の間', post: '二つの if より後' };
+
+  /* 節番号の走査列を返す。mirror=true は左右の子を取り違えて右の部分木から先にたどった場合，
+   * rootOnly=true は根の直下でだけ呼出しの順を入れ替え，その先は正しくたどった場合 */
+  function walk(nodeNum, mode, mirror, rootOnly) {
+    const out = [];
+    (function rec(n) {
+      const swap = rootOnly ? (n === 1) : mirror;
+      const first = swap ? 2 * n + 1 : 2 * n;
+      const second = swap ? 2 * n : 2 * n + 1;
+      if (mode === 'pre') out.push(n);
+      if (first <= nodeNum) rec(first);
+      if (mode === 'in') out.push(n);
+      if (second <= nodeNum) rec(second);
+      if (mode === 'post') out.push(n);
+    })(1);
+    return out;
+  }
+
+  const def = {
+    id: 'jb07', cat: 'tgh', type: 'trace',
+    title: '配列で表した2分木の走査',
+    est: 10, ref: 'fe-algo.html#al-16',
+    origin: '令和4年 科目Bサンプル問題セット 問9（大域の配列と再帰手続による2分木の走査）の型',
+
+    gen(rng) {
+      /* ── パラメータ抽選（jb01と同じ「ベストドロー保持つき引き直し」） ──
+       * 節の値が相異なるので通常は初回で5通りそろうが，走査列が縮退したドロー
+       * （左右対称な木など，モデル間で出力が一致してしまう場合）を機械的に弾くための保険。 */
+      let best = null;
+      for (let attempt = 0; attempt < 60; attempt++) {
+        /* 節数（＝treeの要素数）。偶数なら「左の子だけを持つ節」が現れ，木の形が毎回変わる。
+         * 上限を 10 にしているのは，配列リテラルの行が全角35文字相当を超えないため
+         * （2けたの値が11個で全角36文字相当になる）。 */
+        const nodeNum = H.ri(rng, 5, 10);
+        const mode = H.pick(rng, MODES);          // 出力する行の位置
+        const vals = H.take(rng, POOL, nodeNum);  // 相異なる節の値
+        const seqOf = (m, mirror) => walk(nodeNum, m, mirror).map(i => vals[i - 1]);
+        const others = MODES.filter(m => m !== mode);
+        const correct = seqOf(mode, false);
+        /* 誤答モデルの母集団。解答群は先頭の値から数値順に並べるので，
+         * 「1番目に出力される節が正解と同じモデル」ばかりだと正解の位置が固まる。
+         * 1番目の節が正解とずれるモデル（根を最後に回す・根の直下だけ左右を入れ替える・
+         * 走査の種別と左右の両方を取り違える）も混ぜて，ここから4種を抽選する。 */
+        const rootLast = correct.filter(v => v !== vals[0]).concat([vals[0]]);
+        const cands = [
+          {
+            seq: seqOf(others[0], false),
+            why: '出力する行の位置を読み違え，' + MODE_SHORT[others[0]] + 'でたどった場合の順序。'
+              + 'この順序になるのは，出力する行が' + OUT_POS[others[0]] + 'にあるときである'
+          },
+          {
+            seq: seqOf(others[1], false),
+            why: '出力する行の位置を読み違え，' + MODE_SHORT[others[1]] + 'でたどった場合の順序。'
+              + 'この順序になるのは，出力する行が' + OUT_POS[others[1]] + 'にあるときである'
+          },
+          {
+            seq: seqOf(mode, true),
+            why: '左の子の節（要素番号 2 × n）と右の子の節（要素番号 2 × n ＋ 1）を取り違え，'
+              + '右の部分木から先にたどった場合の順序'
+          },
+          {
+            seq: vals.slice(),
+            why: '再帰の呼出しをたどらず，配列 tree の要素番号の順にそのまま出力されると考えた場合の順序'
+          },
+          {
+            seq: seqOf(others[0], true),
+            why: '出力する行の位置を' + MODE_SHORT[others[0]] + 'と読み違え，さらに左の子と右の子も'
+              + '取り違えて，右の部分木から先にたどった場合の順序'
+          },
+          {
+            seq: seqOf(others[1], true),
+            why: '出力する行の位置を' + MODE_SHORT[others[1]] + 'と読み違え，さらに左の子と右の子も'
+              + '取り違えて，右の部分木から先にたどった場合の順序'
+          },
+          {
+            seq: rootLast,
+            why: '根の値を出力するのは全ての呼出しが終わった後だと考え，根以外の節を'
+              + '正しい順序で出力してから，最後に根の値を出力した場合の順序'
+          },
+          {
+            seq: walk(nodeNum, mode, false, true).map(i => vals[i - 1]),
+            why: '根から先に右の部分木をたどってしまい，そのあとで左の部分木をたどった場合の順序。'
+              + '根より下の呼出しの順序は正しい'
+          }
+        ];
+        const uniq = new Set([correct].concat(cands.map(c => c.seq)).map(s => s.join('，'))).size;
+        if (!best || uniq > best.uniq) best = { uniq, nodeNum, mode, vals, correct, cands };
+        if (uniq >= 6) break;                     // 正解＋誤答5種以上が確保できたら即採用
+      }
+      const N = best.nodeNum, mode = best.mode, vals = best.vals;
+
+      /* ── 解答群（IPA流に数値順で整列。先頭の値から順に比較する） ──
+       * 母集団から4種を抽選する。ただ一様に選ぶと「正解より前に並ぶ型」の数が
+       * 走査の種別ごとに決まってしまう（先行順では正解がいつも中央付近になる）ので，
+       * 前に並ぶ型を何個混ぜるか（＝正解の位置）自体をシードで抽選する。 */
+      const cmpSeq = (A, B) => {
+        for (let i = 0; i < Math.min(A.length, B.length); i++) if (A[i] !== B[i]) return A[i] - B[i];
+        return A.length - B.length;
+      };
+      const seen = new Set([best.correct.join('，')]);
+      const preOpt = [], postOpt = [];
+      for (const c of H.shuffle(rng, best.cands)) {
+        const key = c.seq.join('，');
+        if (seen.has(key)) continue;
+        seen.add(key);
+        (cmpSeq(c.seq, best.correct) < 0 ? preOpt : postOpt).push(c);
+      }
+      const kLo = Math.max(0, 4 - postOpt.length);
+      const kHi = Math.max(kLo, Math.min(4, preOpt.length));
+      const picked = preOpt.slice(0, H.ri(rng, kLo, kHi));
+      const shown = [{ seq: best.correct, correct: true }]
+        .concat(picked, postOpt.slice(0, 4 - picked.length));
+      shown.sort((x, y) => cmpSeq(x.seq, y.seq));
+      const options = shown.map(it => ({ html: H.esc(it.seq.join('，')), mono: true }));
+      const answer = shown.findIndex(it => it.correct);
+      const notes = shown.filter(it => !it.correct);   // 実際に表示された誤答だけ
+
+      /* ── 問題文 ── */
+      const intro = [
+        {
+          t: 'p', html: '次のプログラムは，2分木の全ての節の値を出力する。この2分木では，根の節番号を 1 とし，'
+            + '節番号 n の節の左の子の節番号を 2 × n，右の子の節番号を 2 × n ＋ 1 とする。'
+            + '節番号 n の節の値は，大域の配列 tree の要素番号 n の要素に格納されており，'
+            + '節番号が tree の要素数を超える節は存在しない。'
+            + '手続 order は，引数 n で与えられた節を根とする部分木に含まれる全ての節の値を出力する。'
+        },
+        {
+          t: 'code', lines: (function () {
+            const L = [];
+            L.push('大域: 整数型の配列: tree ← {' + vals.join(', ') + '}');
+            L.push('○order(整数型: n)');
+            if (mode === 'pre') L.push('  tree[n] の値を出力する');
+            L.push('  if (2 × n ≦ treeの要素数)');
+            L.push('    order(2 × n)');
+            L.push('  endif');
+            if (mode === 'in') L.push('  tree[n] の値を出力する');
+            L.push('  if (2 × n ＋ 1 ≦ treeの要素数)');
+            L.push('    order(2 × n ＋ 1)');
+            L.push('  endif');
+            if (mode === 'post') L.push('  tree[n] の値を出力する');
+            return L.map(H.esc);
+          })()
+        }
+      ];
+
+      /* ── 解説 ── */
+      const treeRows = [];
+      for (let n = 1; n <= N; n++) {
+        treeRows.push(['節' + n, String(vals[n - 1]),
+          2 * n <= N ? '節' + (2 * n) : '（なし）',
+          2 * n + 1 <= N ? '節' + (2 * n + 1) : '（なし）']);
+      }
+      const callRows = [];
+      for (let n = 1; n <= N; n++) {
+        const acts = [];
+        const outAct = 'tree[' + n + '] の値 ' + vals[n - 1] + ' を出力';
+        if (mode === 'pre') acts.push(outAct);
+        if (2 * n <= N) acts.push('order(' + (2 * n) + ') を呼ぶ');
+        if (mode === 'in') acts.push(outAct);
+        if (2 * n + 1 <= N) acts.push('order(' + (2 * n + 1) + ') を呼ぶ');
+        if (mode === 'post') acts.push(outAct);
+        callRows.push(['order(' + n + ')', acts.join('　→　')]);
+      }
+      const subSize = n => (n > N ? 0 : 1 + subSize(2 * n) + subSize(2 * n + 1));
+      const leftSize = subSize(2);
+      const checkText = mode === 'pre'
+        ? '根（節1）の値 ' + vals[0] + ' が必ず 1 番目に出ます'
+        : (mode === 'in'
+          ? '根の左の部分木には節が ' + leftSize + ' 個あるので，根（節1）の値 ' + vals[0] + ' は '
+            + (leftSize + 1) + ' 番目に出ます'
+          : '根（節1）の値 ' + vals[0] + ' が必ず最後（' + N + ' 番目）に出ます');
+      const ansStr = best.correct.join('，');
+
+      let exp = '<p>まず配列から木の形を復元します。根は節1，節 n の子は節 2 × n（左）と節 2 × n ＋ 1（右）で，'
+        + '節番号が要素数 ' + N + ' を超える節はありません。</p>'
+        + H.traceTable(['節番号 n', 'tree[n]（節の値）', '左の子（2 × n）', '右の子（2 × n ＋ 1）'], treeRows)
+        + '<p>次に出力の位置です。<code>tree[n] の値を出力する</code> の行が' + H.esc(OUT_POS[mode])
+        + 'にあるので，この走査は' + H.esc(MODE_NAME[mode]) + 'です。各呼出しの中身は次のとおりになります。</p>'
+        + H.traceTable(['呼出し', 'この呼出しの中で起きること（左から順に）'], callRows)
+        + '<p>order(1) から順に展開すると，出力は <code>' + H.esc(ansStr) + '</code> の順になります。'
+        + '検算：出力は全部で ' + N + ' 個で，tree の ' + N + ' 個の値がちょうど 1 回ずつ現れています。また，'
+        + H.esc(checkText) + ' ✓</p>';
+      if (notes.length) {
+        exp += '<p><b>誤答の作られ方</b>（本試験の誤答は「ありがちなミス」から逆算されています）：</p><ul>'
+          + notes.map(nte => '<li><code>' + H.esc(nte.seq.join('，')) + '</code><br>… '
+            + H.esc(nte.why) + '</li>').join('')
+          + '</ul>';
+      }
+
+      return {
+        intro,
+        question: '手続 order を order(1) として呼び出したとき，出力される値を順に並べたものはどれか。'
+          + '解答群の中から選べ。ここで，配列の要素番号は 1 から始まる。',
+        options,
+        answer,
+        hints: [
+          'この問題は、配列から木の形を復元するところが半分です。根は節1で、節 n の左の子は要素番号 2 × n、'
+          + '右の子は 2 × n ＋ 1、要素番号が treeの要素数 を超える子は存在しません。'
+          + 'まず節1から順に「どの節の子がどれか」を書き出して、木の形を確定させましょう。',
+          '木ができたら order(1) から呼出しをたどります。order(n) の中で「tree[n] の値を出力する」の行が'
+          + '二つの if のどこに置かれているかで、親の値を出すタイミングが決まります。'
+          + '一度もぐった部分木は最後までたどり終えるまで戻ってこないので、'
+          + '出力が起きた瞬間の値を左から順にメモしていきましょう。'
+        ],
+        exp,
+        traceVars: ['n', 'tree[n]', '出力']
+      };
+    }
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = def;
+  else root.B2.register(def);
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+/* ---- jb08 ---- */
+'use strict';
+/* ============================================================
+ * jb08: 探索・整列 — 2分探索で比較される要素の順序
+ * 型の出典: 2022年12月公開 サンプル問題セット 問13（2分探索）＋
+ *           令和5年度 問2（「順に並べたものはどれか」型の設問）の型
+ * 乱数化: 要素数(7〜9) / 各要素の値 / 目標値x（配列にある・ないの両方が出る）/
+ *         if の2番目の条件の書き方（＜ 派・＞ 派）/ 解答群に出す誤答モデルの顔ぶれ
+ * ============================================================ */
+(function (root) {
+  const H = (typeof module !== 'undefined' && module.exports) ? require('./contract.js') : root.B2H;
+
+  /* 「順に並べたもの」の表記（IPAの出力順の解答群は全角読点区切り） */
+  const fmt = arr => arr.join('，');
+
+  /* 解答群の整列（IPAの解答群は数値順・辞書順）。前方が同じなら短い列を先に置く */
+  function cmpSeq(A, B) {
+    const n = Math.min(A.length, B.length);
+    for (let i = 0; i < n; i++) if (A[i] !== B[i]) return A[i] - B[i];
+    return A.length - B.length;
+  }
+
+  /* 2分探索のシミュレータ。opt で「ありがちな誤り」版に切り替える（opt を省略＝正しい2分探索）。
+   *   ceil   : mid を切り上げで求める      rev    : data[mid] と x の大小判定が逆
+   *   lt     : 繰返し条件が (low ＜ high)   noRet  : 一致しても return しない
+   *   plus1  : mid を1つずらして求める      lowInit: low の初期値（既定 1）
+   *   highInit: high の初期値（既定 dataの要素数）
+   * seq = x と比較された data の要素の値（比較された順）。
+   * 誤り版は範囲が縮まらず止まらないことがあるので歩数の上限を設け，
+   * 打ち切った場合は aborted で知らせる（正しい経路は上限に届かない）。 */
+  function bsearch(a, x, opt) {
+    opt = opt || {};
+    const seq = [], steps = [];
+    let low = opt.lowInit || 1;
+    let high = opt.highInit || a.length;
+    let found = -1, aborted = false, guard = 3 * a.length + 4;
+    while (opt.lt ? low < high : low <= high) {
+      if (guard-- <= 0) { aborted = true; break; }
+      let mid = opt.ceil ? Math.ceil((low + high) / 2) : Math.floor((low + high) / 2);
+      if (opt.plus1) mid = mid + 1;
+      if (mid < 1 || mid > a.length) { aborted = true; break; }
+      const v = a[mid - 1];
+      const st = { low, high, mid, v, hit: false };
+      seq.push(v); steps.push(st);
+      if (v === x) {
+        if (!opt.noRet) { st.hit = true; found = mid; break; }
+        low = mid + 1;                                  // return を書き忘れた版
+      } else if (v < x) {
+        if (opt.rev) high = mid - 1; else low = mid + 1;
+      } else {
+        if (opt.rev) low = mid + 1; else high = mid - 1;
+      }
+    }
+    return { seq, steps, found, low, high, aborted };
+  }
+
+  /* 線形探索（先頭から順に比較。昇順なので x 以上の要素に達した時点で打ち切る） */
+  function linearSeq(a, x) {
+    const seq = [];
+    for (let i = 0; i < a.length; i++) { seq.push(a[i]); if (a[i] >= x) break; }
+    return seq;
+  }
+  /* 同じく線形探索だが，末尾から先頭へ向かってたどった場合（x 以下の要素に達した時点で打ち切る） */
+  function linearRevSeq(a, x) {
+    const seq = [];
+    for (let i = a.length - 1; i >= 0; i--) { seq.push(a[i]); if (a[i] <= x) break; }
+    return seq;
+  }
+
+  const def = {
+    id: 'jb08', cat: 'srt', type: 'trace',
+    title: '2分探索で比較される要素の順序',
+    est: 8, ref: 'fe-algo.html#al-10',
+    origin: '2022年12月公開 サンプル問題セット 問13（2分探索）＋令和5年度 問2（順に並べる設問）の型',
+
+    gen(rng) {
+      const cmpLess = rng() < 0.5;   // if の2番目の条件を ＜ で書くか ＞ で書くか
+      const wantHit = rng() < 0.5;   // x が data にあるか／ないか（引き直しでも変えない）
+
+      /* ── パラメータ抽選 ──
+       * 誤答モデルの列は構造的に一致しやすい（n が奇数だと切り上げ版が正解と同じ経路を通る，
+       * x が data にないと return 忘れ版が正解と同じ列になる，など）。
+       * そこで「正解の比較回数が3〜4回」かつ「列が6種類以上に割れた」最初のドローを採用する。
+       * ★ 最大化ではなく最初に条件を満たしたものを採るのは，最大化にすると
+       *   「x が末尾寄りで比較回数が最長」のドローばかりが選ばれて出題が単調になるため。 */
+      let best = null;
+      for (let attempt = 0; attempt < 60; attempt++) {
+        const n = H.ri(rng, 7, 9);
+        const a = []; let v = H.ri(rng, 11, 18);
+        for (let i = 0; i < n; i++) { a.push(v); v += H.ri(rng, 4, 10); }   // 昇順・重複なし・間隔4以上
+        let x;
+        if (wantHit) {
+          x = a[H.ri(rng, 1, n - 1)];                                       // 配列にある（要素番号2以上）
+        } else {
+          const j = H.ri(rng, 0, n - 2);
+          x = a[j] + H.ri(rng, 1, a[j + 1] - a[j] - 1);                     // 配列にない（隣り合う2要素の間）
+        }
+
+        const cr = bsearch(a, x, {});
+        const half = Math.floor(n / 2);
+        /* ── 誤答モデルの母集団 ──
+         * 解答群は列の数値順に並べるので，「1つ目に比べる値が正解より小さいモデル」は必ず正解より前に，
+         * 「大きいモデル」は必ず後ろに置かれる。どちらか一方に偏った顔ぶれを毎シード出すと
+         * 正解の位置が固定してしまうため，前に来る型と後ろに来る型の両方をそろえ，ここから抽選する。
+         * （実際にどちらへ並ぶかは，抽選のときに正解の列と比べて判定する。） */
+        const wr = (seq, why) => (seq && seq.length ? { seq, why } : null);
+        const abrt = r => (r.aborted ? null : r.seq);
+        const md = [
+          /* ── 主に正解より前に並ぶ型（1つ目の比較が正解と同じか，正解より小さい） ── */
+          wr(abrt(bsearch(a, x, { rev: true })),
+            'data[mid] と x の大小の判定を取り違え，探索範囲を左右逆に狭めてしまった場合の列'),
+          wr(linearSeq(a, x),
+            '昇順であることを使い，x を超える要素に達した時点で打ち切る線形探索を行った場合の列'),
+          wr(abrt(bsearch(a, x, { lt: true })),
+            '繰返しの条件を (low ＜ high) と読み違え，探索範囲が1要素になったときの比較を落とした場合の列'),
+          wr(cr.seq.indexOf(a[0]) >= 0 ? null : [a[0]].concat(cr.seq),
+            '探索を始める前に，x が配列の範囲に入っているかを先頭の要素と比べて確かめ，その比較も数えた場合の列'),
+          wr(abrt(bsearch(a, x, { highInit: half })),
+            'high の初期値を dataの要素数 ではなく dataの要素数 ÷ 2 の商 とし，配列の前半だけを探索した場合の列'),
+          wr(cr.seq.slice().reverse(),
+            '比較した要素は合っているが，並べる順序を逆（最後に比較した要素から）にしてしまった場合の列'),
+          /* ── 主に正解より後ろに並ぶ型（1つ目の比較が正解より大きい） ── */
+          wr(abrt(bsearch(a, x, { ceil: true })),
+            '中央の要素番号を求めるときに，(low ＋ high) ÷ 2 を切り上げてしまった場合の列'),
+          wr(abrt(bsearch(a, x, { noRet: true })),
+            'data[mid] ＝ x となったときに return で終わることを見落とし，繰返しを最後まで続けた場合の列'),
+          wr(abrt(bsearch(a, x, { plus1: true })),
+            '中央の要素番号を mid ← (low ＋ high) ÷ 2 の商 ＋ 1 と1つずらして求めてしまった場合の列'),
+          wr(cr.seq.indexOf(a[n - 1]) >= 0 ? null : [a[n - 1]].concat(cr.seq),
+            '探索を始める前に，x が配列の範囲に入っているかを末尾の要素と比べて確かめ，その比較も数えた場合の列'),
+          wr(abrt(bsearch(a, x, { lowInit: half })),
+            'low の初期値を 1 ではなく dataの要素数 ÷ 2 の商 とし，配列の後半だけを探索した場合の列'),
+          wr(linearRevSeq(a, x),
+            '探索の向きを取り違え，配列の末尾から先頭へ向かって順に x と比較していく線形探索を行った場合の列')
+        ].filter(m => m);
+        const uniq = new Set([cr.seq].concat(md.map(m => m.seq)).map(s => s.join(',')));
+        const okLen = (cr.seq.length >= 3 && cr.seq.length <= 4);
+        const score = (okLen ? 100 : 0) + uniq.size;
+        if (!best || score > best.score) best = { score, a, x, cr, md };
+        if (okLen && uniq.size >= 6) break;            // 正解＋誤答5種が確保できたら即採用
+      }
+      const a = best.a, x = best.x, cr = best.cr;
+      const arrLit = '{' + a.join(', ') + '}';
+
+      /* ── 問題文 ── */
+      const lines = [
+        '○整数型: binarySearch(整数型の配列: data, 整数型: x)',
+        '  整数型: low ← 1',
+        '  整数型: high ← dataの要素数',
+        '  整数型: mid',
+        '  while (low ≦ high)',
+        '    mid ← (low ＋ high) ÷ 2 の商',
+        '    if (data[mid] ＝ x)',
+        '      return mid'
+      ];
+      if (cmpLess) {
+        lines.push('    elseif (data[mid] ＜ x)', '      low ← mid ＋ 1', '    else', '      high ← mid － 1');
+      } else {
+        lines.push('    elseif (data[mid] ＞ x)', '      high ← mid － 1', '    else', '      low ← mid ＋ 1');
+      }
+      lines.push('    endif', '  endwhile', '  return －1');
+
+      const intro = [
+        { t: 'p', html: '関数 binarySearch は，昇順に整列された整数型の配列 data の中から，値が x と等しい要素を2分探索によって探す。値が x と等しい要素が見つかった場合はその要素番号を，見つからなかった場合は －1 を返す。ここで，data の要素の値は全て異なるものとする。' },
+        { t: 'code', lines: lines.map(H.esc) }
+      ];
+
+      /* ── 解答群（重複除去は listOptions，並びはIPA流に数値順へ置き直す）
+       * 母集団から毎回5種を抽選する。ただの一様抽選だと「正解より前に並ぶ型」の方が数がそろいやすく，
+       * 正解が下寄りの位置に固まる。そこで前に並ぶ型と後ろに並ぶ型に分けたうえで，
+       * 前に並ぶ型を何個混ぜるか（＝正解の位置）自体をシードで抽選する。 */
+      const seenSeq = new Set([cr.seq.join(',')]);
+      const pre = [], post = [];
+      for (const m of H.shuffle(rng, best.md)) {
+        const key = m.seq.join(',');
+        if (seenSeq.has(key)) continue;                // 正解と同じ列・重複した列は捨てる
+        seenSeq.add(key);
+        (cmpSeq(m.seq, cr.seq) < 0 ? pre : post).push(m);
+      }
+      const kLo = Math.max(0, 5 - post.length);
+      const kHi = Math.max(kLo, Math.min(5, pre.length));
+      const picked = pre.slice(0, H.ri(rng, kLo, kHi));
+      const cands = picked.concat(post.slice(0, 5 - picked.length))
+        .map(m => ({ h: H.esc(fmt(m.seq)), why: m.why, seq: m.seq }));
+      const built = H.listOptions(rng, { h: H.esc(fmt(cr.seq)) }, cands, { count: 6, shuffle: false, mono: true });
+      const chosen = [{ seq: cr.seq, correct: true }].concat(built.notes.map(m => ({ seq: m.seq, why: m.why })));
+      chosen.sort((A, B) => cmpSeq(A.seq, B.seq));
+      const options = chosen.map(o => ({ html: H.esc(fmt(o.seq)), mono: true }));
+      const answer = chosen.findIndex(o => o.correct);
+
+      /* ── 解説（トレース表つき） ── */
+      const rows = cr.steps.map((st, i) => [
+        (i + 1) + '回目',
+        String(st.low), String(st.high), String(st.mid), String(st.v),
+        st.hit ? st.v + ' ＝ ' + x + ' なので要素番号 ' + st.mid + ' を返して終了'
+          : (st.v < x ? st.v + ' ＜ ' + x + ' なので low ← ' + (st.mid + 1)
+            : st.v + ' ＞ ' + x + ' なので high ← ' + (st.mid - 1))
+      ]);
+      const rangeText = cr.steps.map(st => st.low + '～' + st.high).join(' → ')
+        + (cr.found > 0 ? '' : ' → 空（low ＝ ' + cr.low + '，high ＝ ' + cr.high + '）');
+
+      let exp = '2分探索は「範囲の中央を1回見るたびに、探索範囲が半分になる」探索です。範囲の両端 low と high、その中央 mid を、繰返しごとに1行ずつ書き出します。'
+        + H.traceTable(['繰返し', 'low', 'high', 'mid', 'data[mid]', 'x（＝' + x + '）との比較 → 次の操作'], rows)
+        + '<p>x と比較された要素は、上から順に <code>' + H.esc(fmt(cr.seq)) + '</code> の' + cr.seq.length + 'つです。'
+        + (cr.found > 0
+          ? '要素番号 ' + cr.found + ' の要素が x と一致するので、その場で return し、戻り値は ' + cr.found + ' になります。'
+          : x + ' は data のどの要素とも一致しないので、最後は low ＞ high となって繰返しを抜け、戻り値は －1 になります。')
+        + '</p>'
+        + '<p>検算：探索範囲は ' + H.esc(rangeText) + ' と狭まっていて、どの範囲でも見ているのは中央の1要素だけです ✓</p>';
+
+      const wrongs = chosen.filter(o => !o.correct);
+      if (wrongs.length) {
+        exp += '<p><b>誤答の作られ方</b>（本試験の誤答は「ありがちなミス」から逆算されています）：</p><ul>'
+          + wrongs.map(w => '<li><code>' + H.esc(fmt(w.seq)) + '</code> … ' + H.esc(w.why) + '</li>').join('')
+          + '</ul>';
+      }
+
+      return {
+        intro,
+        question: '関数 binarySearch を binarySearch(' + H.esc(arrLit) + ', ' + x + ') として呼び出したとき，x と比較される data の要素の値を，比較される順に全て並べたものはどれか。解答群の中から選べ。ここで，配列の要素番号は 1 から始まる。',
+        options,
+        answer,
+        hints: [
+          '2分探索は「今の探索範囲」を low（左端の要素番号）と high（右端の要素番号）の2つで持ちます。1回の繰返しで x と比べるのは data[mid] のただ一つだけなので、繰返しごとに low、high、mid の3つを1行に書き出す表を作ると、見落とさずに追えます。',
+          'mid は繰返しのたびに (low ＋ high) ÷ 2 の商で計算し直します。data[mid] と x の大小に応じて、次の範囲は mid より右側か左側のどちらかになり、low か high の一方だけが更新されます。表をどこまで伸ばすかは自分で決めず、繰返しの脱出条件と return がどの行に置かれているかをプログラムで確かめてから伸ばし、拾った data[mid] を拾った順に並べましょう。'
+        ],
+        exp,
+        traceVars: ['low', 'high', 'mid']
+      };
+    }
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = def;
+  else root.B2.register(def);
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+/* ---- jb09 ---- */
+'use strict';
+/* ============================================================
+ * jb09: クラスとインスタンス — 参照のコピーと連動先の付け替え
+ * 型の出典: 令和4年サンプル問題 問3（クラス・コンストラクタ・インスタンスの参照）の型
+ *   クラス本体は擬似言語で書かず，メンバ変数表／コンストラクタ表／メソッド表で仕様を与える
+ *   （ipa-format-spec.md 5.9「擬似言語の記述形式にクラス定義の構文は存在しない」）
+ * 乱数化: 変数名の組 / 生成順と役割（先頭・外れる側・末尾）の対応 / 3インスタンスの初期値と加算量
+ * 学習の核: 参照の代入は実体の複製ではない（別名経由の書き換えが元の変数に見える）
+ * ============================================================ */
+(function (root) {
+  const H = (typeof module !== 'undefined' && module.exports) ? require('./contract.js') : root.B2H;
+
+  /* 参照セマンティクスをそのまま再現するシミュレータ。
+   * 実際に JS のオブジェクト参照で動かすので，別名の扱いを取り違えようがない。
+   * 戻り値: { total, rows }（rows は解説のトレース表の行） */
+  function runProgram(val, stp, head, mid, tail, nm, alias) {
+    const inst = [0, 1, 2].map(i => ({ value: val[i], step: stp[i], base: null, idx: i }));
+    const up = o => { o.value = o.value + o.step; };
+    const sumOf = o => (o.base === null ? o.value : o.value + sumOf(o.base));
+    let S = null;
+    const rows = [];
+    const state = () => {
+      const ls = [];
+      for (const o of inst) if (o.base !== null) ls.push(nm[o.idx] + '→' + nm[o.base.idx]);
+      if (S !== null) ls.push(alias + '＝' + nm[S.idx]);
+      return ls.length ? ls.join('，') : 'なし';
+    };
+    const snap = stmt => rows.push([stmt, String(inst[0].value), String(inst[1].value), String(inst[2].value), state()]);
+
+    const P = inst[head], Q = inst[mid], R = inst[tail];
+    snap('（三つの Counter を生成した直後）');
+    P.base = Q;   snap(nm[head] + '.base ← ' + nm[mid]);
+    S = P;        snap(alias + ' ← ' + nm[head]);
+    S.base = R;   snap(alias + '.base ← ' + nm[tail]);
+    up(S);        snap(alias + '.up()');
+    up(Q);        snap(nm[mid] + '.up()');
+    const total = sumOf(P);
+    snap('total ← ' + nm[head] + '.sum()');
+    return { total, rows };
+  }
+
+  const def = {
+    id: 'jb09', cat: 'fnc', type: 'trace',
+    title: 'カウンタの連結とインスタンスの参照',
+    est: 10, ref: 'fe-algo.html#al-9',
+    origin: '令和4年サンプル問題 問3（クラス・コンストラクタ・インスタンスの参照）の型',
+
+    gen(rng) {
+      /* ── 変数名の組 ── */
+      const NS = H.pick(rng, [
+        { v: ['p', 'q', 'r'], a: 's' },
+        { v: ['x', 'y', 'z'], a: 'w' },
+        { v: ['c1', 'c2', 'c3'], a: 't' }
+      ]);
+      const nm = NS.v, alias = NS.a;
+
+      /* ── 役割の割当て（生成順 0,1,2 のどれが 先頭/外れる側/末尾 になるか） ── */
+      const roles = H.shuffle(rng, [0, 1, 2]);
+      const head = roles[0], mid = roles[1], tail = roles[2];
+
+      /* ── 値の抽選。誤答モデルは加減算だけででき衝突しやすいので，
+       *    ベストドロー保持つきで60回まで引き直し，最も値がばらけたドローを採る ── */
+      let best = null;
+      for (let attempt = 0; attempt < 60; attempt++) {
+        const val = [H.ri(rng, 4, 29), H.ri(rng, 4, 29), H.ri(rng, 4, 29)];
+        const stp = [H.ri(rng, 2, 12), H.ri(rng, 2, 12), H.ri(rng, 2, 12)];
+        const vH = val[head], vM = val[mid], vT = val[tail];
+        const sH = stp[head], sM = stp[mid], sT = stp[tail];
+        const correct = runProgram(val, stp, head, mid, tail, nm, alias).total;
+
+        const md = {
+          copy: {
+            v: vH + vM + sM,
+            why: alias + ' ← ' + nm[head] + ' でインスタンスが複製されると考え，' + alias
+              + ' への操作が ' + nm[head] + ' に届かないとした場合の値'
+          },
+          noRepoint: {
+            v: vH + sH + vM + sM,
+            why: alias + '.base ← ' + nm[tail] + ' による連動先の変更を読み飛ばし，'
+              + nm[head] + ' の連動先を ' + nm[mid] + ' のままとした場合の値'
+          },
+          insert: {
+            v: vH + sH + vT + vM + sM,
+            why: '連動先の変更を「' + nm[tail] + ' を間に割り込ませた」と読み，' + nm[head] + '→'
+              + nm[tail] + '→' + nm[mid] + ' の順につながっているとした場合の値'
+          },
+          swapArgs: {
+            v: vH + sH + sT,
+            why: 'コンストラクタの二つの引数を取り違え，第2引数の方で value を初期化するとした場合の値'
+          },
+          noUp: {
+            v: vH + vT,
+            why: alias + '.up() が ' + nm[head] + ' の value を増やすことを見落とした場合の値'
+          },
+          cascade: {
+            v: vH + sH + vT + sT,
+            why: 'up の効果が連動先のカウンタにも波及すると誤解した場合の値'
+          },
+          sumAll: {
+            v: val[0] + val[1] + val[2] + stp[0] + stp[1] + stp[2],
+            why: '参照のつながりを追わず，三つのインスタンスの value と step を全て合計した場合の値'
+          },
+          ownOnly: {
+            v: vH + sH,
+            why: 'メソッド sum が base をたどらず，そのカウンタ自身の value だけを返すと読んだ場合の値'
+          },
+          midChain: {
+            v: vM + sM,
+            why: '連動先の付替えを「' + nm[head] + ' が連結から外れて ' + nm[mid]
+              + ' だけが残る」と読み違え，' + nm[mid] + ' の側から合計した場合の値'
+          }
+        };
+        const uniq = new Set([correct].concat(Object.keys(md).map(k => md[k].v)));
+        if (!best || uniq.size > best.uniq) best = { uniq: uniq.size, val, stp, correct, md };
+        if (uniq.size >= 8) break;           // 正解＋誤答7種以上が別々の値になれば十分
+      }
+      const val = best.val, stp = best.stp, correct = best.correct, md = best.md;
+      const vH = val[head], vM = val[mid], vT = val[tail];
+      const sH = stp[head], sM = stp[mid], sT = stp[tail];
+
+      /* ── 問題文 ── */
+      /* 説明の列（各行の最終セル）は文が長いので左揃え（.qtbl td.l） */
+      const tbl = (cap, heads, body) =>
+        '<table class="qtbl"><caption>' + cap + '</caption><thead><tr>'
+        + heads.map((h, i) => '<th' + (i === heads.length - 1 ? ' class="l"' : '') + '>' + h + '</th>').join('')
+        + '</tr></thead><tbody>'
+        + body.map(r => '<tr>' + r.map((c, i) => '<td' + (i === r.length - 1 ? ' class="l"' : '') + '>' + c + '</td>').join('') + '</tr>').join('')
+        + '</tbody></table>';
+
+      const intro = [
+        {
+          t: 'p', html: 'クラス Counter は，値を数え上げるカウンタを表す。カウンタは，メンバ変数 base に'
+            + '別のカウンタの参照を格納することによって連結することができ，メソッド sum は，base を末尾まで'
+            + 'たどって，連結された全てのカウンタの value の合計を返す。クラス Counter の説明を表1〜表3 に示す。'
+        },
+        {
+          t: 'table', html: tbl('表1　クラス Counter のメンバ変数の説明',
+            ['メンバ変数', '型', '説明'],
+            [
+              ['value', '整数型', 'カウンタの現在の値'],
+              ['step', '整数型', 'メソッド up を1回呼び出したときに value に加える値'],
+              ['base', 'Counter', '連動先のカウンタの参照。連動先がないときの状態は未定義']
+            ])
+        },
+        {
+          t: 'table', html: tbl('表2　クラス Counter のコンストラクタの説明',
+            ['コンストラクタ', '説明'],
+            [
+              ['Counter(整数型: n, 整数型: m)',
+                '引数 n でメンバ変数 value を，引数 m でメンバ変数 step を初期化する。メンバ変数 base は未定義とする。']
+            ])
+        },
+        {
+          t: 'table', html: tbl('表3　クラス Counter のメソッドの説明',
+            ['メソッド', '戻り値', '説明'],
+            [
+              ['up()', 'なし', 'メンバ変数 value に，メンバ変数 step の値を加える。'],
+              ['sum()', '整数型',
+                'メンバ変数 base が未定義のときは，メンバ変数 value の値を返す。base が未定義でないときは，'
+                + 'value の値と base.sum() の戻り値との和を返す。']
+            ])
+        },
+        {
+          t: 'p', html: '次のプログラムは，クラス Counter のインスタンスを三つ生成し，'
+            + '連結のしかたを変えながら操作した後，変数 total に合計を求めるものである。'
+            + 'ここで，Counter 型の変数はクラス Counter のインスタンスの参照を格納するものとする。'
+        },
+        {
+          t: 'code', lines: (function () {
+            const L = [];
+            L.push('整数型: total');
+            for (let i = 0; i < 3; i++) L.push('Counter: ' + nm[i] + ' ← Counter(' + val[i] + ', ' + stp[i] + ')');
+            L.push('Counter: ' + alias);
+            L.push(nm[head] + '.base ← ' + nm[mid]);
+            L.push(alias + ' ← ' + nm[head]);
+            L.push(alias + '.base ← ' + nm[tail]);
+            L.push(alias + '.up()');
+            L.push(nm[mid] + '.up()');
+            L.push('total ← ' + nm[head] + '.sum()');
+            return L.map(H.esc);
+          })()
+        }
+      ];
+
+      /* ── 解答群（copy は本問の核心なので必ず候補の先頭に置き，残りはシードで入れ替える） ──
+       * insert・cascade・sumAll は構造上どのシードでも正解より大きい値になる。
+       * 3つとも出すと解答群は「正解＋その上に3つ」の形に固まり，昇順に並べた正解の位置が上へ寄る。
+       * そこでこの3つからは 0〜2 個だけを採り，上下どちらにも振れるモデル（midChain）と
+       * 必ず正解より小さいモデル（noUp・ownOnly）を混ぜて位置を散らす。
+       * 小さい側の2つも毎回そろえると今度は正解が下へ寄るので，こちらも 1〜2 個の抽選にする。 */
+      const bigs = H.shuffle(rng, [md.insert, md.cascade, md.sumAll]).slice(0, H.ri(rng, 0, 2));
+      const smalls = H.shuffle(rng, [md.noUp, md.ownOnly, md.swapArgs]).slice(0, H.ri(rng, 1, 2));
+      const drawn = bigs.concat(smalls, [md.noRepoint, md.midChain]);
+      /* 抽選から漏れたモデルは末尾に予備として置く（値が重なって肢が4つに足りないときだけ効く） */
+      const spare = [md.insert, md.cascade, md.sumAll, md.noUp, md.ownOnly, md.swapArgs]
+        .filter(m => drawn.indexOf(m) < 0);
+      const built = H.numOptions(rng, correct,
+        [md.copy].concat(H.shuffle(rng, drawn), H.shuffle(rng, spare)),
+        { count: 5 });
+
+      /* ── 解説 ── */
+      const sim = runProgram(val, stp, head, mid, tail, nm, alias);
+      const heads = ['実行する文', nm[0] + ' の value', nm[1] + ' の value', nm[2] + ' の value', '参照の状態'];
+      let exp = '<p>クラス型の変数が持っているのは，インスタンスそのものではなく<b>インスタンスの参照</b>です。'
+        + 'したがって ' + alias + ' ← ' + nm[head] + ' で複製されるのは参照だけで，インスタンスは三つのままです。'
+        + alias + ' と ' + nm[head] + ' は同じインスタンスの別名になり，' + alias + ' への操作は '
+        + nm[head] + ' から見た値をそのまま変えます。各文を実行した直後の状態：</p>'
+        + H.traceTable(heads, sim.rows)
+        + '<p>最後の ' + nm[head] + '.sum() は base をたどります。' + nm[head] + ' の value は '
+        + vH + ' + ' + sH + ' = ' + (vH + sH) + '，その base は ' + nm[tail] + ' で value は ' + vT + '，'
+        + nm[tail] + ' の base は未定義なのでここで終わりです。よって total = '
+        + (vH + sH) + ' + ' + vT + ' = ' + correct + ' です。</p>'
+        + '<p>検算：' + nm[mid] + ' は ' + alias + '.base ← ' + nm[tail] + ' を実行した時点で '
+        + nm[head] + ' の連動先から外れています。そのあとの ' + nm[mid] + '.up() で ' + nm[mid]
+        + ' の value は ' + vM + ' + ' + sM + ' = ' + (vM + sM)
+        + ' になりますが，どの base からもたどり着けないので total には入りません ✓</p>';
+      if (built.notes.length) {
+        exp += '<p><b>誤答の作られ方</b>（本試験の誤答は「ありがちなミス」から逆算されています）：</p><ul>'
+          + built.notes.map(n => '<li><code>' + H.esc(n.v) + '</code> … ' + H.esc(n.why) + '</li>').join('')
+          + '</ul>';
+      }
+
+      return {
+        intro,
+        question: 'プログラムを実行し終わった直後の変数 total の値はどれか。解答群の中から選べ。',
+        options: built.options,
+        answer: built.answer,
+        hints: [
+          '生成されているインスタンスは何個で，Counter 型の変数は何個あるかを数えてみましょう。'
+            + '前書きの「Counter 型の変数はクラス Counter のインスタンスの参照を格納する」という一文が，'
+            + '代入 ' + alias + ' ← ' + nm[head] + ' の意味を決めています。',
+          'インスタンスを箱として描き，箱の中に value と step を書きます。変数名は箱の外から矢印で指すラベルとして書き，'
+            + 'base への代入があるたびに箱と箱をつなぐ矢印を引き直しましょう。最後は表3の sum の説明どおり，'
+            + nm[head] + ' の箱から矢印をたどれる範囲だけを足していきます。'
+        ],
+        exp,
+        traceVars: [nm[0], nm[1], nm[2], alias, 'total']
+      };
+    }
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = def;
+  else root.B2.register(def);
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+/* ---- jb10 ---- */
+'use strict';
+/* ============================================================
+ * jb10: セキュリティ — リスクアセスメント（評価表から計算で正答が決まる型）
+ * 乱数化: 業種/資産の顔ぶれ/評価値/設問バリアント(最大リスク・対象の組合せ)
+ * 一意性: 最大が同点にならないよう調整。誤答モデル（部分積で比べる）が
+ *         別の資産を指す表を優先採用
+ * 設計メモ: 「三つの値の和で比べた最大」は誤答モデルとして構造的に死んでいる
+ *   （{1,2,3}^3 の全729組で積の最大は常に和でも最大＝別資産を指せない）。
+ *   部分積（脅威×脆弱性など）は別資産を指せるのでこちらを使う。
+ *   genは例外を投げない（段階的に条件を緩めて必ず問題を返す）。
+ * ============================================================ */
+(function (root) {
+  const H = (typeof module !== 'undefined' && module.exports) ? require('./contract.js') : root.B2H;
+
+  const NUM = ['（一）', '（二）', '（三）', '（四）', '（五）'];
+
+  const def = {
+    id: 'jb10', cat: 'sec', type: 'sec',
+    title: 'リスクアセスメント（リスク値の算定）',
+    est: 4, ref: 'fe-security.html#sec-11',
+    origin: '科目Bセキュリティのケース問題（リスク値の算定を伴う型）',
+
+    gen(rng) {
+      const gyosyu = H.pick(rng, ['機械部品の製造販売', '食品の卸売', '住宅設備の施工', '事務機器の販売保守']);
+      const emp = H.ri(rng, 6, 18) * 10;
+      const assetPool = ['顧客情報データベース', '経理サーバ', '営業部員のノートPC', '採用応募者の応募書類', '生産管理システム', '社内ポータルサイト', '委託先との契約書ファイル'];
+      const assets = H.take(rng, assetPool, 5);
+      const isCombo = rng() < 0.5;
+
+      const drawVals = () => assets.map(() => [H.ri(rng, 1, 3), H.ri(rng, 1, 3), H.ri(rng, 1, 3)]);
+      const prodOf = v => v.map(x => x[0] * x[1] * x[2]);
+      const uniMaxIdx = arr => {
+        const m = Math.max(...arr);
+        return arr.filter(z => z === m).length === 1 ? arr.indexOf(m) : -1;
+      };
+
+      /* ── 評価値の抽選（例外は投げず、段階的に緩めて必ず確定させる） ── */
+      let vals, prods, ansIdx = -1, S = [], boundaryIdx = -1, K = 0, models = null;
+
+      if (!isCombo) {
+        /* 最大リスク型: 積の最大が一意で、部分積モデルが別資産を指す表を優先 */
+        let bestDraw = null;
+        for (let att = 0; att < 400; att++) {
+          const v = drawVals(); const p = prodOf(v);
+          const pi = uniMaxIdx(p);
+          if (pi < 0) continue;
+          const tvI = uniMaxIdx(v.map(x => x[1] * x[2]));
+          const atI = uniMaxIdx(v.map(x => x[0] * x[1]));
+          const avI = uniMaxIdx(v.map(x => x[0]));
+          let score = 0;
+          if (tvI >= 0 && tvI !== pi) score++;
+          if (atI >= 0 && atI !== pi) score++;
+          if (avI >= 0 && avI !== pi) score++;
+          if (!bestDraw || score > bestDraw.score) bestDraw = { score, v, p, pi, tvI, atI, avI };
+          if (score >= 2) break;
+        }
+        if (!bestDraw) {
+          /* 400回とも積の最大が同点だった場合（きわめてまれ）: 同点を機械的に崩す */
+          const v = drawVals();
+          for (let g = 0; g < 20; g++) {
+            const p = prodOf(v); const m = Math.max(...p);
+            const ties = p.map((z, i) => [z, i]).filter(x => x[0] === m);
+            if (ties.length === 1) break;
+            const r = v[ties[1][1]];
+            const j = r.findIndex(z => z > 1);
+            if (j >= 0) r[j]--; else r[0] = 2;
+          }
+          const p = prodOf(v);
+          bestDraw = { score: 0, v, p, pi: p.indexOf(Math.max(...p)), tvI: -1, atI: -1, avI: -1 };
+        }
+        vals = bestDraw.v; prods = bestDraw.p; ansIdx = bestDraw.pi;
+        models = bestDraw;
+      } else {
+        /* 組合せ型: K以上が2〜3件・ちょうどKが1件（境界の罠）を優先し、
+         * だめなら条件を緩め、最後はドローから K を逆算して必ず成立させる */
+        let found = false;
+        const tryDraw = cond => {
+          for (let att = 0; att < 200 && !found; att++) {
+            const v = drawVals(); const p = prodOf(v);
+            const kk = H.pick(rng, [12, 18]);
+            const s = p.map((z, i) => [z, i]).filter(x => x[0] >= kk).map(x => x[1]);
+            const eq = s.filter(i => p[i] === kk);
+            const below = p.filter(z => z < kk);
+            if (!cond(s, eq, below, kk)) continue;
+            vals = v; prods = p; S = s; K = kk;
+            boundaryIdx = eq.length ? eq[0] : -1;
+            found = true;
+          }
+        };
+        tryDraw((s, eq, below, kk) => s.length >= 2 && s.length <= 3 && eq.length === 1 && below.length > 0 && Math.max(...below) >= kk - 6);
+        if (!found) tryDraw((s, eq, below) => s.length >= 2 && s.length <= 3 && eq.length >= 1 && below.length > 0);
+        if (!found) tryDraw((s, eq, below) => s.length >= 2 && s.length <= 3 && below.length > 0);
+        if (!found) {
+          /* K をドローから逆算: 2番目に大きい積を基準にすれば必ず2件以上が対象になる */
+          const v = drawVals(); const p = prodOf(v);
+          const sorted = p.slice().sort((a, b) => b - a);
+          const kk = Math.max(2, sorted[1]);
+          vals = v; prods = p; K = kk;
+          S = p.map((z, i) => [z, i]).filter(x => x[0] >= kk).map(x => x[1]);
+          const eq = S.filter(i => p[i] === kk);
+          boundaryIdx = eq.length ? eq[0] : -1;
+        }
+      }
+      const sums = vals.map(v => v[0] + v[1] + v[2]);
+
+      /* ── 表（項番つき） ── */
+      const tbl = '<table class="qtbl"><thead><tr><th>項番</th><th class="l">情報資産</th><th>資産価値</th><th>脅威</th><th>脆弱性</th></tr></thead><tbody>'
+        + assets.map((a, i) => '<tr><td>' + NUM[i] + '</td><td class="l">' + H.esc(a) + '</td>'
+          + vals[i].map(v => '<td>' + v + '</td>').join('') + '</tr>').join('')
+        + '</tbody></table>';
+
+      const intro = [
+        { t: 'p', html: 'A社は，従業員 ' + emp + ' 名の' + H.esc(gyosyu) + 'を営む会社である。A社では，情報セキュリティリーダーとして総務部の C 課長を選任しており，C 課長が中心となって，年 1 回の情報セキュリティリスクアセスメントを実施している。' },
+        { t: 'p', html: '今回のアセスメントでは，主要な情報資産について，資産価値，脅威及び脆弱性をそれぞれ 3 段階（1〜3。値が大きいほど高い）で評価した。結果を表に示す。リスク値は，資産価値，脅威及び脆弱性の三つの値の積として算出する。' + (isCombo ? 'A社では，リスク値が ' + K + ' 以上の情報資産を，優先的に対策を講じる対象としている。' : '') },
+        { t: 'p', html: '<b>表　情報資産の評価結果</b>' },
+        { t: 'table', html: tbl },
+      ];
+
+      /* ── 設問と解答群 ── */
+      let question, options, answer, notes = [];
+      if (!isCombo) {
+        question = '表の情報資産のうち，リスク値が最も大きいものはどれか。解答群のうち，最も適切なものを選べ。';
+        options = assets.map(a => ({ html: H.esc(a) }));
+        answer = ansIdx;
+        if (models.tvI >= 0 && models.tvI !== ansIdx)
+          notes.push({ v: assets[models.tvI], why: '資産価値を見ず、脅威×脆弱性だけの積で比べたときの最大。リスク値は三つの値の積で算出する' });
+        if (models.atI >= 0 && models.atI !== ansIdx)
+          notes.push({ v: assets[models.atI], why: '脆弱性を見ず、資産価値×脅威だけの積で比べたときの最大' });
+        if (models.avI >= 0 && models.avI !== ansIdx)
+          notes.push({ v: assets[models.avI], why: '資産価値だけを見たときの最大。脅威と脆弱性も掛け合わせる必要がある' });
+      } else {
+        question = '表の情報資産のうち，優先的に対策を講じる対象となるものだけを全て挙げた組合せを，解答群の中から選べ。';
+        const numSet = idxs => idxs.slice().sort((a, b) => a - b).map(i => NUM[i]).join('，');
+        const correct = numSet(S);
+        const cands = [];
+        if (boundaryIdx >= 0)
+          cands.push({ h: numSet(S.filter(i => i !== boundaryIdx)), why: '「' + K + ' 以上」を「' + K + ' より大きい」と誤読し、リスク値がちょうど ' + K + ' の資産を外した組合せ' });
+        const belowMax = prods.map((p, i) => [p, i]).filter(x => x[0] < K).sort((a, b) => b[0] - a[0]);
+        if (belowMax.length) {
+          cands.push({ h: numSet(S.concat([belowMax[0][1]])), why: '基準（' + K + ' 以上）に届かない資産まで含めた組合せ' });
+          if (boundaryIdx >= 0)
+            cands.push({ h: numSet(S.filter(i => i !== boundaryIdx).concat([belowMax[0][1]])), why: 'ちょうど ' + K + ' の資産を外し、代わりに基準未満で最大の資産を入れた組合せ' });
+        }
+        const pmx = prods.indexOf(Math.max(...prods));
+        cands.push({ h: numSet([pmx]), why: 'リスク値が最大の 1 件だけを挙げた組合せ（設問は「対象を全て」）' });
+        for (const t of [9, 8, 7, 6]) {
+          const sumSet = sums.map((s, i) => [s, i]).filter(x => x[0] >= t).map(x => x[1]);
+          if (sumSet.length >= 1 && sumSet.length <= 4) {
+            cands.push({ h: numSet(sumSet), why: '積ではなく三つの値の和（' + t + ' 以上）で判定した組合せ' });
+            break;
+          }
+        }
+        const topA = vals.map((v, i) => [v[0], i]).filter(x => x[0] === 3).map(x => x[1]);
+        if (topA.length >= 1 && topA.length <= 3) cands.push({ h: numSet(topA), why: '資産価値が最高の資産だけを選んだ組合せ' });
+        const built = H.listOptions(rng, { h: correct }, cands, { count: 6, shuffle: false });
+        const withMeta = built.options.map((o, i) => ({ o, correct: i === built.answer }));
+        withMeta.sort((x, y) => x.o.html < y.o.html ? -1 : x.o.html > y.o.html ? 1 : 0);
+        options = withMeta.map(w => w.o);
+        answer = withMeta.findIndex(w => w.correct);
+        notes = built.notes;
+      }
+
+      /* ── 解説 ── */
+      const calcRows = assets.map((a, i) => [NUM[i] + '　' + a, vals[i].join(' × '), String(prods[i]),
+        isCombo ? (prods[i] >= K ? '対象（' + K + ' 以上）' : '対象外') : (i === answer && !isCombo ? '最大' : '')]);
+      let exp = '<p>まず全行のリスク値（積）を計算します。ここを暗算で飛ばすのがいちばんの事故のもとです。</p>'
+        + H.traceTable(['情報資産', '計算', 'リスク値', isCombo ? '判定' : '備考'], calcRows)
+        + (isCombo
+          ? '<p>リスク値が ' + K + ' 以上の資産は上の表のとおり' + (boundaryIdx >= 0 ? 'で、「ちょうど ' + K + '」の資産（' + H.esc(assets[boundaryIdx]) + '）も「' + K + ' 以上」に含まれる点が境界の罠です。' : 'です。') + '</p>'
+          : '<p>積の最大は ' + H.esc(assets[answer]) + '（リスク値 ' + prods[answer] + '）です。</p>')
+        + (notes.length ? '<p><b>誤答の作られ方</b>：</p><ul>' + notes.map(n => '<li>' + H.esc(n.v !== undefined ? n.v : H.stripTags(n.h)) + ' … ' + H.esc(n.why) + '</li>').join('') + '</ul>' : '');
+
+      return {
+        intro, question, options, answer,
+        hints: [
+          'まず表の全行についてリスク値（三つの値の積）を計算して書き出しましょう。トレース表を「項番／積」の2列にして埋めると速いです。',
+          isCombo
+            ? '「' + K + ' 以上」の境界に注意。リスク値がちょうど ' + K + ' の資産を含めるかどうかは、問題文の言い回しどおりに決めましょう。'
+            : '最大の行を選んだら、それが三つの値すべてを掛けた「積」の最大かどうか、計算をもう一度だけ見直しましょう。',
+        ],
+        exp,
+        traceVars: ['項番', 'リスク値'],
+      };
+    }
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = def;
+  else root.B2.register(def);
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+/* ---- jb11 ---- */
+'use strict';
+/* ============================================================
+ * jb11: 情報セキュリティ — 標的型攻撃メールの添付を開いた直後の初動
+ * 型の出典: 令和8年度 問6（「…だけを全て挙げた組合せ」型）＋
+ *           令和4年12月 サンプル問18（(一)〜(五)の候補を提示する型）
+ * 乱数化: 会社設定（取扱品目・従業員数）／部署／詐称された差出人／添付ファイルの
+ *         名目と形式／異常の症状／発生時刻／情報システム部門の名称／
+ *         行動候補8個から5個の抽選と並び順／解答群に載る誤答組合せの顔ぶれ
+ * 適否の根拠は図1の規程で固定してあるので，乱数で正誤が動くことはない。
+ * ============================================================ */
+(function (root) {
+  const H = (typeof module !== 'undefined' && module.exports) ? require('./contract.js') : root.B2H;
+
+  const KAN = ['一', '二', '三', '四', '五'];
+  const lab = i => '（' + KAN[i] + '）';
+  const fmtSet = set => set.map(lab).join('，');
+  /* 集合（昇順の要素番号配列）を辞書順に比較 */
+  const cmpSet = (a, b) => {
+    const n = Math.min(a.length, b.length);
+    for (let i = 0; i < n; i++) if (a[i] !== b[i]) return a[i] - b[i];
+    return a.length - b.length;
+  };
+  const keyOf = set => set.join(',');
+
+  const def = {
+    id: 'jb11', cat: 'sec', type: 'sec',
+    title: '標的型攻撃メールを開いた直後の初動',
+    est: 8, ref: 'fe-security.html#sec-4',
+    origin: '令和8年度 問6（「…だけを全て挙げた組合せ」型）＋令和4年12月 問18（(一)〜(五)の候補提示）の型',
+
+    gen(rng) {
+      const E = H.esc;
+
+      /* ── 細部の抽選（適否には影響しない飾りだけを振る） ── */
+      const goods = H.pick(rng, ['食品原料', '機械部品', '医療機器', '産業用資材', '化学品']);
+      const emp = H.ri(rng, 15, 32) * 10;                     // 150〜320名
+      const dept = H.pick(rng, ['営業第二部', '購買部', '海外事業部', '業務管理部']);
+      const isDept = H.pick(rng, ['情報システム部', '情報システム課']);
+      const partner = H.pick(rng, ['D社', 'E社', 'F社']);
+      const role = H.pick(rng, ['営業担当者', '経理担当者', '購買担当者', '品質保証担当者']);
+      const at = H.pick(rng, [
+        { n: '請求書', f: 'PDF形式のファイル' },
+        { n: '注文書', f: '圧縮形式のファイル' },
+        { n: '見積書', f: '表計算ソフトのファイル' },
+        { n: '納品書', f: '文書作成ソフトのファイル' }
+      ]);
+      const symptom = H.pick(rng, [
+        '一瞬だけ黒い画面が表示されただけで文書は開かず，その後も業務PCのファンが回り続けている',
+        '文書は表示されないまま，見慣れない小さなウィンドウが一瞬現れて消え，業務PCの動作が急に遅くなった',
+        '文書は表示されず，業務PCの記憶装置のアクセスランプが点滅し続けている'
+      ]);
+      const hh = H.ri(rng, 9, 16);
+      const mm = H.pick(rng, [10, 15, 20, 25, 30, 35, 40, 45, 50]);
+      const timeText = hh + '時' + mm + '分';
+
+      /* ── 行動候補プール（8個。適否と根拠は固定） ── */
+      const POOL_OK = [
+        {
+          ok: true, key: 'iso',
+          act: '業務PCの有線LANケーブルを抜き，無線LANの接続も切って，社内ネットワークから切り離す。',
+          basis: '図1の1番目のとおりです。感染が疑われるPCをまず社内ネットワークから切り離し、ほかのPCやファイルサーバへ広がるのを止めます（隔離）。',
+          short: 'ネットワークからの切離し',
+          lack: '感染がほかのPCやファイルサーバへ広がるのを止められません'
+        },
+        {
+          ok: true, key: 'rep',
+          act: '自席の固定電話から' + isDept + 'に連絡し，事象が起きた時刻と，開いた添付ファイルの名前を伝える。',
+          basis: '図1の2番目のとおりです。業務PC以外の手段で' + isDept + 'へ速やかに報告し、組織としての調査と封じ込めを始めてもらいます（報告）。',
+          short: isDept + 'への報告',
+          lack: '組織としての調査と封じ込めが始まらず、対応がまるごと遅れます'
+        },
+        {
+          ok: true, key: 'keep',
+          act: '業務PCの電源は入れたままにし，' + isDept + 'の指示があるまで業務PCを操作しない。',
+          basis: '図1の3番目のとおりです。電源を切らず操作もしないことで、メモリ上の情報や動作の記録が失われるのを防ぎます（証拠保全）。',
+          short: '電源を切らず操作もしないこと',
+          lack: '原因を突き止めるための手掛かりが失われ、被害範囲の特定ができなくなります'
+        },
+        {
+          ok: true, key: 'mail',
+          act: '受信した不審なメールを，添付ファイルを付けたまま削除せずに残しておく。',
+          basis: '図1の4番目のとおりです。不審なメールと添付ファイルは調査の対象そのものなので、消さずに残します（証拠保全）。',
+          short: '不審なメールを残しておくこと',
+          lack: '調査の対象そのものが消え、同じメールがほかにも届いていないかを追えなくなります'
+        }
+      ];
+      const POOL_NG = [
+        {
+          ok: false, key: 'reboot',
+          act: '業務PCを再起動し，同じ事象が再び起こるかどうかを確かめる。',
+          basis: '図1の3番目に反します。再起動するとメモリ上の痕跡が消えて調査ができなくなりますし、事象が再現しなかったとしても感染していない証明にはなりません。',
+          trap: '「一度再起動すれば直るのでは」という日常の感覚に沿う行動ですが、証拠を消すだけで何も解決しません'
+        },
+        {
+          ok: false, key: 'bcast',
+          act: '不審なメールを添付ファイルごと全社員宛てに転送し，同じメールに注意するよう促す。',
+          basis: '図1の7番目に反します。添付ファイルごと配れば、受け取った従業員がそれを開いて被害が一気に広がります。注意喚起は' + isDept + 'が行います。',
+          trap: '善意の注意喚起に見えますが、危険な添付ファイルを自分の手で全社にばらまく行為です'
+        },
+        {
+          ok: false, key: 'reopen',
+          act: '添付ファイルをもう一度開き，どのような動作になるのかを確認する。',
+          basis: '図1の3番目に反します。もう一度開けばマルウェアの実行を重ねることになり、被害を大きくするだけです。',
+          trap: '「本当に危険なのか確かめたい」という気持ちに沿う行動ですが、感染を重ねるだけです'
+        },
+        {
+          ok: false, key: 'reply',
+          act: '不審なメールにそのまま返信し，差出人に添付ファイルの内容を問い合わせて安全かどうかを確かめる。',
+          basis: '図1の5番目に反します。差出人は詐称されているので返信は攻撃者に届き、そのメールアドレスが実在して読まれていることまで教えてしまいます。確認はメールとは別の経路で行います。',
+          trap: '確認しているように見えますが、確認先が攻撃者本人では意味がありません（別経路確認の原則）'
+        },
+        {
+          ok: false, key: 'clean',
+          act: 'ウイルス対策ソフトで自分でスキャンを実行し，検出されたファイルを削除する。',
+          basis: '図1の6番目に反します。マルウェアの駆除は' + isDept + 'だけが行うと定められています。従業員が自分で検出結果を消してしまうと、何に感染したのか、ほかに何をされたのかを調べる手掛かりまで一緒に消えます。',
+          trap: '「早く消せば安全になる」と思いがちですが、復旧を自分で抱え込む行為であり、調査に必要な検体まで壊してしまいます'
+        }
+      ];
+
+      /* ── 5個を抽選（適切は2個か3個）→ シャッフルして（一）〜（五）へ ── */
+      const nOk = H.ri(rng, 2, 3);
+      const items = H.shuffle(rng, H.take(rng, POOL_OK, nOk).concat(H.take(rng, POOL_NG, 5 - nOk)));
+
+      const S = items.map((it, i) => i).filter(i => items[i].ok);    // 正解＝適切な項番（昇順）
+      const NG = items.map((it, i) => i).filter(i => !items[i].ok);
+
+      /* ── 誤答モデル（正解±1項目・入替え） ── */
+      /* 最大の項番を落とした omit は解答群で正解より前に並ぶ。これを載せるかどうかで
+       * 正解が入る行が前にも後ろにも動く（位置バレ防止）。 */
+      const omitOrder = H.shuffle(rng, S);
+      if (rng() < 0.5) {
+        const mx = S[S.length - 1];
+        omitOrder.splice(omitOrder.indexOf(mx), 1);
+        omitOrder.unshift(mx);
+      }
+      const omits = omitOrder.map(e => ({
+        set: S.filter(x => x !== e), model: 'omit-' + items[e].key,
+        why: '適切な' + lab(e) + '（' + items[e].short + '）を落とした組合せです。これを欠かすと' + items[e].lack + '。'
+      }));
+      const adds = H.shuffle(rng, NG).map(f => ({
+        set: S.concat([f]).sort((a, b) => a - b), model: 'add-' + items[f].key,
+        why: lab(f) + 'を適切と誤って加えた組合せです。' + items[f].trap + '。'
+      }));
+      const swapAll = [];
+      for (const e of S) for (const f of NG) swapAll.push({
+        set: S.filter(x => x !== e).concat([f]).sort((a, b) => a - b), model: 'swap-' + items[e].key + '/' + items[f].key,
+        why: '適切な' + lab(e) + 'を外して不適切な' + lab(f) + 'を入れた組合せです。項目の個数が正解と同じなので、個数の感覚だけで選ぶと引っ掛かります。'
+      });
+      const swaps = H.shuffle(rng, swapAll);
+
+      /* 誤答5個の内訳（omit, add, swap の本数）もシードで振る。
+       * 内訳を固定すると「肢の要素数の並び」がいつも同じになり，数を数えるだけで絞れてしまう。 */
+      const mixes = [[2, 2, 1], [1, 2, 2], [2, 1, 2], [1, 3, 1], [1, 1, 3], [2, 3, 0], [3, 1, 1], [0, 2, 3], [2, 0, 3]]
+        .filter(m => m[0] <= omits.length && m[1] <= adds.length && m[2] <= swaps.length);
+      const mix = H.pick(rng, mixes);
+      const chosen = omits.slice(0, mix[0]).concat(adds.slice(0, mix[1])).concat(swaps.slice(0, mix[2]));
+
+      /* ── 解答群（辞書順・自前構築） ── */
+      const seen = new Set([keyOf(S)]);
+      const rows = [{ set: S, correct: true }];
+      for (const c of chosen) {
+        const k = keyOf(c.set);
+        if (seen.has(k)) continue;
+        seen.add(k); rows.push(c);
+      }
+      rows.sort((a, b) => cmpSet(a.set, b.set));
+      const options = rows.map(r => ({ html: E(fmtSet(r.set)) }));
+      const answer = rows.findIndex(r => r.correct);
+      const notes = rows.filter(r => !r.correct);
+
+      /* ── 問題文 ── */
+      const rules = [
+        '業務で利用するPC（以下，業務PCという）で不審な事象を認めた従業員は，直ちに当該業務PCを社内ネットワークから切り離す。',
+        '切り離した後，速やかに，業務PC以外の手段で' + isDept + 'に連絡し，事象の内容と発生時刻を報告する。',
+        '報告した従業員は，' + isDept + 'の指示があるまで，当該業務PCの電源を切らず，操作もしない。',
+        '不審なメール及びその添付ファイルは，調査が終わるまで削除せずに保存する。',
+        'メールの内容の真偽は，メールへの返信ではなく，あらかじめ取引先台帳に登録された電話番号など，メールとは別の経路で確認する。',
+        'マルウェアの駆除，業務PCの初期化などの復旧作業は' + isDept + 'だけが行い，従業員は自分で復旧を試みない。',
+        '全社員宛ての一斉送信は，' + isDept + 'の承認を得た場合だけ行うことができる。'
+      ];
+      const fig1 = '<ul>' + rules.map(r => '<li>' + E(r) + '</li>').join('') + '</ul>';
+      const tbl1 = '<table class="qtbl"><caption>表1　Bさんが検討した行動</caption>'
+        + '<thead><tr><th>項番</th><th class="l">検討した行動</th></tr></thead><tbody>'
+        + items.map((it, i) => '<tr><td>' + E(lab(i)) + '</td><td class="l">' + E(it.act) + '</td></tr>').join('')
+        + '</tbody></table>';
+
+      const intro = [
+        {
+          t: 'p', html: 'A社は，' + E(goods) + 'を扱う従業員' + emp + '名の中堅商社である。A社では，従業員一人一人に業務用のノート型PCを貸与しており，社内ネットワークを介して基幹システム及びファイルサーバを利用している。A社の情報セキュリティ規程のうち，マルウェアへの対応に関する部分を図1に示す。'
+        },
+        { t: 'box', title: '図1　A社の情報セキュリティ規程（抜粋）', html: fig1 },
+        {
+          t: 'p', html: 'ある日の' + E(timeText) + '，A社' + E(dept) + 'のBさんの業務PCに，取引先である' + E(partner) + 'の' + E(role) + 'を名のる差出人から，過去のやり取りの件名と本文を引用したメールが届いた。本文には至急の確認を求める記載があり，「' + E(at.n) + '」と称する' + E(at.f) + 'が添付されていた。Bさんは取引先からの連絡であると思い込み，この添付ファイルを開いた。すると，' + E(symptom) + '。Bさんは，このメールが標的型攻撃メールであり，業務PCがマルウェアに感染した可能性があると考えた。'
+        },
+        { t: 'p', html: 'Bさんが，この直後にとる行動として検討した内容を表1に示す。' },
+        { t: 'table', html: tbl1 },
+        { t: 'note', html: '注記　表1の行動は，それぞれ独立に検討したものであり，実施する順序を示すものではない。' }
+      ];
+
+      /* ── 解説 ── */
+      const jrows = items.map((it, i) => [lab(i), it.ok ? '適切' : '不適切', H.stripTags(it.basis)]);
+      let exp = '<p>この問題は「よさそうに見えるか」ではなく、図1の規程と、マルウェア対応の初動で守るべきものに照らして、'
+        + '（一）〜（五）に1件ずつ○×を付ければ決まります。判定は次のとおりです。</p>'
+        + H.traceTable(['項番', '判定', '根拠'], jrows)
+        + '<p>したがって、適切なものだけを全て挙げた組合せは <b>' + E(fmtSet(S)) + '</b> です。</p>'
+        + '<p><b>初動で守るべき三つの柱</b></p><ul>'
+        + '<li><b>隔離と報告</b>… まず感染の広がりを止め（ネットワークからの切離し）、次に組織へ渡す（' + E(isDept) + 'へ別の手段で連絡）。個人で抱え込まないことが最優先です。</li>'
+        + '<li><b>証拠保全</b>… 電源を切らない、操作しない、不審なメールを消さない。原因と被害範囲を後から調べるための材料を、良かれと思って壊さないことです。</li>'
+        + '<li><b>別経路確認</b>… メールの真偽をそのメールへの返信で確かめてはいけません。あらかじめ分かっている電話番号など、攻撃者が細工できない経路で確認します。</li>'
+        + '</ul>';
+      if (notes.length) {
+        exp += '<p><b>誤答の作られ方</b>（本試験の誤答は「ありがちなミス」から逆算されています）：</p><ul>'
+          + notes.map(n => '<li><code>' + E(fmtSet(n.set)) + '</code> … ' + E(n.why) + '</li>').join('')
+          + '</ul>';
+      }
+
+      return {
+        intro,
+        question: '表1中の（一）〜（五）のうち，Bさんがとる行動として適切なものだけを全て挙げた組合せを，解答群の中から選べ。',
+        options,
+        answer,
+        hints: [
+          '解答群を見る前に、図1の7項目が「何をせよ」「何をするな」と定めているかを読み直しましょう。この設問は、行動の見た目の親切さではなく、規程とマルウェア対応の初動の原則に照らして1件ずつ判定する問題です。',
+          '表1の（一）〜（五）に、①被害の広がりを止めるか（それとも自分で広げてしまうか）、②後の調査に必要なものを壊さないか、③判断や復旧を自分で抱え込んでいないか、の3点で○×を付けていきます。○が付いた項番だけを書き出してから解答群を見ると、似た組合せに迷わされずに済みます。'
+        ],
+        exp
+      };
+    }
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = def;
+  else root.B2.register(def);
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+/* ---- jb12 ---- */
+'use strict';
+/* ============================================================
+ * jb12: セキュリティ — アカウント棚卸し（表から最優先是正を選ぶ型）
+ * 乱数化: バリアント(最上位違反=退職者有効/異動の特権残り) / 行順 / 氏名・部門 / 権限
+ * 一意性: 「図1の方針はリスクの大きい順」を本文に明記し，最上位方針の違反行が
+ *         構造上ちょうど1行になるよう表を構成する
+ * ============================================================ */
+(function (root) {
+  const H = (typeof module !== 'undefined' && module.exports) ? require('./contract.js') : root.B2H;
+
+  const def = {
+    id: 'jb12', cat: 'sec', type: 'sec',
+    title: 'アカウントとアクセス権の棚卸し',
+    est: 4, ref: 'fe-security.html#sec-12',
+    origin: '科目Bセキュリティのケース問題（一覧表から判断する型）',
+
+    gen(rng) {
+      const names = H.take(rng, ['佐藤', '鈴木', '高橋', '田中', '伊藤', '渡辺', '中村', '小林'], 5);
+      const depts = H.take(rng, ['営業部', '経理部', '製造部', '総務部', '購買部'], 4);
+      const v2 = rng() < 0.45;                     // false: 退職者が有効のまま / true: 異動の特権残り
+
+      /* 行の設計。violate: 違反した方針番号（0=違反なし）。why: 解説用（読点は「、」） */
+      let rows;
+      if (!v2) {
+        const cPriv = rng() < 0.5;
+        rows = [
+          { user: names[0] + '（退職済み）', state: '有効', priv: cPriv ? '特権' : '一般', note: '個人', violate: 1,
+            why: '退職者のアカウントが有効なまま残っており、方針(1)に違反。在籍しない者が' + (cPriv ? '特権で' : '') + 'アクセスできる状態で、最も優先して是正すべき' },
+          { user: depts[0] + 'の複数名で共用', state: '有効', priv: '特権', note: '共有', violate: 3,
+            why: '共有かつ特権のアカウントは方針(3)に反するが、方針はリスクの大きい順。方針(1)違反の是正が先' },
+          { user: names[1] + '（' + depts[1] + 'から' + depts[2] + 'へ異動）', state: '有効', priv: '一般', note: '異動前のアクセス権のまま', violate: 2,
+            why: '異動後の見直し漏れは方針(2)違反だが、方針(1)違反より優先度は下' },
+          { user: names[2] + '（退職済み）', state: '無効', priv: '一般', note: '個人', violate: 0,
+            why: '退職済みだが退職日に無効化されており、方針どおりに処理済み' },
+          { user: names[3] + '（在籍）', state: '有効', priv: '一般', note: '個人', violate: 0,
+            why: '方針に反する点はない' },
+        ];
+      } else {
+        rows = [
+          { user: names[0] + '（' + depts[0] + 'から' + depts[1] + 'へ異動）', state: '有効', priv: '特権', note: '異動前の特権のまま', violate: 2,
+            why: '異動前の特権が残っており方針(2)違反。表の中で最も上位の方針に反しているので、最優先で是正する' },
+          { user: names[1] + '（退職済み）', state: '無効', priv: '特権', note: '退職日に無効化済み', violate: 0,
+            why: '退職済みだが退職日に無効化されており、方針(1)は守られている' },
+          { user: depts[2] + 'の複数名で共用', state: '有効', priv: '一般', note: '共有', violate: 3,
+            why: '共有アカウントは方針(3)違反だが、方針(2)違反である特権の残留の方が優先' },
+          { user: names[2] + '（在籍・情報システム部門の担当者）', state: '有効', priv: '特権', note: '個人', violate: 0,
+            why: '特権アカウント自体は、業務上必要な担当者への付与であれば方針(4)の範囲内で、違反ではない' },
+          { user: names[3] + '（在籍）', state: '有効', priv: '一般', note: '個人', violate: 0,
+            why: '方針に反する点はない' },
+        ];
+      }
+      rows = H.shuffle(rng, rows);
+      const ids = ['A', 'B', 'C', 'D', 'E'];
+      const ansIdx = rows.findIndex(r => r.violate === (v2 ? 2 : 1));
+
+      const tbl = '<table class="qtbl"><thead><tr><th>アカウント</th><th class="l">利用者</th><th>状態</th><th>権限</th><th class="l">備考</th></tr></thead><tbody>'
+        + rows.map((r, i) => '<tr><td>' + ids[i] + '</td><td class="l">' + H.esc(r.user) + '</td><td>' + r.state + '</td><td>' + r.priv + '</td><td class="l">' + H.esc(r.note) + '</td></tr>').join('')
+        + '</tbody></table>';
+
+      const intro = [
+        { t: 'p', html: 'B社の情報システム部門は，年 1 回のアカウント棚卸しを実施している。B社がアクセス権の管理について定めている方針を図1に示す。' },
+        { t: 'box', title: '図1　アクセス権管理の方針', html: '<ul><li>(1)　退職者のアカウントは，退職日に無効化する。</li><li>(2)　部門を異動した従業員のアクセス権は，異動日に見直す。</li><li>(3)　複数人で共用する共有アカウントは，原則として作成しない。</li><li>(4)　特権アカウントは，業務上必要な最小限の担当者にだけ付与する。</li></ul>' },
+        { t: 'p', html: '図1の方針は，情報セキュリティ上のリスクの大きい順に並べてある。今年の棚卸しの結果を表に示す。' },
+        { t: 'p', html: '<b>表　アカウント棚卸しの結果</b>' },
+        { t: 'table', html: tbl },
+      ];
+
+      const options = ids.map(id => ({ html: 'アカウント' + id }));
+
+      const expRows = rows.map((r, i) => [
+        ids[i], r.violate ? '方針(' + r.violate + ')に違反' : '違反なし']);
+      let exp = '<p>行ごとに「どの方針に違反しているか」を判定し、違反があるものの中で<b>最も上位の方針</b>（本文に「リスクの大きい順」とある）に違反する行を選びます。</p>'
+        + H.traceTable(['アカウント', '判定'], expRows)
+        + '<ul>' + rows.map((r, i) => '<li><b>' + ids[i] + '</b> … ' + H.esc(r.why) + '</li>').join('') + '</ul>'
+        + '<p>考え方の軸は「<b>在籍しない・権限をもつべきでない主体が、いまアクセスできる状態</b>」を最優先で塞ぐこと（退職時の即時無効化・最小権限・共有IDの禁止）。見た目のこわさ（特権かどうか）だけで選ばず、方針との突き合わせで決めるのがポイントです。</p>';
+
+      return {
+        intro,
+        question: '表のアカウントのうち，方針の優先順位に照らして最も優先して是正すべきものはどれか。解答群のうち，最も適切なものを選べ。',
+        options,
+        answer: ansIdx,
+        hints: [
+          '表の各行を図1の方針(1)〜(4)と突き合わせ、「どの方針に違反しているか」を行ごとにメモしましょう。違反ゼロの行（正しく処理済みの行）も必ずあります。',
+          '違反が複数行あるときは、方針の並び順に意味があります。図1の並びを本文がどう説明しているかを確かめてから、違反した行同士を比べましょう。',
+        ],
+        exp,
+        traceVars: ['アカウント', '違反方針'],
+      };
+    }
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = def;
+  else root.B2.register(def);
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+/*__B2_TEMPLATES_END__*/
+</script>
+<script>
+'use strict';
+/* ============ アプリ本体 ============ */
+const KEY='feKamokuB2.v1';
+function loadSt(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function saveSt(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+let ST=loadSt();
+const $=id=>document.getElementById(id);
+const H=window.B2H;
+const CATLABEL={bas:'文法・トレース',arr:'配列',fnc:'関数・再帰',dat:'スタック・キュー・リスト',srt:'探索・整列',tgh:'木・グラフ',str:'文字列・ビット',sec:'セキュリティ'};
+const TYPELABEL={trace:'トレース',fill:'穴埋め',sec:'ケース問題'};
+
+function stOf(id){return ST[id]||{n:0,c:0,seeds:[]}}
+function isMastered(id){const t=ST[id];return !!t&&(t.seeds||[]).length>=2}
+function randSeed(prev){let s;do{s=1+Math.floor(Math.random()*2147483646)}while(s===prev);return s}
+
+/* ── 一覧 ── */
+function renderList(){
+  const box=$('plist');box.textContent='';
+  let done=0;
+  for(const def of B2.list){
+    const st=stOf(def.id);
+    const row=document.createElement('div');row.className='prow';
+    const cat=document.createElement('span');cat.className='pcat'+(def.cat==='sec'?' sec':'');cat.textContent=CATLABEL[def.cat];
+    const t=document.createElement('span');t.className='pt';t.textContent=def.title;
+    const meta=document.createElement('span');meta.className='pmeta';meta.textContent=TYPELABEL[def.type]+'・目安'+def.est+'分';
+    const stat=document.createElement('span');stat.className='pstat';
+    if(isMastered(def.id)){stat.textContent='✅ 攻略';stat.classList.add('done');done++}
+    else if(st.n>0){stat.textContent='挑戦中 '+st.c+'/'+st.n+'問正解';stat.classList.add('mid')}
+    else stat.textContent='未挑戦';
+    const btn=document.createElement('button');btn.type='button';btn.className='btn btn-sub btn-sm';
+    btn.textContent=st.n>0?'もう一度':'挑戦する';
+    btn.addEventListener('click',()=>openProblem(def.id,randSeed(st.lastSeed)));
+    row.append(cat,t,meta,stat,btn);
+    box.appendChild(row);
+  }
+  $('p-done').textContent=done;
+  $('p-total').textContent=B2.list.length;
+}
+
+/* ── 出題 ── */
+let cur=null; // {def,seed,g,answered,t0,timerInt}
+function stopTimer(){if(cur&&cur.timerInt){clearInterval(cur.timerInt);cur.timerInt=null}}
+function fmtTime(ms){const s=Math.floor(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+
+function el(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!==undefined)e.innerHTML=html;return e}
+
+function renderCode(block,idx){
+  const wrap=el('div','codewrap');
+  const head=el('div','codehead');
+  head.appendChild(el('span','clabel',H.esc(block.label||'〔プログラム〕')));
+  const pin=el('button','btn-pin');pin.type='button';pin.textContent='📌 固定';
+  pin.setAttribute('aria-pressed','false');
+  pin.setAttribute('aria-label','このプログラムを画面上部に固定表示する');
+  const box=el('div','codebox');
+  pin.addEventListener('click',()=>{
+    const on=pin.getAttribute('aria-pressed')!=='true';
+    document.querySelectorAll('.codebox.pinned').forEach(b=>b.classList.remove('pinned'));
+    document.querySelectorAll('.btn-pin[aria-pressed="true"]').forEach(b=>{b.setAttribute('aria-pressed','false');b.textContent='📌 固定'});
+    if(on){box.classList.add('pinned');pin.setAttribute('aria-pressed','true');pin.textContent='📌 固定中'}
+  });
+  head.appendChild(pin);
+  block.lines.forEach((ln,i)=>{
+    const row=el('div','cl');
+    row.appendChild(el('span','ln',String(i+1)));
+    /* IPAの実物どおり、宣言・シグネチャの型名に下線を付ける */
+    row.appendChild(el('span','lc',ln.replace(/((?:整数|実数|文字列|文字|論理)型(?:の(?:二次元)?配列)?)(?=:)/g,'<u>$1</u>')));
+    row.addEventListener('click',()=>{
+      const was=row.classList.contains('cur');
+      box.querySelectorAll('.cl.cur').forEach(r=>r.classList.remove('cur'));
+      if(!was)row.classList.add('cur');
+    });
+    box.appendChild(row);
+  });
+  wrap.append(head,box);
+  return wrap;
+}
+
+function renderTraceTool(traceVars){
+  const det=el('details','ttool');
+  det.appendChild(el('summary',null,'🧮 トレースツール（表とメモ）'));
+  const body=el('div','ttool-body');
+  body.appendChild(el('p','mini','セルをタップ→下のキーパッドで入力。1周＝1行。列見出しは書き換えOK。'));
+  const twrap=el('div','ttwrap');
+  const table=el('table','tt');table.id='tt-table';
+  table.setAttribute('aria-label','トレース表（自由記入）');
+  const thead=el('thead');const hrow=el('tr');
+  const vars=(traceVars&&traceVars.length?traceVars:['変数1','変数2','変数3']);
+  for(const v of vars)hrow.appendChild(headCell(v));
+  hrow.appendChild(el('th',null,''));
+  thead.appendChild(hrow);
+  const tbody=el('tbody');
+  table.append(thead,tbody);
+  twrap.appendChild(table);
+  body.appendChild(twrap);
+  const ctl=el('div','ttctl');
+  const bRow=el('button','btn btn-sub','＋行');bRow.type='button';
+  const bCol=el('button','btn btn-sub','＋列');bCol.type='button';
+  const bClr=el('button','btn btn-sub','全消去');bClr.type='button';
+  bRow.addEventListener('click',()=>{addRow(table);});
+  bCol.addEventListener('click',()=>{
+    hrow.insertBefore(headCell('変数'+(hrow.children.length)),hrow.lastElementChild);
+    tbody.querySelectorAll('tr').forEach(tr=>tr.insertBefore(bodyCell(),tr.lastElementChild));
+  });
+  bClr.addEventListener('click',()=>{tbody.textContent='';addRow(table);addRow(table);});
+  ctl.append(bRow,bCol,bClr);
+  body.appendChild(ctl);
+  const memo=el('textarea','ttmemo');memo.placeholder='自由メモ（消去法の記録などに）';
+  memo.setAttribute('aria-label','自由メモ');
+  body.appendChild(memo);
+  det.appendChild(body);
+  addRow(table);addRow(table);
+  return det;
+}
+function headCell(v){
+  const th=el('th');
+  const inp=document.createElement('input');inp.type='text';inp.value=v;
+  inp.setAttribute('aria-label','列見出し');
+  th.appendChild(inp);return th;
+}
+function bodyCell(){
+  const td=el('td');
+  const inp=document.createElement('input');inp.type='text';
+  inp.className='tt-cell';inp.readOnly=!freeInput;
+  inp.setAttribute('aria-label','トレース表のセル');
+  inp.autocomplete='off';
+  td.appendChild(inp);return td;
+}
+function addRow(table){
+  const cols=table.tHead.rows[0].children.length-1;
+  const tr=el('tr');
+  for(let i=0;i<cols;i++)tr.appendChild(bodyCell());
+  const del=el('td','rowdel');
+  const b=el('button',null,'×');b.type='button';b.setAttribute('aria-label','この行を削除');
+  b.addEventListener('click',()=>tr.remove());
+  del.appendChild(b);tr.appendChild(del);
+  table.tBodies[0].appendChild(tr);
+  return tr;
+}
+
+/* ── キーパッド ──
+ * iOS Safari は readonly input のタップでフォーカスが乗らないため、
+ * focus イベントに依存せず pointerdown でセルを「選択」する方式（.sel で可視化） */
+let activeCell=null,freeInput=false;
+const kpad=$('kpad');
+function setActiveCell(c){
+  if(activeCell)activeCell.classList.remove('sel');
+  activeCell=c;
+  if(c)c.classList.add('sel');
+}
+function showKpad(){kpad.classList.remove('hidden');$('kpad-spacer').hidden=false}
+function hideKpad(){kpad.classList.add('hidden');$('kpad-spacer').hidden=true;setActiveCell(null)}
+document.addEventListener('pointerdown',e=>{
+  const t=e.target;
+  const cell=t.closest?t.closest('.tt-cell'):null;
+  if(cell){
+    if(!freeInput){setActiveCell(cell);showKpad();if(cell.scrollIntoViewIfNeeded)cell.scrollIntoViewIfNeeded()}
+    return;
+  }
+  if(t.closest&&t.closest('#kpad'))return;
+  if(!kpad.classList.contains('hidden'))hideKpad();
+});
+/* キーボード操作（Tabでセルに入った場合）でもキーパッドを出す */
+document.addEventListener('focusin',e=>{
+  if(e.target.classList&&e.target.classList.contains('tt-cell')&&!freeInput){
+    setActiveCell(e.target);showKpad();
+  }
+});
+kpad.addEventListener('pointerdown',e=>{e.preventDefault()});
+kpad.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  const k=b.dataset.k;
+  if(k==='close'){hideKpad();return}
+  if(!activeCell)return;
+  if(k==='bs')activeCell.value=activeCell.value.slice(0,-1);
+  else if(k==='clr')activeCell.value='';
+  else if(k==='sp')activeCell.value+=' ';
+  else if(k==='undef')activeCell.value+='未定義';
+  else if(k==='free'){
+    freeInput=true;
+    const c=activeCell;
+    document.querySelectorAll('.tt-cell').forEach(x=>x.readOnly=false);
+    hideKpad();
+    if(c)c.focus();
+    return;
+  }
+  else if(k==='next'){
+    const cells=[...document.querySelectorAll('.tt-cell')];
+    const i=cells.indexOf(activeCell);
+    if(i>=0&&i<cells.length-1)setActiveCell(cells[i+1]);
+    return;
+  }
+  else if(k==='row'){
+    const table=$('tt-table');if(!table)return;
+    const tr=addRow(table);
+    const first=tr.querySelector('.tt-cell');
+    if(first){setActiveCell(first);if(first.scrollIntoViewIfNeeded)first.scrollIntoViewIfNeeded()}
+    return;
+  }
+  else activeCell.value+=k;
+});
+/* PCの物理キーボードでも選択中セルに入力できるように */
+document.addEventListener('keydown',e=>{
+  if(!activeCell||freeInput)return;
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  if(/^[0-9,\-. ]$/.test(e.key)){activeCell.value+=e.key==='-'?'−':e.key;e.preventDefault()}
+  else if(e.key==='Backspace'){activeCell.value=activeCell.value.slice(0,-1);e.preventDefault()}
+});
+
+/* ── 出題の描画 ── */
+function openProblem(id,seed){
+  const def=B2.byId[id];if(!def)return;
+  stopTimer();
+  /* まれな抽選失敗（gen内の制約が満たせない等）はシードを引き直して回復する */
+  let g=null;
+  for(let t=0;t<6&&!g;t++){
+    try{g=def.gen(H.makeRng(seed))}catch(e){seed=randSeed(seed)}
+  }
+  if(!g)return;
+  cur={def,seed,g,answered:false,t0:Date.now(),timerInt:null};
+  const st=stOf(id);st.lastSeed=seed;ST[id]=st;saveSt(ST);
+  freeInput=false;
+
+  const arena=$('arena');arena.textContent='';
+  $('arena-card').hidden=false;
+
+  const head=el('div','qhead');
+  head.appendChild(el('span','tag','<b>'+H.esc(CATLABEL[def.cat])+'</b> ・ '+H.esc(TYPELABEL[def.type])+' ・ '+H.esc(def.title)+' ・ 目安'+def.est+'分'));
+  const timer=el('span','timer','0:00');
+  timer.setAttribute('aria-label','経過時間');
+  head.appendChild(timer);
+  arena.appendChild(head);
+  cur.timerInt=setInterval(()=>{timer.textContent=fmtTime(Date.now()-cur.t0)},1000);
+
+  for(const b of g.intro){
+    if(b.t==='p')arena.appendChild(el('p','qp',b.html));
+    else if(b.t==='note')arena.appendChild(el('p','qnote',b.html));
+    else if(b.t==='table'){const w=el('div','qtblwrap');w.innerHTML=b.html;arena.appendChild(w)}
+    else if(b.t==='box'){
+      const d=el('div','qbox');
+      d.appendChild(el('div','qbox-b',b.html));
+      if(b.title)d.appendChild(el('p','qbox-t',H.esc(b.title)));
+      arena.appendChild(d);
+    }
+    else if(b.t==='code')arena.appendChild(renderCode(b));
+    else if(b.t==='fig'){
+      const f=el('figure','fig');
+      const sc=el('div','figscroll');sc.innerHTML=b.svg;f.appendChild(sc);
+      if(b.caption)f.appendChild(el('figcaption',null,H.esc(b.caption)));
+      arena.appendChild(f);
+      arena.appendChild(el('p','sethint','↔ 図は横にスクロールできます'));
+    }
+  }
+
+  arena.appendChild(renderTraceTool(g.traceVars));
+  arena.appendChild(el('p','qt',g.question));
+
+  const chBox=el('div','choices');
+  g.options.forEach((o,i)=>{
+    const b=el('button','choice');b.type='button';
+    b.appendChild(el('span','kn',H.kana[i]));
+    b.appendChild(el('span','cv'+(o.mono?' cm':''),o.html));
+    b.addEventListener('click',()=>answer(i));
+    chBox.appendChild(b);
+  });
+  arena.appendChild(chBox);
+
+  const hl=el('div','hintline');
+  const h1=el('button','btn-hint','💡 ヒント1（着眼点）');h1.type='button';
+  const h2=el('button','btn-hint hidden','🧭 ヒント2（組み立て）');h2.type='button';
+  const hb1=el('div','hintbox hidden');const hb2=el('div','hintbox hidden');
+  h1.addEventListener('click',()=>{
+    if(cur.answered)return;
+    hb1.innerHTML='<b>💡 着眼点：</b>'+H.esc(g.hints[0]);
+    hb1.classList.remove('hidden');h1.classList.add('hidden');h2.classList.remove('hidden');
+  });
+  h2.addEventListener('click',()=>{
+    if(cur.answered)return;
+    hb2.innerHTML='<b>🧭 組み立て：</b>'+H.esc(g.hints[1]);
+    hb2.classList.remove('hidden');h2.classList.add('hidden');
+  });
+  hl.append(h1,h2);
+  arena.append(hl,hb1,hb2);
+
+  const ans=el('div','ansbox hidden');ans.id='ansbox';
+  ans.setAttribute('aria-live','polite');
+  arena.appendChild(ans);
+
+  document.querySelector('#arena-card').scrollIntoView({block:'start'});
+}
+
+function answer(i){
+  if(!cur||cur.answered)return;
+  cur.answered=true;
+  stopTimer();
+  const g=cur.g,def=cur.def;
+  const ok=i===g.answer;
+  const elapsed=Date.now()-cur.t0;
+
+  const st=stOf(def.id);
+  st.n++;
+  if(ok){st.c++;st.seeds=st.seeds||[];if(!st.seeds.includes(cur.seed)){st.seeds.push(cur.seed);if(st.seeds.length>20)st.seeds.shift()}}
+  ST[def.id]=st;saveSt(ST);
+
+  const btns=[...document.querySelectorAll('#arena .choice')];
+  btns.forEach((b,j)=>{
+    b.disabled=true;
+    if(j===g.answer)b.classList.add('correct');
+    else if(j===i)b.classList.add('wrong');
+  });
+
+  const ans=$('ansbox');ans.classList.remove('hidden');ans.textContent='';
+  ans.appendChild(el('p','verdict '+(ok?'good':'bad'),ok?'⭕ 正解！':'❌ 不正解（正解：'+H.kana[g.answer]+'）'));
+  const overEst=elapsed>def.est*60000;
+  ans.appendChild(el('p','statline',
+    '経過 <b>'+fmtTime(elapsed)+'</b>（目安'+def.est+'分'+(overEst?'・オーバー':'・OK')+'）'+
+    ' ／ この問題 '+st.n+'回中<b class="g">'+st.c+'回正解</b>'+
+    ' ／ 攻略まで別シード正解あと'+Math.max(0,2-(st.seeds||[]).length)+'回'));
+  ans.appendChild(el('div','exp',g.exp));
+  if(def.origin)ans.appendChild(el('p','origin','この問題の型：'+H.esc(def.origin)+'（オリジナル問題）'));
+
+  const nl=el('div','nextline');
+  const again=el('button','btn btn-main','🎲 数値を変えてもう一度');again.type='button';
+  again.addEventListener('click',()=>openProblem(def.id,randSeed(cur.seed)));
+  const same=el('button','btn btn-sub','同じ数値でやり直す');same.type='button';
+  same.addEventListener('click',()=>openProblem(def.id,cur.seed));
+  const back=el('button','btn btn-sub','📋 一覧へ');back.type='button';
+  back.addEventListener('click',()=>{renderList();$('plist-card').scrollIntoView({block:'start'})});
+  nl.append(again,same,back);
+  ans.appendChild(nl);
+
+  renderList();
+  ans.scrollIntoView({block:'nearest'});
+}
+
+renderList();
+</script>
+</body>
+</html>
