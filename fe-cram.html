@@ -46,7 +46,7 @@
   .hero p.lead{color:var(--ink-dim);font-size:.9rem}
   .toc{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0 8px;scroll-margin-top:56px}
   .toc a{font-size:.76rem;text-decoration:none;color:var(--ink);background:var(--surface);
-    border:1px solid var(--border);border-radius:99px;padding:4px 11px;transition:.12s}
+    border:1px solid var(--border);border-radius:99px;padding:4px 11px;transition:background-color .12s,border-color .12s,color .12s}
   .toc a:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
   main{display:flex;flex-direction:column;gap:18px;margin-top:14px}
   .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
@@ -67,11 +67,11 @@
   .ctl select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .seg{display:flex;flex-wrap:wrap;gap:6px}
   .seg label{font-size:.8rem;font-weight:600;color:var(--ink-dim);background:var(--surface2);
-    border:1px solid var(--border);border-radius:99px;padding:5px 13px;cursor:pointer;user-select:none;transition:.12s}
+    border:1px solid var(--border);border-radius:99px;padding:5px 13px;cursor:pointer;user-select:none;transition:background-color .12s,border-color .12s,color .12s}
   .seg input{display:none}
   .seg label:has(input:checked){background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-ink)}
   .btn{border:none;border-radius:11px;padding:12px 18px;font-family:var(--sans);font-weight:700;
-    font-size:.9rem;cursor:pointer;transition:.12s}
+    font-size:.9rem;cursor:pointer;transition:background-color .12s,border-color .12s,color .12s,filter .12s}
   .btn-main{background:var(--accent-ink);color:#fff}
   .btn-main:hover{background:#A84C2E}
   .btn-main:disabled{background:var(--accent-dim);cursor:not-allowed}
@@ -99,7 +99,7 @@
   .gradebtns .btn{flex:1;min-width:120px}
   .endchips{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 4px}
   .endchips a{font-size:.78rem;text-decoration:none;color:var(--warn);background:var(--warn-soft);
-    border:1px solid #E8D3B0;border-radius:99px;padding:4px 12px;transition:.12s}
+    border:1px solid #E8D3B0;border-radius:99px;padding:4px 12px;transition:filter .12s}
   .endchips a:hover{filter:brightness(.97)}
   .stopline{text-align:center;margin-top:8px}
   .stopline button{background:none;border:none;color:var(--ink-dim);font-size:.76rem;font-family:var(--sans);
@@ -108,7 +108,7 @@
   /* ── 計算ドリルのトピック ── */
   .topics{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
   .tp{font-size:.78rem;font-weight:600;color:var(--ink-dim);background:var(--surface2);
-    border:1px solid var(--border);border-radius:99px;padding:4px 12px;cursor:pointer;user-select:none;transition:.12s}
+    border:1px solid var(--border);border-radius:99px;padding:4px 12px;cursor:pointer;user-select:none;transition:background-color .12s,border-color .12s,color .12s}
   .tp.on{background:var(--blue-soft);border-color:#B9CBE6;color:var(--blue-ink)}
   .tp.on::before{content:'✓ ';font-weight:700}
   .tpall{font-size:.74rem;color:var(--accent-ink);background:none;border:none;font-family:var(--sans);
@@ -130,17 +130,19 @@
     text-decoration:underline;cursor:pointer;padding:7px 10px;min-height:24px}
   /* ── リンク集 ── */
   .related{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-  .related a{flex:1;min-width:200px;display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;
-    background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:11px 14px;
-    font-size:.84rem;font-weight:600;transition:.12s}
+  .related a{flex:1;min-width:200px;display:flex;flex-direction:column;align-items:flex-start;gap:3px;
+    text-decoration:none;color:inherit;background:var(--surface2);border:1px solid var(--border);
+    border-radius:12px;padding:11px 14px;font-size:.84rem;font-weight:600;
+    transition:border-color .12s,color .12s}
+  .related a span{font-weight:400;color:var(--ink-dim);font-size:.76rem}
   .related a:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
   .seclinks{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 2px}
   .seclinks a{font-size:.78rem;text-decoration:none;color:var(--ink);background:var(--surface2);
-    border:1px solid var(--border);border-radius:99px;padding:4px 12px;transition:.12s}
+    border:1px solid var(--border);border-radius:99px;padding:4px 12px;transition:border-color .12s,color .12s}
   .seclinks a:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
   .pager{display:flex;justify-content:space-between;gap:12px;margin-top:6px}
   .pager a{flex:1;text-decoration:none;background:var(--surface);border:1px solid var(--border);
-    border-radius:13px;padding:13px 16px;color:var(--ink);font-size:.86rem;font-weight:600;transition:.12s}
+    border-radius:13px;padding:13px 16px;color:var(--ink);font-size:.86rem;font-weight:600;transition:border-color .12s,color .12s}
   .pager a:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
   .pager a.next{text-align:right}
   .pager .dir{display:block;font-size:.7rem;color:var(--ink-dim);font-weight:500}
@@ -161,17 +163,17 @@
   <h1>⚡ 直前対策ドリル</h1>
   <p class="lead">試験直前の総仕上げ用ページ。全104項目の一問一答スピードランと、数値が毎回変わる計算ドリルで「わかったつもり」を潰します。🤔を付けた項目は学習ノートの<b>あやしいリスト</b>にそのまま入るので、間違えたらすぐ解説に戻れます。</p>
   <nav class="toc">
-    <a href="#speedrun">🃏 一問一答</a>
-    <a href="#calcdrill">🧮 計算ドリル</a>
-    <a href="#checklist">📋 本番チェックリスト</a>
-    <a href="#links">🔗 復習リンク</a>
+    <a href="#speedrun">一問一答</a>
+    <a href="#calcdrill">計算ドリル</a>
+    <a href="#checklist">本番チェックリスト</a>
+    <a href="#links">復習リンク</a>
   </nav>
 </div>
 
 <main>
 
 <section class="card">
-  <h2>🗓️ 直前3日間の回し方（目安）</h2>
+  <h2>直前3日間の回し方（目安）</h2>
   <ul>
     <li><b>3日前〜2日前</b>：一問一答を全範囲で1周。即答できなかったものは🤔 → 解説に戻って読み直す。</li>
     <li><b>毎日</b>：計算ドリルを1周（数値が毎回変わるので「型」が身につきます）。</li>
@@ -181,7 +183,7 @@
 
 <!-- ============ 一問一答スピードラン ============ -->
 <section class="card" id="speedrun">
-  <h2>🃏 一問一答スピードラン</h2>
+  <h2>一問一答スピードラン</h2>
   <p class="sub">口に出して（頭の中で）即答→タップで答え合わせ。3秒で出てこなければ🤔でOK、それが正しい直前対策です。</p>
 
   <div id="sr-setup">
@@ -248,7 +250,7 @@
 
 <!-- ============ 計算ドリル ============ -->
 <section class="card" id="calcdrill">
-  <h2>🧮 計算ドリル（数値は毎回変わる）</h2>
+  <h2>計算ドリル（数値は毎回変わる）</h2>
   <p class="sub">科目Aの定番計算14パターン。数値がランダムに変わるので、答えの丸暗記ではなく解き方の「型」を確認できます。出題したいパターンをタップで絞り込み。</p>
   <div class="topics" id="cd-topics"></div>
   <div class="ctl">
@@ -277,7 +279,7 @@
 
 <!-- ============ 本番チェックリスト ============ -->
 <section class="card" id="checklist">
-  <h2>📋 本番チェックリスト</h2>
+  <h2>本番チェックリスト</h2>
   <p class="sub">チェックはこの端末に保存されます。細かい会場ルールは申込時の案内・確認票が正なので、最後にそちらも確認を。</p>
 
   <div class="ckhead">前日まで</div>
@@ -306,15 +308,15 @@
 
 <!-- ============ 復習リンク ============ -->
 <section class="card" id="links">
-  <h2>🔗 復習リンク</h2>
+  <h2>復習リンク</h2>
   <p class="sub">🤔になった分野はここから解説へ。</p>
   <div class="seclinks">
     <a href="fe-basics.html">1 基礎理論</a><a href="fe-computer.html">2 コンピュータ</a><a href="fe-network.html">3 ネットワーク</a><a href="fe-security.html">4 セキュリティ</a><a href="fe-database.html">5 データベース</a><a href="fe-develop.html">6 開発技術</a><a href="fe-manage.html">7 マネジメント</a><a href="fe-strategy.html">8 ストラテジ</a><a href="fe-algo.html">9 科目B</a>
   </div>
   <div class="related">
-    <a href="fe-guide.html">🏠 基本情報ノート トップ<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">あやしいリスト・抜き打ちチェック</span></a>
-    <a href="fe-kamoku-b.html">🔁 科目B 反復トレーニング<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">擬似言語×セキュリティの本試験形式ドリル</span></a>
-    <a href="https://www.ipa.go.jp/shiken/mondai-kaiotu/sg_fe/koukai/2025r07.html" target="_blank" rel="noopener">📄 IPA 公開問題（2025年度）<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">本試験からの公開問題と解答例</span></a>
+    <a href="fe-guide.html">🏠 基本情報ノート トップ<span>あやしいリスト・抜き打ちチェック</span></a>
+    <a href="fe-kamoku-b.html">🔁 科目B 反復トレーニング<span>擬似言語×セキュリティの本試験形式ドリル</span></a>
+    <a href="https://www.ipa.go.jp/shiken/mondai-kaiotu/sg_fe/koukai/2025r07.html" target="_blank" rel="noopener">📄 IPA 公開問題（2025年度）<span>本試験からの公開問題と解答例</span></a>
   </div>
 </section>
 

@@ -72,7 +72,7 @@
   .band-toggle button {
     background: none; border: none; color: var(--text-dim); cursor: pointer;
     padding: 6px 16px; font-family: var(--sans); font-size: .82rem; font-weight: 600;
-    border-radius: 7px; transition: .14s;
+    border-radius: 7px; transition: background-color .14s,color .14s,box-shadow .14s;
   }
   .band-toggle button.active { background: var(--accent-soft); color: var(--accent-ink); box-shadow: inset 0 0 0 1px var(--accent-line); }
   .band-toggle button:hover:not(.active) { color: var(--text); }
@@ -127,7 +127,7 @@
   .reset-btn {
     margin-top: 14px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim);
     padding: 7px 18px; border-radius: 8px; cursor: pointer; font-family: var(--sans); font-size: .82rem;
-    font-weight: 500; transition: .14s;
+    font-weight: 500; transition: background-color .14s,color .14s,border-color .14s;
   }
   .reset-btn:hover { background: var(--accent-soft); color: var(--accent-ink); border-color: var(--accent-line); }
 
@@ -139,7 +139,7 @@
   .unit-btn {
     background: none; border: none; color: var(--text-dim); cursor: pointer;
     padding: 5px 15px; font-family: var(--sans); font-size: .8rem; font-weight: 600;
-    border-radius: 6px; transition: .14s;
+    border-radius: 6px; transition: background-color .14s,color .14s,box-shadow .14s;
   }
   .unit-btn.active { background: var(--accent-soft); color: var(--accent-ink); box-shadow: inset 0 0 0 1px var(--accent-line); }
   .unit-btn:hover:not(.active) { color: var(--text); }
@@ -155,7 +155,7 @@
   .color-chip {
     display: flex; align-items: center; gap: 9px; padding: 9px 12px;
     background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
-    cursor: grab; transition: .12s; user-select: none;
+    cursor: grab; transition: border-color .12s,box-shadow .12s,transform .12s,opacity .12s; user-select: none;
   }
   .color-chip:hover { border-color: var(--accent-dim); transform: translateY(-2px); box-shadow: 0 5px 12px -4px rgba(60,45,28,.22); }
   .color-chip:active { cursor: grabbing; }

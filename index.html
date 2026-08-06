@@ -53,7 +53,6 @@
     margin:26px 2px 12px; font-size:.88rem; font-weight:700; letter-spacing:.02em; color:var(--ink);
   }
   .gh:first-of-type{ margin-top:0; }
-  .gh .gh-ico{ font-size:1rem; }
   .gh::after{ content:""; flex:1; height:1px; background:var(--border); }
 
   .card{
@@ -71,8 +70,9 @@
     background:var(--accent-bg,#F2E9D8); border:1px solid rgba(80,60,30,.06);
   }
   .meta{min-width:0;}
-  .meta .t{ font-weight:700; font-size:1rem; color:var(--ink); }
-  .meta .d{ color:var(--ink-dim); font-size:.78rem; margin-top:2px; }
+  /* span のままだとタイトルと説明が同じ行に流れる (margin-top も効かない) */
+  .meta .t{ display:block; font-weight:700; font-size:1rem; color:var(--ink); }
+  .meta .d{ display:block; color:var(--ink-dim); font-size:.78rem; margin-top:2px; }
   .arrow{ margin-left:auto; color:var(--accent-dim); font-size:1.3rem; flex-shrink:0; transition:color .12s; }
   .card:hover .arrow{ color:var(--accent); }
 
@@ -101,10 +101,10 @@
     <div class="rule"></div>
   </header>
 
-  <h2 class="gh"><span class="gh-ico">🔧</span>電子工作・IoT</h2>
+  <h2 class="gh">電子工作・IoT</h2>
   <nav class="grid">
     <a class="card" href="https://room-env.nerunerunerure.workers.dev" target="_blank" rel="noopener noreferrer">
-      <span class="ico" style="--accent-bg:#E4ECDE">🌡️</span>
+      <span class="ico" aria-hidden="true" style="--accent-bg:#E4ECDE">🌡️</span>
       <span class="meta">
         <span class="t">部屋環境モニター</span>
         <span class="d">CO₂・温湿度をリアルタイム表示（ESP32 + Cloudflare）</span>
@@ -113,7 +113,7 @@
     </a>
 
     <a class="card" href="logic-lab.html">
-      <span class="ico" style="--accent-bg:#EAE6F0">🔀</span>
+      <span class="ico" aria-hidden="true" style="--accent-bg:#EAE6F0">🔀</span>
       <span class="meta">
         <span class="t">論理回路ラボ</span>
         <span class="d">論理ゲートをつないで動かすシミュ＋パズル12問。真理値表つき</span>
@@ -122,7 +122,7 @@
     </a>
 
     <a class="card" href="breadboard-designer.html">
-      <span class="ico" style="--accent-bg:#E7EDDC">🔌</span>
+      <span class="ico" aria-hidden="true" style="--accent-bg:#E7EDDC">🔌</span>
       <span class="meta">
         <span class="t">ブレッドボード配置デザイナー</span>
         <span class="d">回路図 ↔ ブレッドボード配置を学ぶ</span>
@@ -131,7 +131,7 @@
     </a>
 
     <a class="card" href="resistor-calculator.html">
-      <span class="ico" style="--accent-bg:#F4E7DB">🎨</span>
+      <span class="ico" aria-hidden="true" style="--accent-bg:#F4E7DB">🎨</span>
       <span class="meta">
         <span class="t">抵抗値カラーコード計算機</span>
         <span class="d">カラーバンドから抵抗値を計算</span>
@@ -140,10 +140,10 @@
     </a>
   </nav>
 
-  <h2 class="gh"><span class="gh-ico">📚</span>学習・試験対策</h2>
+  <h2 class="gh">学習・試験対策</h2>
   <nav class="grid">
     <a class="card" href="study-guide.html">
-      <span class="ico" style="--accent-bg:#F4E7DB">📗</span>
+      <span class="ico" aria-hidden="true" style="--accent-bg:#F4E7DB">📗</span>
       <span class="meta">
         <span class="t">電子回路 学習ノート</span>
         <span class="d">訓練校の振り返り39項目を図解×クイズでおさらい</span>
@@ -152,7 +152,7 @@
     </a>
 
     <a class="card" href="fe-guide.html">
-      <span class="ico" style="--accent-bg:#F3E5DA">📘</span>
+      <span class="ico" aria-hidden="true" style="--accent-bg:#F3E5DA">📘</span>
       <span class="meta">
         <span class="t">基本情報 学習ノート</span>
         <span class="d">FE試験の頻出104項目を図解×チェック×クイズで攻略</span>
@@ -161,7 +161,7 @@
     </a>
 
     <a class="card" href="fe-cram.html">
-      <span class="ico" style="--accent-bg:#F5E8D4">⚡</span>
+      <span class="ico" aria-hidden="true" style="--accent-bg:#F5E8D4">⚡</span>
       <span class="meta">
         <span class="t">基本情報 直前対策ドリル</span>
         <span class="d">一問一答151問×計算ドリル14型で試験直前の総仕上げ</span>
@@ -170,7 +170,7 @@
     </a>
 
     <a class="card" href="fe-kamoku-b.html">
-      <span class="ico" style="--accent-bg:#E7EDDC">🔁</span>
+      <span class="ico" aria-hidden="true" style="--accent-bg:#E7EDDC">🔁</span>
       <span class="meta">
         <span class="t">基本情報 科目B 反復トレーニング</span>
         <span class="d">擬似言語×セキュリティを本試験形式で反復。弱点ほど繰り返し出題</span>
@@ -179,7 +179,7 @@
     </a>
 
     <a class="card" href="fe-kamoku-b-jissen.html">
-      <span class="ico" style="--accent-bg:#E3EAF3">🏋️</span>
+      <span class="ico" aria-hidden="true" style="--accent-bg:#E3EAF3">🏋️</span>
       <span class="meta">
         <span class="t">基本情報 科目B 実践演習</span>
         <span class="d">本試験と同じ外形の15問。数値が毎回変わるから暗記が効かない</span>
@@ -188,7 +188,7 @@
     </a>
 
     <a class="card" href="pomodoro.html">
-      <span class="ico" style="--accent-bg:#F6E3D6">🍅</span>
+      <span class="ico" aria-hidden="true" style="--accent-bg:#F6E3D6">🍅</span>
       <span class="meta">
         <span class="t">ポモドーロ勉強タイマー</span>
         <span class="d">25分集中+5分休憩をワンボタンで。今日の完了数も見える</span>

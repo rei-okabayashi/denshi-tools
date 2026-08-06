@@ -49,7 +49,7 @@
   .hero p.lead{color:var(--ink-dim);font-size:.9rem}
   .toc{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0 8px;scroll-margin-top:56px}
   .toc a{font-size:.76rem;text-decoration:none;color:var(--ink);background:var(--surface);
-    border:1px solid var(--border);border-radius:99px;padding:4px 11px;transition:.12s}
+    border:1px solid var(--border);border-radius:99px;padding:4px 11px;transition:background-color .12s,border-color .12s,color .12s}
   .toc a:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
   main{display:flex;flex-direction:column;gap:18px;margin-top:14px}
   .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
@@ -70,12 +70,12 @@
   .ctl select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .seg{display:flex;flex-wrap:wrap;gap:6px}
   .seg label{font-size:.8rem;font-weight:600;color:var(--ink-dim);background:var(--surface2);
-    border:1px solid var(--border);border-radius:99px;padding:5px 13px;cursor:pointer;user-select:none;transition:.12s}
+    border:1px solid var(--border);border-radius:99px;padding:5px 13px;cursor:pointer;user-select:none;transition:background-color .12s,border-color .12s,color .12s}
   .seg input{position:absolute;opacity:0;pointer-events:none}
   .seg label:has(input:checked){background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-ink)}
   .seg label:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
   .btn{border:none;border-radius:11px;padding:12px 18px;font-family:var(--sans);font-weight:700;
-    font-size:.9rem;cursor:pointer;transition:.12s}
+    font-size:.9rem;cursor:pointer;transition:background-color .12s,border-color .12s,color .12s,filter .12s}
   .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .btn-main:focus-visible{box-shadow:inset 0 0 0 2px rgba(255,255,255,.9)}
   .btn-sub:focus-visible,.btn-ng:focus-visible{box-shadow:inset 0 0 0 2px var(--accent-dim)}
@@ -97,7 +97,7 @@
   .choices{display:flex;flex-direction:column;gap:8px;margin:12px 0 2px}
   .choice{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;
     background:var(--surface2);border:1px solid var(--border);border-radius:11px;padding:11px 14px;
-    font-family:var(--sans);font-size:.92rem;line-height:1.6;color:var(--ink);cursor:pointer;transition:.12s}
+    font-family:var(--sans);font-size:.92rem;line-height:1.6;color:var(--ink);cursor:pointer;transition:background-color .12s,border-color .12s,color .12s,opacity .12s}
   .choice:hover{border-color:var(--accent-dim)}
   .choice:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .choice .kn{font-weight:700;color:var(--accent-ink);flex-shrink:0}
@@ -124,7 +124,7 @@
   .nextline .btn{flex:1;min-width:140px}
   .endchips{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 4px}
   .endchips a{font-size:.78rem;text-decoration:none;color:var(--warn);background:var(--warn-soft);
-    border:1px solid #E8D3B0;border-radius:99px;padding:4px 12px;transition:.12s}
+    border:1px solid #E8D3B0;border-radius:99px;padding:4px 12px;transition:filter .12s}
   .endchips a:hover{filter:brightness(.97)}
   .stopline{text-align:center;margin-top:8px}
   .stopline button{background:none;border:none;color:var(--ink-dim);font-size:.76rem;font-family:var(--sans);
@@ -174,7 +174,7 @@
   .dlog li{background:var(--blue-soft);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:7px 11px;margin:6px 0;line-height:1.75}
   .dlog li b{color:var(--blue-ink)}
   .dchoices{display:flex;flex-direction:column;gap:6px;margin:8px 0}
-  .dchoice{font-size:.86rem;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:7px 11px;transition:.12s}
+  .dchoice{font-size:.86rem;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:7px 11px;transition:background-color .12s,border-color .12s,color .12s}
   .dchoice .kn{font-weight:700;color:var(--accent-ink);margin-right:6px}
   .dchoice.dead{color:var(--ink-dim);text-decoration:line-through}
   .dchoice.dead .kn{color:var(--ink-dim)}
@@ -186,7 +186,7 @@
   /* ── 出題中のヒント ── */
   .hintline{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0}
   .btn-hint{background:var(--blue-soft);color:var(--blue-ink);border:1px solid #C9D6E8;border-radius:99px;
-    padding:7px 14px;font-size:.8rem;font-weight:700;font-family:var(--sans);cursor:pointer;transition:.12s}
+    padding:7px 14px;font-size:.8rem;font-weight:700;font-family:var(--sans);cursor:pointer;transition:filter .12s}
   .btn-hint:hover{filter:brightness(.97)}
   .btn-hint:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .hintbox{font-size:.85rem;background:var(--blue-soft);border:1px dashed #A8BBD6;border-radius:10px;
@@ -203,13 +203,15 @@
     padding:12px 16px;margin:14px 0 2px;font-size:.88rem}
   .point .tt{font-weight:700;color:var(--accent-ink);font-size:.84rem;display:block;margin-bottom:4px}
   .related{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-  .related a{flex:1;min-width:200px;display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;
-    background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:11px 14px;
-    font-size:.84rem;font-weight:600;transition:.12s}
+  .related a{flex:1;min-width:200px;display:flex;flex-direction:column;align-items:flex-start;gap:3px;
+    text-decoration:none;color:inherit;background:var(--surface2);border:1px solid var(--border);
+    border-radius:12px;padding:11px 14px;font-size:.84rem;font-weight:600;
+    transition:border-color .12s,color .12s}
+  .related a span{font-weight:400;color:var(--ink-dim);font-size:.76rem}
   .related a:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
   .pager{display:flex;justify-content:space-between;gap:12px;margin-top:6px}
   .pager a{flex:1;text-decoration:none;background:var(--surface);border:1px solid var(--border);
-    border-radius:13px;padding:13px 16px;color:var(--ink);font-size:.86rem;font-weight:600;transition:.12s}
+    border-radius:13px;padding:13px 16px;color:var(--ink);font-size:.86rem;font-weight:600;transition:border-color .12s,color .12s}
   .pager a:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
   .pager a.next{text-align:right}
   .pager .dir{display:block;font-size:.7rem;color:var(--ink-dim);font-weight:500}
@@ -228,20 +230,20 @@
 <div class="hero">
   <div class="eyebrow">KAMOKU-B TRAINING</div>
   <h1>🔁 科目B 反復トレーニング</h1>
-  <p class="lead">擬似言語のトレース・穴埋めとセキュリティのケース問題 全<span class="qtotal">80</span>問を、本試験と同じ選択式で解くドリルです。間違えた問題は<b>同じセッション内で何度でも</b>戻ってきて、2回連続で正解するまで「定着」になりません。解いた記録はこの端末に保存されます。初めての人は、先に<a href="#guide">🧭解き方ガイド</a>で「型」をつかむのが近道です。</p>
+  <p class="lead">擬似言語のトレース・穴埋めとセキュリティのケース問題 全<span class="qtotal">80</span>問を、本試験と同じ選択式で解くドリルです。間違えた問題は<b>同じセッション内で何度でも</b>戻ってきて、2回連続で正解するまで「定着」になりません。解いた記録はこの端末に保存されます。初めての人は、先に<a href="#guide">解き方ガイド</a>で「型」をつかむのが近道です。</p>
   <nav class="toc" aria-label="ページ内目次">
-    <a href="#guide">🧭 解き方ガイド</a>
-    <a href="#drill">🎯 反復ドリル</a>
-    <a href="#map">📊 習熟マップ</a>
-    <a href="#tips">📖 トレースのコツ</a>
-    <a href="#links">🔗 復習リンク</a>
+    <a href="#guide">解き方ガイド</a>
+    <a href="#drill">反復ドリル</a>
+    <a href="#map">習熟マップ</a>
+    <a href="#tips">トレースのコツ</a>
+    <a href="#links">復習リンク</a>
   </nav>
 </div>
 
 <main>
 
 <section class="card">
-  <h2>🔄 このドリルの回し方</h2>
+  <h2>このドリルの回し方</h2>
   <ul>
     <li>選択肢をタップすると<b>その場で正誤とトレース付き解説</b>が出ます。</li>
     <li>詰まったら<b>💡ヒント</b>を開く：「着眼点」→「組み立て」の2段階。いきなり答えを見るより、ヒントで1手だけ助けてもらって自力で解くほうが力がつきます。</li>
@@ -254,7 +256,7 @@
 
 <!-- ============ 解き方ガイド ============ -->
 <section class="card" id="guide">
-  <h2>🧭 解き方ガイド — どこから手を付ける？</h2>
+  <h2>解き方ガイド — どこから手を付ける？</h2>
   <p class="sub">科目Bの問題は実は3タイプだけ。それぞれ「最初に見る場所」と「手の動かし方」が決まっていて、型どおりに進めればひらめきは要りません。各タイプの実演を1回ずつ動かしてみてください。</p>
 
   <details class="gd" id="guide-trace" open>
@@ -331,7 +333,7 @@
 
 <!-- ============ 反復ドリル ============ -->
 <section class="card" id="drill">
-  <h2>🎯 反復ドリル</h2>
+  <h2>反復ドリル</h2>
   <p class="sub">本試験の科目Bは擬似言語16問＋セキュリティ4問の20問・100分。ここでは分野を絞って短く何周も回します。</p>
 
   <div id="dr-setup">
@@ -413,7 +415,7 @@
 
 <!-- ============ 習熟マップ ============ -->
 <section class="card" id="map">
-  <h2>📊 習熟マップ</h2>
+  <h2>習熟マップ</h2>
   <p class="sub">1マス＝1問。分野ごとの定着具合がひと目でわかります。弱い分野は「この分野を回す」からすぐ復習。</p>
   <div id="map-body"></div>
   <div class="legend" aria-hidden="true">
@@ -427,7 +429,7 @@
 
 <!-- ============ トレースのコツ ============ -->
 <section class="card" id="tips">
-  <h2>📖 トレースのコツ（試験直前の再確認用）</h2>
+  <h2>トレースのコツ（試験直前の再確認用）</h2>
   <p>科目Bは暗記ではなく<b>トレース（1行ずつ実行した気持ちで追うこと）</b>の試験です。手順はいつも同じ4ステップ。</p>
   <ol>
     <li><b>①ゴール確認</b>：何を答えるか（戻り値？出力？空欄？）を先に見る。</li>
@@ -450,14 +452,14 @@
 
 <!-- ============ 復習リンク ============ -->
 <section class="card" id="links">
-  <h2>🔗 復習リンク</h2>
+  <h2>復習リンク</h2>
   <p class="sub">❌が続く分野は、ドリルを回す前に解説を読み直すほうが早いです。</p>
   <div class="related">
-    <a href="fe-kamoku-b-jissen.html">🏋️ 科目B 実践演習（本試験形式）<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">このドリルの次のステップ。公開問題と同じ外形の15問</span></a>
-    <a href="fe-algo.html">🧩 科目B アルゴリズム解説<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">擬似言語の文法からトレースまで全18項目</span></a>
-    <a href="fe-security.html">🔒 セキュリティ解説<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">科目Bセキュリティ問題の知識のベース</span></a>
-    <a href="fe-cram.html">⚡ 直前対策ドリル<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">科目A向け一問一答×計算ドリル</span></a>
-    <a href="https://www.ipa.go.jp/shiken/mondai-kaiotu/sg_fe/koukai/2025r07.html" target="_blank" rel="noopener">📄 IPA 公開問題（2025年度）<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">本試験からの公開問題と解答例</span></a>
+    <a href="fe-kamoku-b-jissen.html">🏋️ 科目B 実践演習（本試験形式）<span>このドリルの次のステップ。公開問題と同じ外形の15問</span></a>
+    <a href="fe-algo.html">🧩 科目B アルゴリズム解説<span>擬似言語の文法からトレースまで全18項目</span></a>
+    <a href="fe-security.html">🔒 セキュリティ解説<span>科目Bセキュリティ問題の知識のベース</span></a>
+    <a href="fe-cram.html">⚡ 直前対策ドリル<span>科目A向け一問一答×計算ドリル</span></a>
+    <a href="https://www.ipa.go.jp/shiken/mondai-kaiotu/sg_fe/koukai/2025r07.html" target="_blank" rel="noopener">📄 IPA 公開問題（2025年度）<span>本試験からの公開問題と解答例</span></a>
   </div>
 </section>
 

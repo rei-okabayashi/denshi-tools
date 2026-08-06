@@ -88,7 +88,7 @@
     text-decoration:none;font-weight:700;border-bottom:1.5px solid var(--accent-line)}
   .btns{display:flex;gap:10px;flex-wrap:wrap}
   .btns button{flex:1;min-width:130px;border:none;border-radius:11px;padding:11px 14px;
-    font-family:var(--sans);font-weight:700;font-size:.88rem;cursor:pointer;transition:.12s}
+    font-family:var(--sans);font-weight:700;font-size:.88rem;cursor:pointer;transition:background-color .12s,filter .12s}
   .btn-draw{background:var(--accent-ink);color:#fff}
   .btn-draw:hover{background:#A84C2E}
   .btn-ok{background:var(--green-soft);color:var(--green);border:1px solid #D5DFC6!important}
@@ -98,14 +98,17 @@
   .tips{font-size:.86rem}
   .tips b{color:var(--accent-ink)}
   .related{display:flex;gap:10px;flex-wrap:wrap}
-  .related a{flex:1;min-width:200px;display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;
-    background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:11px 14px;font-size:.84rem;font-weight:600;transition:.12s}
+  .related a{flex:1;min-width:200px;display:flex;flex-direction:column;align-items:flex-start;gap:3px;
+    text-decoration:none;color:inherit;background:var(--surface2);border:1px solid var(--border);
+    border-radius:12px;padding:11px 14px;font-size:.84rem;font-weight:600;
+    transition:border-color .12s,color .12s}
+  .related a span{font-weight:400;color:var(--ink-dim);font-size:.76rem}
   .related a:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
   /* あやしいリスト・優先出題 */
   .mini{font-size:.78rem;color:var(--ink-dim);font-weight:400}
   .weaklist{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 2px}
   .weaklist a{font-size:.8rem;text-decoration:none;color:var(--ink);background:var(--surface2);
-    border:1px solid var(--border);border-radius:99px;padding:4px 12px;transition:.12s}
+    border:1px solid var(--border);border-radius:99px;padding:4px 12px;transition:background-color .12s,border-color .12s,color .12s}
   .weaklist a:hover{border-color:var(--accent-dim);color:var(--accent-ink)}
   .weaklist a.done{background:var(--green-soft);border-color:#D5DFC6;color:var(--green)}
   .weaklist a.weak{background:var(--warn-soft);border-color:#E8D3B0;color:var(--warn)}
@@ -130,7 +133,7 @@
   .sync-row input{flex:1;min-width:0;font-family:var(--sans);font-size:.78rem;padding:9px 11px;
     border:1px solid var(--border);border-radius:9px;background:var(--surface2);color:var(--ink)}
   .sync-row button{flex-shrink:0;border:none;border-radius:9px;padding:9px 16px;font-family:var(--sans);
-    font-weight:700;font-size:.82rem;cursor:pointer;background:var(--accent-ink);color:#fff;transition:.12s}
+    font-weight:700;font-size:.82rem;cursor:pointer;background:var(--accent-ink);color:#fff;transition:background-color .12s}
   .sync-row button:hover{background:#A84C2E}
   .sync-msg{font-size:.84rem;font-weight:700;margin:10px 0 0;padding:10px 12px;border-radius:9px}
   .sync-msg.ok{color:var(--green);background:var(--green-soft);border:1px solid #D5DFC6}
@@ -165,7 +168,7 @@
 
 <!-- 試験の基本データ -->
 <section class="card">
-  <h2>📝 試験の基本データ（2026年7月時点・IPA公式より）</h2>
+  <h2>試験の基本データ（2026年7月時点・IPA公式より）</h2>
   <table class="tbl">
     <tr><th>方式</th><td>CBT（パソコン受験）・通年いつでも申込可／受験料 7,500円</td></tr>
     <tr><th>科目A</th><td>90分・60問（四択）── 知識問題。テクノロジ／マネジメント／ストラテジ</td></tr>
@@ -183,7 +186,7 @@
 
 <!-- 全体進捗 -->
 <section class="card">
-  <h2>📊 いまの定着度</h2>
+  <h2>いまの定着度</h2>
   <div class="total">
     <div class="num"><span id="total-count">0</span><small> / 104 項目</small></div>
     <div class="side">
@@ -195,7 +198,7 @@
 
 <!-- 項目検索 -->
 <section class="card">
-  <h2>🔎 項目をさがす</h2>
+  <h2>項目をさがす</h2>
   <input id="find-input" type="search" placeholder="キーワードで104項目から検索（例：サブネット、稼働率、正規化）" autocomplete="off">
   <div class="weaklist hidden" id="find-list"></div>
   <p class="mini hidden" id="find-none">見つかりませんでした。別の言い方で試してみて。</p>
@@ -204,7 +207,7 @@
 <!-- セクション（科目A） -->
 <div class="kamoku">科目A（知識・60問）</div>
 <a class="sec" href="fe-basics.html">
-  <span class="ico" style="--accent-bg:#F4E7DB">🔢</span>
+  <span class="ico" aria-hidden="true" style="--accent-bg:#F4E7DB">🔢</span>
   <span class="meta">
     <span class="t">1. 基礎理論 <span class="cnt"><b id="c-fb">0</b>/12</span></span>
     <span class="d">2進数・補数・論理演算・情報量・標本化・浮動小数点 ── 計算問題の土台</span>
@@ -213,7 +216,7 @@
   <span class="arrow" aria-hidden="true">›</span>
 </a>
 <a class="sec" href="fe-computer.html">
-  <span class="ico" style="--accent-bg:#E3EAF3">🖥️</span>
+  <span class="ico" aria-hidden="true" style="--accent-bg:#E3EAF3">🖥️</span>
   <span class="meta">
     <span class="t">2. コンピュータシステム <span class="cnt"><b id="c-cs">0</b>/12</span></span>
     <span class="d">CPU・キャッシュ・OS・RAID・稼働率・待ち行列 ── 定番計算の宝庫</span>
@@ -222,7 +225,7 @@
   <span class="arrow" aria-hidden="true">›</span>
 </a>
 <a class="sec" href="fe-network.html">
-  <span class="ico" style="--accent-bg:#E7EDDC">🌐</span>
+  <span class="ico" aria-hidden="true" style="--accent-bg:#E7EDDC">🌐</span>
   <span class="meta">
     <span class="t">3. ネットワーク <span class="cnt"><b id="c-nw">0</b>/11</span></span>
     <span class="d">OSIとTCP/IP・ポート番号・IPアドレス・サブネット計算・DNS</span>
@@ -231,7 +234,7 @@
   <span class="arrow" aria-hidden="true">›</span>
 </a>
 <a class="sec" href="fe-security.html">
-  <span class="ico" style="--accent-bg:#F3E5DA">🔐</span>
+  <span class="ico" aria-hidden="true" style="--accent-bg:#F3E5DA">🔐</span>
   <span class="meta">
     <span class="t">4. セキュリティ <span class="cnt"><b id="c-sec">0</b>/13</span></span>
     <span class="d">攻撃手法・暗号・署名・認証・ISMS ── 最多出題＋科目Bに直結</span>
@@ -240,7 +243,7 @@
   <span class="arrow" aria-hidden="true">›</span>
 </a>
 <a class="sec" href="fe-database.html">
-  <span class="ico" style="--accent-bg:#EAE4D5">🗃️</span>
+  <span class="ico" aria-hidden="true" style="--accent-bg:#EAE4D5">🗃️</span>
   <span class="meta">
     <span class="t">5. データベース <span class="cnt"><b id="c-db">0</b>/10</span></span>
     <span class="d">正規化・SQL・トランザクション・障害回復</span>
@@ -249,7 +252,7 @@
   <span class="arrow" aria-hidden="true">›</span>
 </a>
 <a class="sec" href="fe-develop.html">
-  <span class="ico" style="--accent-bg:#E4ECDE">🛠️</span>
+  <span class="ico" aria-hidden="true" style="--accent-bg:#E4ECDE">🛠️</span>
   <span class="meta">
     <span class="t">6. 開発技術 <span class="cnt"><b id="c-dv">0</b>/9</span></span>
     <span class="d">V字モデル・アジャイル・テスト技法・見積り</span>
@@ -258,7 +261,7 @@
   <span class="arrow" aria-hidden="true">›</span>
 </a>
 <a class="sec" href="fe-manage.html">
-  <span class="ico" style="--accent-bg:#F5E8D4">📋</span>
+  <span class="ico" aria-hidden="true" style="--accent-bg:#F5E8D4">📋</span>
   <span class="meta">
     <span class="t">7. マネジメント <span class="cnt"><b id="c-mg">0</b>/9</span></span>
     <span class="d">クリティカルパス・人月計算・ITIL・SLA・監査</span>
@@ -267,7 +270,7 @@
   <span class="arrow" aria-hidden="true">›</span>
 </a>
 <a class="sec" href="fe-strategy.html">
-  <span class="ico" style="--accent-bg:#E3EAF3">📈</span>
+  <span class="ico" aria-hidden="true" style="--accent-bg:#E3EAF3">📈</span>
   <span class="meta">
     <span class="t">8. ストラテジ <span class="cnt"><b id="c-st">0</b>/10</span></span>
     <span class="d">SWOT・PPM・損益分岐点・著作権・法律・生成AI</span>
@@ -277,7 +280,7 @@
 </a>
 <div class="kamoku">科目B（技能・20問）── 配点の8割が擬似言語</div>
 <a class="sec" href="fe-algo.html">
-  <span class="ico" style="--accent-bg:#F4E7DB">🧩</span>
+  <span class="ico" aria-hidden="true" style="--accent-bg:#F4E7DB">🧩</span>
   <span class="meta">
     <span class="t">9. アルゴリズムと擬似言語 <span class="cnt"><b id="c-al">0</b>/18</span></span>
     <span class="d">擬似言語の読み方・トレースの型・再帰・ソート・木構造・グラフ・科目Bセキュリティ</span>
@@ -288,7 +291,7 @@
 
 <!-- 抜き打ちチェック -->
 <section class="card rndcheck">
-  <h2>🎲 抜き打ちチェック（アクティブ・リコール）</h2>
+  <h2>抜き打ちチェック（アクティブ・リコール）</h2>
   <p style="font-size:.85rem;color:var(--ink-dim)">全104項目からランダムに1問。<b>まず何も見ずに30秒、口に出して説明</b>してみてから判定しよう。「思い出そうとする」こと自体が最強の記憶術です。「🤔 まだあやしい」にした項目は、下の<b>あやしいリスト</b>に溜まります。</p>
   <div class="q hidden" id="q-box">
     <div class="sec-tag" id="q-sec">セクション1</div>
@@ -309,7 +312,7 @@
 
 <!-- あやしいリスト -->
 <section class="card">
-  <h2>🤔 あやしいリスト <span class="mini">（<b id="weak-count">0</b> 件）</span></h2>
+  <h2>あやしいリスト <span class="mini">（<b id="weak-count">0</b> 件）</span></h2>
   <p style="font-size:.85rem;color:var(--ink-dim)">抜き打ちチェックで「まだあやしい」と判定した項目と、各ページで「🤔 あやしい」を付けた項目。リンク先で復習して「✔ できるようになった」を付けると、自動でここから消えます。</p>
   <div class="weaklist hidden" id="weak-list"></div>
   <p class="mini" id="weak-empty">いまは空っぽ。抜き打ちチェックの「🤔 まだあやしい」か、各ページの「🤔 あやしい」ボタンで、ここに溜まっていきます。</p>
@@ -317,7 +320,7 @@
 
 <!-- 直前対策ドリルへの導線 -->
 <a class="sec" href="fe-cram.html" style="background:linear-gradient(135deg,#FCFBF7,#F3E5DA);border-color:var(--accent-line)">
-  <span class="ico" style="--accent-bg:#F5E8D4">⚡</span>
+  <span class="ico" aria-hidden="true" style="--accent-bg:#F5E8D4">⚡</span>
   <span class="meta">
     <span class="t">直前対策ドリル</span>
     <span class="d">一問一答151問×数値が毎回変わる計算ドリル14型。🤔あやしいリストと連動</span>
@@ -327,7 +330,7 @@
 
 <!-- 科目B反復トレーニングへの導線 -->
 <a class="sec" href="fe-kamoku-b.html" style="background:linear-gradient(135deg,#FCFBF7,#E7EDDC);border-color:#C2D0AE">
-  <span class="ico" style="--accent-bg:#E7EDDC">🔁</span>
+  <span class="ico" aria-hidden="true" style="--accent-bg:#E7EDDC">🔁</span>
   <span class="meta">
     <span class="t">科目B 反復トレーニング</span>
     <span class="d">擬似言語×セキュリティの本試験形式ドリル。間違えた問題ほど繰り返し出題</span>
@@ -337,7 +340,7 @@
 
 <!-- 科目B実践演習への導線 -->
 <a class="sec" href="fe-kamoku-b-jissen.html" style="background:linear-gradient(135deg,#FCFBF7,#E3EAF3);border-color:#C9D6E8">
-  <span class="ico" style="--accent-bg:#E3EAF3">🏋️</span>
+  <span class="ico" aria-hidden="true" style="--accent-bg:#E3EAF3">🏋️</span>
   <span class="meta">
     <span class="t">科目B 実践演習（本試験形式）</span>
     <span class="d">公開問題と同じ外形の15問。数値が毎回変わるから暗記が効かない</span>
@@ -347,7 +350,7 @@
 
 <!-- 進捗の共有（端末間同期） -->
 <section class="card" id="sync-card">
-  <h2>📱 進捗をほかの端末と共有</h2>
+  <h2>進捗をほかの端末と共有</h2>
   <p style="font-size:.85rem;color:var(--ink-dim)">チェックは端末（ブラウザ）ごとに保存されるため、PCとスマホでは別々になります。共有コードを使うと、チェックとあやしいリストを<b>合算（マージ）</b>できます。取り込んでも、取り込み先に既にあるチェックは消えません。</p>
   <div class="btns"><button class="btn-draw" id="btn-sync-make">この端末の進捗から共有コードを作る</button></div>
   <div id="sync-out" class="hidden">
@@ -368,7 +371,7 @@
 
 <!-- 使い方 -->
 <section class="card">
-  <h2>📖 このノートの使い方（おすすめの回し方）</h2>
+  <h2>このノートの使い方（おすすめの回し方）</h2>
   <ol>
     <li><b>1周目：</b>セクション1から順に、図を眺めながら読む。理解できた項目は「✔ できるようになった」、不安が残る項目は「🤔 あやしい」を付けて先へ進む。</li>
     <li><b>計算問題は手を動かす：</b>稼働率・サブネット・損益分岐点などは、例題を紙で解いてからチェック。</li>
@@ -394,11 +397,11 @@
 
 <!-- 本試験の過去問 -->
 <section class="card">
-  <h2>✍️ 仕上げは本物の問題で</h2>
+  <h2>仕上げは本物の問題で</h2>
   <p>このノートで土台を作ったら、IPA公式の問題で腕試しを。科目Bは特に「時間を計って解く」練習が効きます。</p>
   <div class="related">
-    <a href="https://www.ipa.go.jp/shiken/mondai-kaiotu/sg_fe/koukai/2025r07.html" target="_blank" rel="noopener">📄 IPA 公開問題（2025年度）<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">本試験からの公開問題と解答例</span></a>
-    <a href="https://www.ipa.go.jp/shiken/syllabus/gaiyou.html" target="_blank" rel="noopener">📚 IPA 試験要綱・シラバス<br><span style="font-weight:400;color:var(--ink-dim);font-size:.76rem">サンプル問題・最新の出題範囲</span></a>
+    <a href="https://www.ipa.go.jp/shiken/mondai-kaiotu/sg_fe/koukai/2025r07.html" target="_blank" rel="noopener">📄 IPA 公開問題（2025年度）<span>本試験からの公開問題と解答例</span></a>
+    <a href="https://www.ipa.go.jp/shiken/syllabus/gaiyou.html" target="_blank" rel="noopener">📚 IPA 試験要綱・シラバス<span>サンプル問題・最新の出題範囲</span></a>
   </div>
   <div class="reset"><button id="btn-reset">チェック進捗をすべてリセットする</button></div>
 </section>
