@@ -20,6 +20,9 @@
     --bg:#F1EEE5; --ground:#E6E1D4; --surface:#FCFBF7; --surface2:#F2EFE6;
     --accent:#BE5A38; --accent-ink:#A54E31; --accent-dim:#D69B81; --accent-soft:#F3E5DA; --accent-line:#E6C3B0;
     --ink:#211F1A; --ink-dim:#716C61;
+    /* --ink-dim は標準背景(--bg #F1EEE5)でちょうど 4.50:1 ＝ AAの境界。色味を敷いたカードの上では割れる。
+       グラデーション(#FCFBF7→#F3E5DA / #E7EDDC / #E3EAF3)に乗る小さい文字はこちらを使う（--accent-ink と同じ考え方） */
+    --ink-dim-tint:#6A655A;
     --blue:#4A6FA5; --green:#4f6b3a; --green-soft:#E7EDDC;
     --warn:#9a5a22; --warn-soft:#F5E8D4;
     --border:#E2DCCD;
@@ -79,6 +82,10 @@
   .sec .arrow{color:var(--accent-dim);font-size:1.25rem;flex-shrink:0}
   /* 抜き打ちチェック */
   .rndcheck{background:linear-gradient(135deg,#FCFBF7,#F3E5DA);border:1px solid var(--accent-line)}
+  /* 色味を敷いたカードの中だけ --ink-dim を AA 安全版に差し替える。
+     子孫のセレクタを1つずつ直すと必ず取りこぼすので、変数をスコープごと上書きする。
+     .sec は各カードが style 属性で別々のグラデーションを持つ（#F3E5DA / #E7EDDC / #E3EAF3）。 */
+  .rndcheck, .sec{--ink-dim:var(--ink-dim-tint)}
   .rndcheck .q{background:#FFFEFB;border:1px solid var(--border);border-radius:12px;
     padding:18px 16px;margin:12px 0;text-align:center}
   .rndcheck .q .sec-tag{font-size:.72rem;color:var(--ink-dim);letter-spacing:.04em}
@@ -343,7 +350,7 @@
   <span class="ico" aria-hidden="true" style="--accent-bg:#E3EAF3">🏋️</span>
   <span class="meta">
     <span class="t">科目B 実践演習（本試験形式）</span>
-    <span class="d">公開問題と同じ外形の15問。数値が毎回変わるから暗記が効かない</span>
+    <span class="d">公開問題と同じ外形の16問。数値が毎回変わるから暗記が効かない</span>
   </span>
   <span class="arrow" aria-hidden="true">›</span>
 </a>

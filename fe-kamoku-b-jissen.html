@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>基本情報 科目B 実践演習｜本試験形式・数値が変わる15問</title>
-<meta name="description" content="基本情報技術者試験（FE）科目Bの本試験（公開問題）と同じ外形のオリジナル15問。擬似言語11問＋セキュリティ4問。数値や変種がシードで毎回変わるので暗記が効かず、実践力が鍛えられます。スマホだけでトレースできる道具（コード固定表示・トレース表・専用キーパッド）つき。">
+<title>基本情報 科目B 実践演習｜本試験形式・数値が変わる16問</title>
+<meta name="description" content="基本情報技術者試験（FE）科目Bの本試験（公開問題）と同じ外形のオリジナル16問。擬似言語12問＋セキュリティ4問。数値や変種がシードで毎回変わるので暗記が効かず、実践力が鍛えられます。スマホだけでトレースできる道具（コード固定表示・トレース表・専用キーパッド）つき。">
 <meta name="theme-color" content="#F1EEE5">
-<meta property="og:title" content="基本情報 科目B 実践演習｜本試験形式・数値が変わる15問">
+<meta property="og:title" content="基本情報 科目B 実践演習｜本試験形式・数値が変わる16問">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://nerunerunerure-hue.github.io/denshi-tools/fe-kamoku-b-jissen.html">
-<meta property="og:description" content="科目B本試験（公開問題）と同じ外形のオリジナル15問。数値・変種がシードで毎回変わるので暗記が効かない。スマホだけでトレースできる道具つき。">
+<meta property="og:description" content="科目B本試験（公開問題）と同じ外形のオリジナル16問。数値・変種がシードで毎回変わるので暗記が効かない。スマホだけでトレースできる道具つき。">
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -265,7 +265,7 @@
 <div class="hero">
   <div class="eyebrow">KAMOKU-B JISSEN</div>
   <h1>🏋️ 科目B 実践演習 — 本試験形式</h1>
-  <p class="lead">IPAの公開問題と同じ外形（設問→前書き→プログラム→解答群）で作ったオリジナル15問。<b>数値や処理の変種がシードで毎回変わる</b>ので、答えの暗記が効きません。<a href="fe-kamoku-b.html">反復トレーニング（80問）</a>で型を身につけたあと、ここで本番の重さに慣れるのがおすすめです。スマホしか無くてもトレースできる道具つき。</p>
+  <p class="lead">IPAの公開問題と同じ外形（設問→前書き→プログラム→解答群）で作ったオリジナル16問。<b>数値や処理の変種がシードで毎回変わる</b>ので、答えの暗記が効きません。<a href="fe-kamoku-b.html">反復トレーニング（80問）</a>で型を身につけたあと、ここで本番の重さに慣れるのがおすすめです。スマホしか無くてもトレースできる道具つき。</p>
   <nav class="toc" aria-label="ページ内目次">
     <a href="#howto">使い方</a>
     <a href="#plist-card">問題一覧</a>
@@ -280,7 +280,7 @@
 <section class="card" id="howto">
   <h2>使い方 — 本番のつもりで1問ずつ</h2>
   <ul>
-    <li>一覧から1問選んで<b>「挑戦する」</b>。タイマーが回り始めます（本試験の感覚：科目Bは<b>20問100分＝1問平均5分</b>。ここの15問は本番より重めなので、目安時間は問題ごとに表示します）。</li>
+    <li>一覧から1問選んで<b>「挑戦する」</b>。タイマーが回り始めます（本試験の感覚：科目Bは<b>20問100分＝1問平均5分</b>。ここの16問は本番より重めなので、目安時間は問題ごとに表示します）。</li>
     <li>紙とペンがあるなら<b>紙でトレース</b>が本番同様で最強。スマホだけなら<b>🧮トレースツール</b>（下の<a href="#mobile-guide">説明</a>）を使ってください。</li>
     <li>詰まったら💡ヒント（着眼点→組み立ての2段階）。それでも無理なら<b>「📖 答えと解説を見る」</b>（記録に残りません）を押して、<b>解説のトレース表を自分の手で再現</b>してください。ヒントは解答後も読み返せます。</li>
     <li>解き終わったら<b>「🎲 数値を変えてもう一度」</b>。<b>別の数値で2回正解すると「攻略」</b>です。数値が変わっても解けて初めて、その型が身についたことになります。</li>
@@ -662,8 +662,15 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
  * jb02: 配列 — 1次元配列の要素移動（空欄a×bの組合せ）
  * 型の出典: 令和8年度 公開問題 問1（配列の回転・for の制御記述を選ぶ）＋
  *           令和4年サンプル問題 問2（配列の逆順・両端の入替え）の型
- * 乱数化: 変種(右回転/左回転/逆順) / 例示配列(5〜6要素の相異なる値) /
+ * 乱数化: 変種(右回転/左回転/逆順) × 実装方式(tmp退避して上書き／隣接swap) の組合せ(COMBOS) /
+ *         例示配列(5〜6要素の相異なる値) /
  *         解答群に載せる空欄a・空欄bの候補の顔ぶれと個数（＝行数・並び・正解位置）
+ * ⚠️ 2026-08-08 修正: 以前は「変種3つそれぞれに数学的に唯一の正しい(a,b)」しか無く，
+ *   例示配列をどう変えても正解の組が3通りに固定されていた（カンニング対策の穴）。
+ *   回転は「隣り合う2要素を入れ替える」方式でも同じ結果になる別実装が成り立つため，
+ *   右回転・左回転それぞれに tmp退避方式／隣接swap方式 の2通りを追加し，
+ *   逆順(常にswap方式)と合わせて計5通りの正解(a,b)をシードで均等に抽選する。
+ *   どちらの方式でも「正答はシミュレータ(simulate)が計算する」原則は変えていない。
  * 一意性: 空欄a候補7種 × 空欄b候補5種 の全35組合せを実際に実行し，
  *         仕様どおりの結果になる組合せが1つだけになるドローだけを採用する。
  * 解説: 表示された誤答は「a だけ違う／b だけ違う／両方違う」を問わず全件を記号つきで説明する。
@@ -713,47 +720,70 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
     right: {
       fn: 'rotateRight',
       spec: '全ての要素を一つずつ後ろへずらし，末尾にあった要素を先頭に移した配列を返す',
-      pre: n => 'tmp ← data[n]', post: '  data[1] ← tmp',
       target: a => [a[a.length - 1]].concat(a.slice(0, a.length - 1))
     },
     left: {
       fn: 'rotateLeft',
       spec: '全ての要素を一つずつ前へずらし，先頭にあった要素を末尾に移した配列を返す',
-      pre: n => 'tmp ← data[1]', post: '  data[n] ← tmp',
       target: a => a.slice(1).concat([a[0]])
     },
     rev: {
       fn: 'reverseArray',
       spec: '要素の並びを逆順にした配列を返す',
-      pre: null, post: null,
       target: a => a.slice().reverse()
     }
   };
+  /* method: 'assign'（tmp に退避して上書き）／'swap'（隣接する2要素を入れ替える）。
+   * pre/post（tmp の退避・書き戻し）は assign方式のときだけ必要で，どちら端を扱うかは vk で決まる。
+   * rev は昔から swap方式のみ（対称な入替えなので tmp が要らない）。 */
+  const PREPOST = {
+    right: { pre: 'tmp ← data[n]', post: '  data[1] ← tmp' },
+    left: { pre: 'tmp ← data[1]', post: '  data[n] ← tmp' }
+  };
+  /* 正解になり得る(a,b)の組を5通りに広げるための組合せ。等確率で1つ選ぶ。
+   * 数学的に成り立つ別実装（回転をtmp退避でなく隣接swapの連鎖で行う）を使うことで，
+   * 「例示配列を変えても正解の(a,b)が3通りに固定される」問題を解消する。 */
+  /* Akey/Bkey は各(vk,method)で数学的に唯一定まる正解の組（手検算で確認済み）。
+   * ⚠️ swap方式は隣接swapの連鎖なので，"末尾側から i と i＋1 を入れ替える" と
+   *   "末尾側から i と i−1 を入れ替える" は同じ操作列になり得る（対称な操作のため）。
+   *   そのため searchで「たまたま他の組も仕様どおりになっていないか」を毎回，表全体で検算する
+   *   （下のgen内の一意性チェック）。 */
+  const COMBOS = [
+    { vk: 'right', method: 'assign', Akey: 'bn2', Bkey: 'im1' },
+    { vk: 'right', method: 'swap', Akey: 'bn11', Bkey: 'ip1' },
+    { vk: 'left', method: 'assign', Akey: 'f1n1', Bkey: 'ip1' },
+    { vk: 'left', method: 'swap', Akey: 'f2n', Bkey: 'im1' },
+    { vk: 'rev', method: 'swap', Akey: 'half', Bkey: 'nmi1' }
+  ];
 
   /* 空欄a・bに候補を入れたときのプログラムを実際に走らせる。
    * 成功  : { d: 実行後の配列, swaps: 入れ替えた対の並び }
    * 領域外: { oob: { i: 最初に範囲外になったときの i, k: そのとき参照した要素番号 } }
    * ＝ 解説が「0 と n＋1 のどちらに、どの i で落ちるのか」を具体値で書けるようにするための戻り値。 */
-  function simulate(vk, A, B, src) {
+  function simulate(vk, method, A, B, src) {
     const n = src.length;
     const d = src.slice();                 // d[k-1] が擬似言語の data[k]
     const swaps = [];
     if (n <= 1) return { d: d, swaps: swaps };
     let tmp;
-    if (vk === 'right') tmp = d[n - 1];
-    if (vk === 'left') tmp = d[0];
+    if (method === 'assign') {
+      if (vk === 'right') tmp = d[n - 1];
+      if (vk === 'left') tmp = d[0];
+    }
     const to = A.to(n), st = A.step;
     for (let i = A.from(n); st > 0 ? i <= to : i >= to; i += st) {
       if (i < 1 || i > n) return { oob: { i: i, k: i } };
       const j = B.f(i, n);
       if (j < 1 || j > n) return { oob: { i: i, k: j } };
-      if (vk === 'rev') {
+      if (method === 'swap') {
         if (i !== j) swaps.push(Math.min(i, j) + '-' + Math.max(i, j));   // 自分自身との入替えは何も起きないので数えない
         const t = d[i - 1]; d[i - 1] = d[j - 1]; d[j - 1] = t;
       } else d[i - 1] = d[j - 1];
     }
-    if (vk === 'right') d[0] = tmp;
-    if (vk === 'left') d[n - 1] = tmp;
+    if (method === 'assign') {
+      if (vk === 'right') d[0] = tmp;
+      if (vk === 'left') d[n - 1] = tmp;
+    }
     return { d: d, swaps: swaps };
   }
   /* 実行結果が期待配列と一致したか（領域外で落ちたものは常に不一致扱い） */
@@ -766,33 +796,19 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
     origin: '令和8年度 公開問題 問1（配列の回転・for の制御記述）／令和4年サンプル問題 問2（配列の逆順）の型',
 
     gen(rng) {
-      const vk = H.pick(rng, ['right', 'left', 'rev']);
+      const combo = H.pick(rng, COMBOS);
+      const vk = combo.vk, method = combo.method;
       const V = VARIANTS[vk];
       const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      const Ac = A_POOL.find(a => a.key === combo.Akey);
+      const Bc = B_POOL.find(b => b.key === combo.Bkey);
 
       /* ── ドロー（最大60回引き直し）──
-       * 条件: 例示配列だけで全35組合せのうち仕様どおりになるのが1つ，
-       *       かつその1つが長さの異なる検証用配列でも仕様どおりに動くこと。 */
-      let best = null;
-      for (let attempt = 0; attempt < 60; attempt++) {
-        const nEx = H.ri(rng, 5, 6);
-        const ex = H.take(rng, digits, nEx);
-        const probes = [H.take(rng, digits, 5), H.take(rng, digits, 6), H.take(rng, digits, 7)];
-
-        const hits = [];
-        for (const A of A_POOL) for (const B of B_POOL) {
-          if (same(simulate(vk, A, B, ex), V.target(ex))) hits.push({ A, B });
-        }
-        const okAll = hits.length === 1 &&
-          probes.every(p => same(simulate(vk, hits[0].A, hits[0].B, p), V.target(p)));
-        if (okAll) { best = { ex, A: hits[0].A, B: hits[0].B }; break; }
-      }
-      /* 条件を満たすドローが引けなかったら黙って誤答を正解にせず，失敗させる（fail-loud） */
-      if (!best) throw new Error('jb02: 一意な正解をもつ例示配列を引けませんでした（60回）');
-      const ex = best.ex, Ac = best.A, Bc = best.B, n = ex.length;
-
-      /* ── 解答群に載せる候補を選ぶ（正解＋抽選した誤答。顔ぶれはシードで動く） ── */
-      const shape = H.pick(rng, [[2, 3], [3, 2], [3, 3]]);
+       * 条件: 正解の組 (Ac, Bc) が例示配列と，長さの異なる検証用配列でも仕様どおりに動くこと。
+       *       かつ，実際に表示する解答群（誤答含む）の中で仕様どおりになる行が正解の1行だけであること
+       *       （swap方式は隣接要素の入替えの連鎖という対称な操作なので，別の(a,b)の書き方が
+       *       数学的に同じ操作列になり得る。表全体を simulate で検算し，紛れ込んでいたら引き直す）。 */
+      const shape0 = () => H.pick(rng, [[2, 3], [3, 2], [3, 3]]);
       const pickCands = (pool, cor, twin, cnt) => {
         const rest = H.shuffle(rng, pool.filter(x => x.key !== cor.key));
         const tw = twin[cor.key] && twin[cor.key] !== cor.key
@@ -801,8 +817,30 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
         const order = (tw && rng() < 0.6) ? [tw].concat(rest.filter(x => x !== tw)) : rest;
         return arrange([cor].concat(order.slice(0, cnt - 1)));   // 並びは顔ぶれから決まる
       };
-      const aList = pickCands(A_POOL, Ac, TWIN_A, shape[0]);
-      const bList = pickCands(B_POOL, Bc, TWIN_B, shape[1]);
+
+      let best = null;
+      for (let attempt = 0; attempt < 60; attempt++) {
+        const nEx = H.ri(rng, 5, 6);
+        const ex = H.take(rng, digits, nEx);
+        const probes = [H.take(rng, digits, 5), H.take(rng, digits, 6), H.take(rng, digits, 7)];
+        if (!same(simulate(vk, method, Ac, Bc, ex), V.target(ex))) continue;
+        if (!probes.every(p => same(simulate(vk, method, Ac, Bc, p), V.target(p)))) continue;
+
+        const shape = shape0();
+        const aList = pickCands(A_POOL, Ac, TWIN_A, shape[0]);
+        const bList = pickCands(B_POOL, Bc, TWIN_B, shape[1]);
+        let hitCount = 0;
+        for (const A of aList) for (const B of bList) {
+          if (same(simulate(vk, method, A, B, ex), V.target(ex))) hitCount++;
+        }
+        if (hitCount !== 1) continue;   // 表の中に別解が紛れ込んだ → 引き直し
+
+        best = { ex, aList, bList };
+        break;
+      }
+      /* 条件を満たすドローが引けなかったら黙って誤答を正解にせず，失敗させる（fail-loud） */
+      if (!best) throw new Error('jb02: 一意な解答群を引けませんでした（60回）');
+      const ex = best.ex, n = ex.length, aList = best.aList, bList = best.bList;
 
       const options = [], rows = [];
       for (const A of aList) for (const B of bList) {
@@ -813,20 +851,21 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
 
       /* ── 〔プログラム〕 ── */
       const cmt = '  /* 要素が 1 個以下のときは並びは変わらない */';
+      const pp = (method === 'assign') ? PREPOST[vk] : null;   // swap方式は pre/post なし
       const lines = [];
       lines.push(H.esc('○整数型の配列: ' + V.fn + '(整数型の配列: data)'));
       lines.push(H.esc('  整数型: i'));
       lines.push(H.esc('  整数型: n ← dataの要素数'));
-      if (V.pre) lines.push(H.esc('  整数型: tmp'));
+      if (pp) lines.push(H.esc('  整数型: tmp'));
       lines.push(H.esc('  if (n が 1 以下)' + cmt));
       lines.push(H.esc('    return data'));
       lines.push(H.esc('  endif'));
-      if (V.pre) lines.push(H.esc('  ' + V.pre(n)));
+      if (pp) lines.push(H.esc('  ' + pp.pre));
       lines.push(H.esc('  for (') + H.blank('a') + H.esc(')'));
-      if (vk === 'rev') lines.push(H.esc('    data[i]とdata[') + H.blank('b') + H.esc(']の値を入れ替える'));
+      if (method === 'swap') lines.push(H.esc('    data[i]とdata[') + H.blank('b') + H.esc(']の値を入れ替える'));
       else lines.push(H.esc('    data[i] ← data[') + H.blank('b') + H.esc(']'));
       lines.push(H.esc('  endfor'));
-      if (V.post) lines.push(H.esc(V.post));
+      if (pp) lines.push(H.esc(pp.post));
       lines.push(H.esc('  return data'));
 
       const arr = a => '{' + a.join(', ') + '}';
@@ -846,33 +885,38 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
       const tr = [];
       const d = ex.slice();
       let tmp = null;
-      if (vk === 'right') { tmp = d[n - 1]; tr.push(['for の前', 'tmp ← data[' + n + ']（tmp は ' + tmp + '）', arr(d)]); }
-      if (vk === 'left') { tmp = d[0]; tr.push(['for の前', 'tmp ← data[1]（tmp は ' + tmp + '）', arr(d)]); }
-      if (vk === 'rev') tr.push(['for の前', '（初期状態）', arr(d)]);
+      if (method === 'assign') {
+        if (vk === 'right') { tmp = d[n - 1]; tr.push(['for の前', 'tmp ← data[' + n + ']（tmp は ' + tmp + '）', arr(d)]); }
+        if (vk === 'left') { tmp = d[0]; tr.push(['for の前', 'tmp ← data[1]（tmp は ' + tmp + '）', arr(d)]); }
+      } else {
+        tr.push(['for の前', '（初期状態）', arr(d)]);
+      }
       const to = Ac.to(n), st = Ac.step;
       for (let i = Ac.from(n); st > 0 ? i <= to : i >= to; i += st) {
         const j = Bc.f(i, n);
         let act;
-        if (vk === 'rev') { act = 'data[' + i + '] と data[' + j + '] を入れ替える'; const t = d[i - 1]; d[i - 1] = d[j - 1]; d[j - 1] = t; }
+        if (method === 'swap') { act = 'data[' + i + '] と data[' + j + '] を入れ替える'; const t = d[i - 1]; d[i - 1] = d[j - 1]; d[j - 1] = t; }
         else { act = 'data[' + i + '] ← data[' + j + ']（' + d[j - 1] + '）'; d[i - 1] = d[j - 1]; }
         tr.push(['i = ' + i, act, arr(d)]);
       }
-      if (vk === 'right') { d[0] = tmp; tr.push(['for の後', 'data[1] ← tmp（' + tmp + '）', arr(d)]); }
-      if (vk === 'left') { d[n - 1] = tmp; tr.push(['for の後', 'data[' + n + '] ← tmp（' + tmp + '）', arr(d)]); }
+      if (method === 'assign') {
+        if (vk === 'right') { d[0] = tmp; tr.push(['for の後', 'data[1] ← tmp（' + tmp + '）', arr(d)]); }
+        if (vk === 'left') { d[n - 1] = tmp; tr.push(['for の後', 'data[' + n + '] ← tmp（' + tmp + '）', arr(d)]); }
+      }
 
       /* ── 解説：表示された誤答が例示配列でどう外れるかを1件ずつ実測して書く ── */
       const dirWord = { right: '後ろへずらす（末尾の要素を先頭へ移す）', left: '前へずらす（先頭の要素を末尾へ移す）' };
       const reasonOf = (A, B) => {
-        const r = simulate(vk, A, B, ex);
+        const r = simulate(vk, method, A, B, ex);
         if (r.oob) {
           return 'i が ' + r.oob.i + ' のときに要素番号が ' + r.oob.k
             + ' になり、存在しない data[' + r.oob.k + '] を参照してしまいます（要素番号は 1 から ' + n + ' まで）';
         }
         let tail = '';
         if (vk !== 'rev') {
-          /* 逆向きの回転の答えをそのまま入れてしまった、という最もありがちな取り違えを名指しする */
+          /* 逆向きの回転の答えをそのまま入れてしまった、という最もありがちな取り違えを名指しする（同じ方式内で判定） */
           const ov = (vk === 'right') ? 'left' : 'right';
-          const rr = simulate(ov, A, B, ex);
+          const rr = simulate(ov, method, A, B, ex);
           if (same(rr, VARIANTS[ov].target(ex))) {
             tail = '（この a と b の組は' + dirWord[ov] + '処理のもので、ずらす向きが逆です）';
           }
@@ -910,13 +954,23 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
         ? 'まず一般則から。逆順は data[i] と「反対の端から数えて同じ位置にある要素」を対にして入れ替える処理です。'
         + '同じ対をもう一度入れ替えると元の並びに戻ってしまうので、for は配列の半分までで止めます。'
         + 'この 2 点（相手の要素番号の書き方と、どこで止めるか）が a と b を決めます。'
-        : (vk === 'right')
-          ? 'まず一般則から。一つずつ後ろへずらす代入は、まだ写していない値を先につぶさないように、'
-          + '<b>後ろの要素から</b>順に書き換えます。そして tmp に退避した値を最後に書き戻す data[1] は '
-          + 'for の中で扱わないので、繰返しの端は 1 ではなく 2 になります。この 2 点が a と b を決めます。'
-          : 'まず一般則から。一つずつ前へずらす代入は、まだ写していない値を先につぶさないように、'
-          + '<b>前の要素から</b>順に書き換えます。そして tmp に退避した値を最後に書き戻す data[n] は '
-          + 'for の中で扱わないので、繰返しの端は n ではなく n − 1 になります。この 2 点が a と b を決めます。';
+        : (method === 'swap')
+          ? (vk === 'right'
+            ? 'まず一般則から。隣り合う 2 要素の入替えを末尾側から順に繰り返すと、末尾にあった要素が入替えのたびに '
+            + '1 つずつ前へ進み、最後には先頭へ届きます。<b>i の大きい方（末尾寄り）から</b>処理しないと、'
+            + 'まだ動かしていない要素を追い越してしまいます。入れ替える相手は自分より 1 つ後ろの要素です。'
+            + 'この 2 点が a と b を決めます。'
+            : 'まず一般則から。隣り合う 2 要素の入替えを先頭側から順に繰り返すと、先頭にあった要素が入替えのたびに '
+            + '1 つずつ後ろへ進み、最後には末尾へ届きます。<b>i の小さい方（先頭寄り）から</b>処理しないと、'
+            + 'まだ動かしていない要素を追い越してしまいます。入れ替える相手は自分より 1 つ前の要素です。'
+            + 'この 2 点が a と b を決めます。')
+          : (vk === 'right')
+            ? 'まず一般則から。一つずつ後ろへずらす代入は、まだ写していない値を先につぶさないように、'
+            + '<b>後ろの要素から</b>順に書き換えます。そして tmp に退避した値を最後に書き戻す data[1] は '
+            + 'for の中で扱わないので、繰返しの端は 1 ではなく 2 になります。この 2 点が a と b を決めます。'
+            : 'まず一般則から。一つずつ前へずらす代入は、まだ写していない値を先につぶさないように、'
+            + '<b>前の要素から</b>順に書き換えます。そして tmp に退避した値を最後に書き戻す data[n] は '
+            + 'for の中で扱わないので、繰返しの端は n ではなく n − 1 になります。この 2 点が a と b を決めます。';
 
       const exp = '<p>' + rule + '</p>'
         + '<p>正解は '
@@ -934,7 +988,9 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
       /* ── ヒント（解かずに読んでも選択肢は絞れない粒度にする） ── */
       const hint1 = (vk === 'rev')
         ? '入れ替える相手の要素番号をどう書くかが鍵です。例示された配列を見ながら、「1 番目の要素は最後にどこにあるか、2 番目はどこか」という移動先の対応表を先に作りましょう。'
-        : 'for の前後にある 2 行（値の退避と書き戻し）が、配列のどちらの端を扱っているかを最初に確認しましょう。for の中の代入は「どの要素の値を、どの要素へ写すか」だけなので、写す向きと、for が要素番号をたどる向きの関係がここで決まります。';
+        : (method === 'swap')
+          ? '入れ替える相手の要素番号をどう書くかが鍵です。隣どうしの要素を 1 回ずつ入れ替えていくと、動かしたい要素が入替えのたびに 1 つずつ位置を進めます。for が i をどちら向きにたどるかで、進む方向が決まります。'
+          : 'for の前後にある 2 行（値の退避と書き戻し）が、配列のどちらの端を扱っているかを最初に確認しましょう。for の中の代入は「どの要素の値を、どの要素へ写すか」だけなので、写す向きと、for が要素番号をたどる向きの関係がここで決まります。';
       const hint2 = '解答群の 1 行は a と b の<b>組</b>です。消すときも 1 行ずつ判定します。'
         + 'ある行について、その行の a が決める i の動く範囲の両端（最初の i と最後の i）だけを取り出し、'
         + 'その i を同じ行の b の式に入れて要素番号を計算しましょう。0 や ' + (n + 1)
@@ -950,7 +1006,7 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
         answer,
         hints: [hint1, hint2],
         exp,
-        traceVars: ['i', (vk === 'rev' ? '入れ替える相手の要素番号' : '写す元の要素番号'), '処理後の data']
+        traceVars: ['i', (method === 'swap' ? '入れ替える相手の要素番号' : '写す元の要素番号'), '処理後の data']
       };
     }
   };
@@ -966,46 +1022,156 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
  * 型の出典: 令和4年12月公開 科目Bサンプル問題セット 問16
  *   （整数を割った余りと商で下位のけたを取り出す反復・空欄穴埋め／正解ク=64）＋
  *   令和5年度 問1（空欄 a・b の直積組合せ解答群／正解ア）の型
- *   ※以前ここに書いていた「令和4年サンプル問題 問2（ビット操作の穴埋め）」は誤り。
- *     2022-04サンプル問2は配列の逆順、2022-12サンプルセット問2は FizzBuzz で、
- *     どちらもビット操作ではない（2026-07-27 の監査で是正）。
- * 乱数化: 仕様バリアント(1の個数/偶数パリティ) / 例示の入力値 / 候補の並び順
- * 一意性: 全候補組合せを複数入力でシミュレートし正解だけが仕様を満たすことをassert
- * 設計メモ: 「8回固定ループ」だと 0を数える実装と 1を数えて8から引く実装が
- *   両方正しくなり組合せの一意性が壊れる → while(x>0) 型で構造的に回避
+ *
+ * ⚠️ 2026-08-08 修正: 以前は「a は while の中で x を作り変える式」が構造的に
+ *   x ÷ 2 の商（右シフト）以外あり得ず（while(x>0) で終了させるにはこれしかない），
+ *   正解(a,b)が parity の2通りしか無かった（前書きの定義文を読むだけで b が決まり，
+ *   a はトレースせずに常に「割り算・商」を選べば通ってしまうカンニング穴）。
+ *   これを埋めるため，走査方向（dir）という新しい乱数軸を追加した:
+ *     dir='lsb'（既存）: 最下位ビットから while(x が 0 より大きい) で走査。正解 a = x ÷ 2 の商
+ *     dir='msb'（新設）: 最上位ビットから for(1〜8) で固定8回走査。正解 a = x × 2 mod 256
+ *   b（cnt を返すか cnt mod 2 を返すか）は走査方向に関係なく parity フラグだけで決まるので，
+ *   dir(2通り) × parity(2通り) = 4通りの (a,b) がシードで現れるようになった。
+ *   どちらの走査でも「a の正しさ」は 0〜255 の全域で機械検証する（一意性チェック）。
+ * 設計メモ（既存, dir='lsb' に適用）: 「8回固定ループ」だと 0を数える実装と
+ *   1を数えて8から引く実装が両方正しくなり組合せの一意性が壊れる
+ *   → while(x>0) 型で構造的に回避（dir='msb' は8回固定だが，判定対象が
+ *     「最上位ビットが1か」なので，0を数える読み替えは成立しない＝一意性は保たれる）。
  * 解説の方針:
- *   - ヒント1が指定する x = 5 を解説の入口にも使い、a の候補を実数値で回して比べる
- *     （「けたを送り出せない」という言葉だけで消さない）
- *   - 主トレース表は判定に使った x mod 2 を列に持ち、各行が単独で検算できる形にする
+ *   - ヒント1が指定する x（DEMO_X。dir で異なる）を解説の入口にも使い、a の候補を
+ *     実数値で回して比べる（「けたを送り出せない」という言葉だけで消さない）
+ *   - 主トレース表は判定に使った 0/1 を列に持ち、各行が単独で検算できる形にする
  *   - 表示された誤答は打ち切らず全件説明する（「残りも同じ理由」で括らない）
+ *
+ * ⚠️ 2026-08-08 追加修正（正解位置の偏り）: 上の修正だけでは a の誤答プールが
+ *   「aCorrectより辞書順で前に来る2種／後に来る2種」の計4種から2種を無作為抽出する
+ *   構造のままで、4種から2種選ぶ超幾何分布は「前1後1」に67%集中してしまう
+ *   （前0後2・前2後0はそれぞれ1/6ずつ）。この「前後の内訳」がそのまま aCorrect の
+ *   辞書順順位（＝解答群の位置）を決めるため、位置2・3（各方向の中央）に67%集中していた。
+ *   対策: aPool を「aCorrectより前に来る候補（aBefore）」「後に来る候補（aAfter）」に
+ *   明示的に分け、各3種に拡充した上で、まず aCorrect の目標順位（0/1/2）を一様抽選し、
+ *   その順位になるだけの個数を aBefore/aAfter からそれぞれ引く
+ *   （jb04で使った「正解の最終順位を先に一様抽選し，その順位になる分だけ候補を取り出す」
+ *   手口の応用）。順位が一様なら b 側（parityで独立に決まる）と合わせて6肢が一様になる。
+ *   新設した誤答候補: lsb側「x × 2」（÷と×の取り違え・無限増加）「x − x mod 2」
+ *   （最下位けたを0にするだけで送り出さない・無限ループ）／msb側「x × 2 mod 128」
+ *   （8ビット(256)と7ビット(128)の桁数取り違え）「x − 2」（送り出さない減算、lsbのminus2と同型）。
+ *   いずれも「名前を付けられるありがちなミス」で、既存候補と同じ基準で選んだ。
+ *   ⚠️ この過程で見つけた別の罠: msb側の誤答候補は最初「x × 2 mod 255」（256と255の
+ *   取り違え）にしていたが、256と255は非常に近いため cnt が popcount(x) と一致して
+ *   しまう x が256個中255個もあり（実測）、「a の候補比較表」でどの demoX を選んでも
+ *   「だけです」という解説の断定が事実に反する（誤答なのに一致して見える）ケースが
+ *   16.5%のシードで発生していた。128（256の半分）に変えて解消し、以後この種の矛盾を
+ *   機械的に検出する自己検査（後述）を追加した。
  * ============================================================ */
 (function (root) {
   const H = (typeof module !== 'undefined' && module.exports) ? require('./contract.js') : root.B2H;
 
   const popcount = x => { let c = 0; while (x > 0) { c += x % 2; x = Math.floor(x / 2); } return c; };
-
-  /* 解説とヒントで共用する「小さい値で候補を試す」入口の値 */
-  const DEMO_X = 5;                       // 2進数 101
-  const DEMO_PC = popcount(DEMO_X);       // = 2
   const fmtNum = n => (n < 0 ? '−' + (-n) : String(n));   // マイナスは全角 −
 
-  /* a の候補ごとに x = DEMO_X から while を回した結果（表示用） */
-  function demoRun(aKey) {
-    const seq = [DEMO_X];
-    let x = DEMO_X, cnt = 0, halted = true;
+  /* ── 走査方向ごとの定義 ──
+   * aBefore/aAfter: aCorrect より辞書順で「前」「後」に来ることが確定している候補群
+   * （どちらも実際に H.esc なしの生テキストで比較確認済み）。gen() 側でこの2群から
+   * 目標順位ぶんだけ抽出することで、aCorrect の解答群内順位を一様に散らす。 */
+  const DEMO_X = { lsb: 5, msb: 131 };                   // 解説・ヒントで使う小さい値（方向ごと）
+  const DIRS = {
+    lsb: {
+      aCorrect: { key: 'div', t: 'x ÷ 2 の商' },
+      aBefore: [
+        { key: 'mod2', t: 'x mod 2' },
+        { key: 'yori', t: 'x ÷ 2 の余り' },
+        { key: 'times', t: 'x × 2' },
+      ],
+      aAfter: [
+        { key: 'minus1', t: 'x − 1' },
+        { key: 'minus2', t: 'x − 2' },
+        { key: 'clearbit', t: 'x − x mod 2' },
+      ],
+    },
+    msb: {
+      /* 括弧を付けない: mod は × と同じ優先度で左から評価されるため x × 2 mod 256 で一意に
+       * (x × 2) mod 256 を意味する。括弧で始めると先頭が "(" になり，他候補（すべて "x…"）より
+       * 辞書順で必ず先頭に来て位置が偏るため、意図的に括弧なしにしている。 */
+      aCorrect: { key: 'mul2', t: 'x × 2 mod 256' },
+      aBefore: [
+        { key: 'mod256', t: 'x mod 256' },    // シフトし忘れ（256未満では x のまま）
+        { key: 'times', t: 'x × 2' },         // mod を忘れて桁あふれ
+        { key: 'mod128', t: 'x × 2 mod 128' }, // 8ビット(256)と7ビット(128)の桁数取り違え
+        /* ⚠️ 当初 "x × 2 mod 255" を使っていたが，256 と 255 は非常に近いため
+         * cnt が popcount(x) と一致してしまう x が 256 個中 255 個もあり（実測），
+         * どんなデモ値を選んでも「だけです」という解説の断定が事実上ウソになっていた。
+         * mod 128 は不一致が 254/256 と十分多く，実測でも demoX=131 で衝突しない。 */
+      ],
+      aAfter: [
+        { key: 'div', t: 'x ÷ 2 の商' },      // 向きの取り違え（lsb変種の正解をそのまま使う）
+        { key: 'minus1', t: 'x − 1' },        // 減算だけでビットを送らない
+        { key: 'minus2', t: 'x − 2' },        // 同上（2ずつ）
+      ],
+    },
+  };
+
+  /* a の式1つぶんの「次の x」を計算する（キーは全方向を通じて一意） */
+  function nextOf(key, x) {
+    switch (key) {
+      case 'div': return Math.floor(x / 2);
+      case 'mod2': return x % 2;
+      case 'yori': return x % 2;
+      case 'minus1': return x - 1;
+      case 'minus2': return x - 2;
+      case 'clearbit': return x - (x % 2);
+      case 'mul2': return (x * 2) % 256;
+      case 'mod256': return x % 256;
+      case 'mod128': return (x * 2) % 128;
+      case 'times': return x * 2;
+      default: throw new Error('未知のa式キー: ' + key);
+    }
+  }
+
+  /* dir='lsb': while (x が 0 より大きい) 型。無限ループ検出のため cap で打ち切る */
+  function runLsb(aKey, x0, cap) {
+    let x = x0, cnt = 0, steps = 0;
+    const seq = [x0];
+    while (x > 0) {
+      if (++steps > cap) return { looped: true, cnt, seq };
+      if (x % 2 === 1) cnt++;
+      x = nextOf(aKey, x);
+      seq.push(x);
+    }
+    return { looped: false, cnt, seq };
+  }
+  /* dir='msb': for (i を 1 から 8 まで 1 ずつ増やす) 型。必ず8回で終わる（無限ループなし） */
+  function runMsb(aKey, x0) {
+    let x = x0, cnt = 0;
+    const seq = [x0];
+    for (let i = 0; i < 8; i++) {
+      if (x >= 128) cnt++;
+      x = nextOf(aKey, x);
+      seq.push(x);
+    }
+    return { looped: false, cnt, seq };
+  }
+  const runDir = (dirKey, aKey, x0, cap) => (dirKey === 'lsb' ? runLsb(aKey, x0, cap) : runMsb(aKey, x0));
+
+  /* ── デモ実行（ヒント・解説の入口として、小さい値 DEMO_X で候補を回して比べる） ── */
+  function demoRunLsb(aKey, x0) {
+    const seq = [x0];
+    let x = x0, cnt = 0, halted = true;
     for (let g = 0; ; g++) {
       if (!(x > 0)) break;
-      if (g >= 8) { halted = false; break; }        // 打切り＝終わらない
+      if (g >= 8) { halted = false; break; }
       if (x % 2 === 1) cnt++;
-      x = aKey === 'div' ? Math.floor(x / 2)
-        : aKey === 'minus1' ? x - 1
-        : aKey === 'minus2' ? x - 2
-        : x % 2;                                     /* mod2 / yori */
+      x = nextOf(aKey, x);
       seq.push(x);
     }
     const shown = halted ? seq : seq.slice(0, 4);
     return { cnt, halted, seqText: shown.map(fmtNum).join(' → ') + (halted ? '' : ' → …') };
   }
+  function demoRunMsb(aKey, x0) {
+    const r = runMsb(aKey, x0);
+    return { cnt: r.cnt, halted: true, seqText: r.seq.map(fmtNum).join(' → ') };
+  }
+  const demoRun = (dirKey, aKey, x0) => (dirKey === 'lsb' ? demoRunLsb(aKey, x0) : demoRunMsb(aKey, x0));
 
   const def = {
     id: 'jb03', cat: 'str', type: 'fill',
@@ -1015,17 +1181,18 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
 
     gen(rng) {
       const parity = rng() < 0.5;                    // false: 1の個数 / true: 偶数パリティ
+      const dirKey = rng() < 0.5 ? 'lsb' : 'msb';     // false→lsb, true→msb（走査方向）
+      const D = DIRS[dirKey];
+      const demoX = DEMO_X[dirKey];
       const fname = parity ? 'parity' : 'bitCount';
 
-      /* 例示用の入力値: 表示がそれらしくなる範囲で抽選 */
+      /* 例示用の入力値: 表示がそれらしくなる範囲で抽選（走査方向に依存しない） */
       let ex;
       for (let i = 0; i < 40; i++) {
         ex = H.ri(rng, 64, 255);
         const pc = popcount(ex);
         if (pc >= 3 && pc <= 6) break;
       }
-      /* 抽選が40回とも外れた場合の決定的フォールバック（解説の「戻り値がこうずれる」の
-       * 文面は exPc が 2 以上であることに依存するため、範囲外の値は使わない） */
       if (popcount(ex) < 3 || popcount(ex) > 6) ex = 165;
       const exBin = ex.toString(2).padStart(8, '0');
       const exPc = popcount(ex);
@@ -1033,51 +1200,43 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
       const exWrongRet = parity ? exPc : exPc % 2;   // b を取り違えたときの戻り値
 
       /* ── 候補 ──
-       * a は正解+誤答2種（4種のプールから抽選）。表示順は文字列の決定的整列
-       * （実物の解答群はランダム順ではない）。正解の位置は「どの誤答を引いたか」で
-       * 動き、b 側は変種で動くので、6肢のどこにも正解が来得る */
-      const A_POOL = [
-        { key: 'mod2', t: 'x mod 2' },
-        { key: 'yori', t: 'x ÷ 2 の余り' },
-        { key: 'minus1', t: 'x − 1' },
-        { key: 'minus2', t: 'x − 2' },
-      ];
-      const aCands = H.take(rng, A_POOL, 2).concat([{ key: 'div', t: 'x ÷ 2 の商' }]);
+       * a は正解+誤答2種。aCorrect の解答群内での順位（0=先頭／1=中央／2=末尾）を
+       * まず一様抽選し、その順位になるだけの個数を aBefore（辞書順で前）／aAfter（後）から
+       * 引く。表示順は文字列の決定的整列（実物の解答群はランダム順ではない）。
+       * b 側は parity で独立に決まるので、a の順位が一様なら6肢の位置も一様になる。 */
+      const aRankTarget = H.ri(rng, 0, 2);
+      const aWrong = aRankTarget === 0 ? H.take(rng, D.aAfter, 2)
+        : aRankTarget === 2 ? H.take(rng, D.aBefore, 2)
+          : [H.pick(rng, D.aBefore), H.pick(rng, D.aAfter)];
+      const aCands = [D.aCorrect].concat(aWrong);
       aCands.sort((s, u) => s.t < u.t ? -1 : 1);
+      const aRankActual = aCands.findIndex(a => a.key === D.aCorrect.key);
+      if (aRankActual !== aRankTarget)
+        throw new Error('順位設計ミス: dir=' + dirKey + ' target=' + aRankTarget + ' actual=' + aRankActual);
       const bCands = [
         { key: 'cnt', t: 'cnt' },
         { key: 'mod', t: 'cnt mod 2' },
       ];
       const bOk = parity ? 'mod' : 'cnt';
 
-      /* ── 一意性の機械検証: 全6組合せ × テスト入力で正解だけが仕様と一致 ── */
+      /* ── 一意性の機械検証: 全6組合せ × x∈[0,255] 全域で正解だけが仕様と一致 ── */
       const spec = x => (parity ? popcount(x) % 2 : popcount(x));
-      const tests = [0, 1, 2, 3, 4, 7, 8, 96, 128, 170, 255];
-      for (let i = 0; i < 20; i++) tests.push(H.ri(rng, 5, 254));
+      const tests = Array.from({ length: 256 }, (_, i) => i);
       let okCount = 0;
       for (const a of aCands) for (const b of bCands) {
         const pass = tests.every(x => {
-          /* runComboを使わずここで素直に実行（mod2の特殊挙動を正確に） */
-          let xx = x, cnt = 0, g = 0, dead = false;
-          while (xx > 0) {
-            if (++g > 64) { dead = true; break; }
-            if (xx % 2 === 1) cnt++;
-            xx = a.key === 'div' ? Math.floor(xx / 2)
-              : a.key === 'minus1' ? xx - 1
-              : a.key === 'minus2' ? xx - 2
-              : xx % 2;                              /* mod2 / yori */
-          }
-          if (dead) return false;
-          const ret = b.key === 'cnt' ? cnt : cnt % 2;
+          const r = runDir(dirKey, a.key, x, 64);
+          if (r.looped) return false;
+          const ret = b.key === 'cnt' ? r.cnt : r.cnt % 2;
           return ret === spec(x);
         });
         if (pass) okCount++;
-        if (pass && !(a.key === 'div' && b.key === bOk))
-          throw new Error('一意性違反: ' + a.key + '/' + b.key + ' も仕様を満たす');
+        if (pass && !(a.key === D.aCorrect.key && b.key === bOk))
+          throw new Error('一意性違反: dir=' + dirKey + ' ' + a.key + '/' + b.key + ' も仕様を満たす');
       }
-      if (okCount !== 1) throw new Error('一意性検証失敗: okCount=' + okCount);
+      if (okCount !== 1) throw new Error('一意性検証失敗: dir=' + dirKey + ' okCount=' + okCount);
 
-      /* ── 問題文 ── */
+      /* ── 問題文（走査方向に依存しない。関数の入出力仕様だけを述べる） ── */
       const specText = parity
         ? '2進数で表したときの 1 のビットの個数が偶数のとき 0 を，奇数のとき 1 を返す。この値は，通信でのビット誤りの検出に使う検査ビット（偶数パリティ）である'
         : '2進数で表したときの 1 のビットの個数を返す';
@@ -1085,43 +1244,104 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
         ? '例えば，x が ' + ex + ' の場合，x の2進数表現は ' + exBin + ' であり，1 のビットは ' + exPc + ' 個（' + (exPc % 2 === 0 ? '偶数' : '奇数') + '）なので戻り値は ' + exRet + ' である。'
         : '例えば，x が ' + ex + ' の場合，x の2進数表現は ' + exBin + ' であり，1 のビットは ' + exPc + ' 個なので戻り値は ' + exRet + ' である。';
 
+      /* ── 〔プログラム〕: 走査方向で骨格が変わる ── */
+      const codeSrcLsb = [
+        '○整数型: ' + fname + '(整数型: x)',
+        '  整数型: cnt ← 0',
+        '  while (x が 0 より大きい)',
+        '    if (x mod 2 が 1 と等しい)',
+        '      cnt ← cnt ＋ 1',
+        '    endif',
+        '    x ← @a@',
+        '  endwhile',
+        '  return @b@',
+      ];
+      const codeSrcMsb = [
+        '○整数型: ' + fname + '(整数型: x)',
+        '  整数型: cnt ← 0',
+        '  整数型: i',
+        '  for (i を 1 から 8 まで 1 ずつ増やす)',
+        '    if (x ≧ 128)',
+        '      cnt ← cnt ＋ 1',
+        '    endif',
+        '    x ← @a@',
+        '  endfor',
+        '  return @b@',
+      ];
+      const codeSrc = dirKey === 'lsb' ? codeSrcLsb : codeSrcMsb;
+
       const intro = [
         { t: 'p', html: '関数 ' + fname + ' は，8ビットの符号なし整数 x（0 以上 255 以下）を受け取り，x を' + specText + '。' + exText },
         {
-          t: 'code', lines: [
-            '○整数型: ' + fname + '(整数型: x)',
-            '  整数型: cnt ← 0',
-            '  while (x が 0 より大きい)',
-            '    if (x mod 2 が 1 と等しい)',
-            '      cnt ← cnt ＋ 1',
-            '    endif',
-            '    x ← @a@',
-            '  endwhile',
-            '  return @b@',
-          ].map(s => H.esc(s).replace('@a@', H.blank('a')).replace('@b@', H.blank('b')))
+          t: 'code', lines: codeSrc.map(s => H.esc(s).replace('@a@', H.blank('a')).replace('@b@', H.blank('b')))
         },
       ];
 
-      /* ── 誤答の消し方の文面（x = DEMO_X の実測値を必ず入れる） ── */
+      /* ── 誤答の消し方の文面（x = demoX の実測値を必ず入れる） ── */
       const dm = {};
-      for (const a of aCands) dm[a.key] = demoRun(a.key);
+      for (const a of aCands) dm[a.key] = demoRun(dirKey, a.key, demoX);
+      const dPc = popcount(demoX);
+      /* ⚠️ 自己検査: 誤答候補が demoX でたまたま正解と同じ cnt になっていないか。
+       * なっていると「a の候補比較表」と「誤答の消し方」の文面が「一致しません」と
+       * 断定するのに実際は一致してしまい、解説が事実と矛盾する（2026-08-08 に
+       * mod255 でこの矛盾を実際に踏んだ教訓）。起きたら候補かdemoXの設計を見直す。 */
+      for (const a of aCands) {
+        if (a.key === D.aCorrect.key) continue;
+        const d = dm[a.key];
+        if (d.halted && d.cnt === dPc)
+          throw new Error('demoX衝突: dir=' + dirKey + ' key=' + a.key + ' demoX=' + demoX + ' で誤答のcntが正解と一致してしまう');
+      }
 
       const whyOfA = key => {
         const d = dm[key];
+        if (dirKey === 'lsb') {
+          if (key === 'minus1' || key === 'minus2') {
+            const step = key === 'minus1' ? '1' : '2';
+            return 'x − ' + step + ' は x を ' + step + ' ずつ減らすだけなので、2進数のけたが 1 つずつ送り出されません。'
+              + 'x = ' + demoX + '（' + demoX.toString(2) + '）で回すと x は ' + d.seqText + ' と動き、'
+              + '通り道の奇数を数えて cnt = ' + d.cnt + ' で終わります（1 のビットは ' + dPc + ' 個なので数えすぎです）';
+          }
+          if (key === 'clearbit') {
+            return 'x − x mod 2 は最下位の1けたを 0 にするだけで、けたを右へ送り出しません。'
+              + 'x = ' + demoX + '（' + demoX.toString(2) + '）で回すと x は ' + d.seqText
+              + ' と動いて値が変わらなくなり、while が終わりません（無限ループ）';
+          }
+          if (key === 'mod2') {
+            return 'x mod 2 は 0 か 1 にしかならないので、x = ' + demoX + ' では x が ' + d.seqText
+              + ' と 1 のまま変わらず、while が終わりません（無限ループ）。'
+              + 'x が偶数のときは 1 周で x が 0 になり、残りのけたを調べられません';
+          }
+          if (key === 'yori') {
+            return 'x ÷ 2 の余り は x mod 2 と同じ値です。x = ' + demoX + ' では x が ' + d.seqText
+              + ' と 1 のまま変わらず、while が終わりません（無限ループ）。'
+              + 'x が偶数のときは 1 周で x が 0 になり、残りのけたを調べられません';
+          }
+          // times
+          return 'x × 2 は x を2倍に増やすだけで、÷ とは逆方向に動いてしまいます。'
+            + 'x = ' + demoX + '（' + demoX.toString(2) + '）で回すと x は ' + d.seqText
+            + ' と増え続け、while が終わりません（無限ループ）。× と ÷ を取り違えた誤りです';
+        }
+        // dirKey === 'msb'
+        if (key === 'div') return '「x ÷ 2 の商」は最下位のけたから送り出す右シフトの式です。この変種は最上位のけたから送り出す必要があるので、向きが逆です。'
+          + 'x = ' + demoX + '（' + demoX.toString(2) + '）で8回回すと x は ' + d.seqText + ' と動き、cnt = ' + d.cnt
+          + ' で終わります（1 のビットは ' + dPc + ' 個なので一致しません）';
+        if (key === 'mod256') return 'x mod 256 は，x が 0〜255 の範囲では x を変えない式です（x のままです）。'
+          + 'x = ' + demoX + ' で8回回しても x は ' + d.seqText + ' と変わらず、毎回同じ判定を繰り返してしまい、cnt = ' + d.cnt
+          + ' になります（1 のビットは ' + dPc + ' 個なので一致しません）';
         if (key === 'minus1' || key === 'minus2') {
           const step = key === 'minus1' ? '1' : '2';
-          return 'x − ' + step + ' は x を ' + step + ' ずつ減らすだけなので、2進数のけたが 1 つずつ送り出されません。'
-            + 'x = ' + DEMO_X + '（' + DEMO_X.toString(2) + '）で回すと x は ' + d.seqText + ' と動き、'
-            + '通り道の奇数を数えて cnt = ' + d.cnt + ' で終わります（1 のビットは ' + DEMO_PC + ' 個なので数えすぎです）';
+          return 'x − ' + step + ' は ' + step + ' ずつ減らすだけで、けたを送り出しません。'
+            + 'x = ' + demoX + ' で8回回すと x は ' + d.seqText + ' と動き、cnt = ' + d.cnt
+            + ' になります（1 のビットは ' + dPc + ' 個なので一致しません）';
         }
-        if (key === 'mod2') {
-          return 'x mod 2 は 0 か 1 にしかならないので、x = ' + DEMO_X + ' では x が ' + d.seqText
-            + ' と 1 のまま変わらず、while が終わりません（無限ループ）。'
-            + 'x が偶数のときは 1 周で x が 0 になり、残りのけたを調べられません';
-        }
-        return 'x ÷ 2 の余り は x mod 2 と同じ値です。x = ' + DEMO_X + ' では x が ' + d.seqText
-          + ' と 1 のまま変わらず、while が終わりません（無限ループ）。'
-          + 'x が偶数のときは 1 周で x が 0 になり、残りのけたを調べられません';
+        if (key === 'mod128') return 'x × 2 mod 256 の 256（8ビットぶん）を 128（7ビットぶん）と取り違えています。'
+          + '9けた目だけでなく8けた目まで早く切り捨ててしまうので、けたの送り方がずれます。'
+          + 'x = ' + demoX + ' で8回回すと x は ' + d.seqText + ' と動き、cnt = ' + d.cnt
+          + ' になります（1 のビットは ' + dPc + ' 個なので一致しません）';
+        // times
+        return 'x × 2 は 256 で割った余りを取らないので、8ビットに収まらず値が際限なく大きくなります。'
+          + 'x = ' + demoX + ' で8回回すと x は ' + d.seqText + ' と動き、cnt = ' + d.cnt
+          + ' になります（1 のビットは ' + dPc + ' 個なので一致しません）';
       };
       const whyOfB = parity
         ? 'a は正しいのですが、cnt は 1 のビットの個数そのものです。この関数は個数が偶数なら 0、奇数なら 1 を返す定義なので、'
@@ -1139,10 +1359,10 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
       let answer = -1; let idx = 0;
       for (const a of aCands) for (const b of bCands) {
         options.push({ html: H.pair(H.esc(a.t), H.esc(b.t)), mono: false });
-        const isOk = a.key === 'div' && b.key === bOk;
+        const isOk = a.key === D.aCorrect.key && b.key === bOk;
         if (isOk) answer = idx;
         else {
-          const why = a.key === 'div' ? whyOfB
+          const why = a.key === D.aCorrect.key ? whyOfB
             : whyOfA(a.key) + (b.key === bOk ? '' : bTail);
           notes.push({ label: H.kana[idx], a: a.t, b: b.t, why });
         }
@@ -1150,8 +1370,8 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
       }
 
       /* ── 解説 ──
-       * (1) 入口: x = 5 で a の候補を実際に回して比べる（ヒント1と同じ流儀）
-       * (2) 例の x で最後まで通すトレース表（判定に使った x mod 2 を列に持つ）
+       * (1) 入口: x = demoX で a の候補を実際に回して比べる（ヒント1と同じ流儀）
+       * (2) 例の x で最後まで通すトレース表（判定に使った 0/1 を列に持つ）
        * (3) b の決定と検算
        * (4) 表示された誤答を全件説明 */
       const demoRows = aCands.map(a => {
@@ -1161,35 +1381,71 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
           d.seqText,
           d.halted ? '終わる' : '終わらない',
           d.halted
-            ? String(d.cnt) + (d.cnt === DEMO_PC ? '（1 のビットの個数と一致）' : '（' + DEMO_PC + ' 個のはずなので不一致）')
+            ? String(d.cnt) + (d.cnt === dPc ? '（1 のビットの個数と一致）' : '（' + dPc + ' 個のはずなので不一致）')
             : '－（数え終わらない）'
         ];
       });
 
+      /* 主トレース表（例の x=ex を、正解の a・方向で最後まで動かす） */
       const rows = [];
-      let xx = ex, cnt = 0, step = 0;
-      while (xx > 0) {
-        step++;
-        const before = xx;
-        const bit = before % 2;
-        cnt += bit;
-        xx = Math.floor(before / 2);
-        rows.push([step + '周目', String(before), String(bit), String(cnt), String(xx)]);
+      if (dirKey === 'lsb') {
+        let xx = ex, cnt = 0, step = 0;
+        while (xx > 0) {
+          step++;
+          const before = xx;
+          const bit = before % 2;
+          cnt += bit;
+          xx = Math.floor(before / 2);
+          rows.push([step + '周目', String(before), String(bit), String(cnt), String(xx)]);
+        }
+      } else {
+        let xx = ex, cnt = 0;
+        for (let i = 1; i <= 8; i++) {
+          const before = xx;
+          const bit = before >= 128 ? 1 : 0;
+          cnt += bit;
+          xx = (before * 2) % 256;
+          rows.push([i + '周目', String(before), String(bit), String(cnt), String(xx)]);
+        }
       }
 
-      let exp = '<p>まず a から決めます。a は while の中で x を作り変える式なので、'
-        + '小さい値 x = ' + DEMO_X + '（2進数で ' + DEMO_X.toString(2) + '、1 のビットは ' + DEMO_PC + ' 個）を'
-        + '候補ごとに当てはめて、実際に手で回してみます。見るのは「ループが終わるか」と「終わったとき cnt が '
-        + DEMO_PC + ' になるか」の2点です。</p>'
-        + H.traceTable(['a の候補', 'x の変わり方（x = ' + DEMO_X + ' から）', 'ループ', '終わったときの cnt'], demoRows)
-        + '<p>ループが終わって、しかも cnt が 1 のビットの個数と一致するのは <code>x ÷ 2 の商</code> だけです。'
-        + 'この式は x を2進数で見たときのけたを 1 つずつ右へ送る操作で、送り出される最下位のけたを'
-        + '直前の <code>x mod 2</code> が読み取っています。よって a は <code>x ÷ 2 の商</code> です。</p>'
-        + '<p>a が決まったので、前書きの例 x = ' + ex + '（' + exBin + '）を cnt = 0 から最後まで通します。'
-        + '各行は「その周に判定した x」「そのときの x mod 2」「足し込んだ後の cnt」「次の周へ渡る x」で、'
-        + '1行だけ見れば増分が確かめられます。</p>'
-        + H.traceTable(['周', 'x（判定前）', 'x mod 2', 'cnt', 'x（更新後）'], rows)
-        + '<p>x が 0 になったところで while を抜けます。cnt には 1 のビットの個数（' + exPc + '）が数え上がっているので、b は'
+      const endCond = dirKey === 'lsb' ? 'x が 0 になったところで while を抜けます' : 'for が8回まわり終えたところで抜けます';
+
+      const openParagraph = dirKey === 'lsb'
+        ? '<p>まず a から決めます。a は while の中で x を作り変える式なので、'
+          + '小さい値 x = ' + demoX + '（2進数で ' + demoX.toString(2) + '、1 のビットは ' + dPc + ' 個）を'
+          + '候補ごとに当てはめて、実際に手で回してみます。見るのは「ループが終わるか」と「終わったとき cnt が '
+          + dPc + ' になるか」の2点です。</p>'
+        : '<p>まず a から決めます。a は for の中で x を作り変える式なので、'
+          + '小さい値 x = ' + demoX + '（2進数で ' + demoX.toString(2) + '、1 のビットは ' + dPc + ' 個）を'
+          + '候補ごとに当てはめて、実際に手で8回回してみます。for は必ず8回で終わるので「終わるか」は手がかりになりません。'
+          + '見るのは「8回まわし終えたとき cnt が ' + dPc + ' になるか」の1点です。</p>';
+
+      const aConclusion = dirKey === 'lsb'
+        ? '<p>ループが終わって、しかも cnt が 1 のビットの個数と一致するのは <code>x ÷ 2 の商</code> だけです。'
+          + 'この式は x を2進数で見たときのけたを 1 つずつ右へ送る操作で、送り出される最下位のけたを'
+          + '直前の <code>x mod 2</code> が読み取っています。よって a は <code>x ÷ 2 の商</code> です。</p>'
+        : '<p>8回まわし終えて、cnt が 1 のビットの個数と一致するのは <code>x × 2 mod 256</code> だけです。'
+          + 'この式は x を2進数で見たときのけたを 1 つずつ左へ送る操作で、256 で割った余りを取ることで'
+          + '9けた目にあふれた分を切り捨てています。送り出される最上位のけたを、送り出す直前の'
+          + '<code>x ≧ 128</code> が読み取っています。よって a は <code>x × 2 mod 256</code> です。</p>';
+
+      const traceIntro = dirKey === 'lsb'
+        ? '<p>a が決まったので、前書きの例 x = ' + ex + '（' + exBin + '）を cnt = 0 から最後まで通します。'
+          + '各行は「その周に判定した x」「そのときの x mod 2」「足し込んだ後の cnt」「次の周へ渡る x」で、'
+          + '1行だけ見れば増分が確かめられます。</p>'
+        : '<p>a が決まったので、前書きの例 x = ' + ex + '（' + exBin + '）を cnt = 0 から8回まわして最後まで通します。'
+          + '各行は「その周に判定した x」「そのとき x ≧ 128 だったか（1/0）」「足し込んだ後の cnt」「次の周へ渡る x」で、'
+          + '1行だけ見れば増分が確かめられます。</p>';
+
+      const traceHead = ['周', 'x（判定前）', '判定結果（0/1）', 'cnt', 'x（更新後）'];
+
+      let exp = openParagraph
+        + H.traceTable(['a の候補', 'x の変わり方（x = ' + demoX + ' から）', 'ループ', '終わったときの cnt'], demoRows)
+        + aConclusion
+        + traceIntro
+        + H.traceTable(traceHead, rows)
+        + '<p>' + endCond + '。cnt には 1 のビットの個数（' + exPc + '）が数え上がっているので、b は'
         + (parity ? 'その偶奇 <code>cnt mod 2</code>（= ' + exRet + '）' : '個数そのもの <code>cnt</code>（= ' + exRet + '）')
         + 'が定義と一致します。検算：' + exBin + ' の 1 は ' + exPc + ' 個'
         + (parity ? '、' + exPc + ' は' + (exPc % 2 === 0 ? '偶数なので戻り値 0' : '奇数なので戻り値 1') : '')
@@ -1198,18 +1454,22 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
         + notes.map(n => '<li><b>' + n.label + '</b>（a=' + H.esc(n.a) + '／b=' + H.esc(n.b) + '）… ' + H.esc(n.why) + '</li>').join('')
         + '</ul>';
 
+      const hint1 = dirKey === 'lsb'
+        ? 'a は while の中で x を作り変える式です。候補を1つずつ x = ' + demoX + '（2進数で ' + demoX.toString(2)
+          + '、1 のビットは ' + dPc + ' 個）に当てはめて、while を手で回してみましょう。'
+          + '見るのは2点、(1) ループがちゃんと終わるか、(2) 終わったとき cnt が ' + dPc + ' になっているか、です。'
+        : 'a は for の中で x を作り変える式です。候補を1つずつ x = ' + demoX + '（2進数で ' + demoX.toString(2)
+          + '、1 のビットは ' + dPc + ' 個）に当てはめて、for を手で8回回してみましょう。'
+          + 'for は8回で必ず終わるので、着眼点は1点だけ、8回まわし終えたとき cnt が ' + dPc + ' になっているか、です。';
+      const hint2 = 'b は前書きの定義文（この関数が何を返すか）で決まります。a を決めたトレースで cnt に何が数え上がっているかを確かめてから、定義（個数そのものか、その偶奇か）に合う式を選びましょう。';
+
       return {
         intro,
         question: '次のプログラム中の ' + H.blank('a') + ' と ' + H.blank('b') + ' に入れる正しい答えの組合せを，解答群の中から選べ。',
         options, answer,
-        hints: [
-          'a は while の中で x を作り変える式です。候補を1つずつ x = ' + DEMO_X + '（2進数で ' + DEMO_X.toString(2)
-            + '、1 のビットは ' + DEMO_PC + ' 個）に当てはめて、while を手で回してみましょう。'
-            + '見るのは2点、(1) ループがちゃんと終わるか、(2) 終わったとき cnt が ' + DEMO_PC + ' になっているか、です。',
-          'b は前書きの定義文（この関数が何を返すか）で決まります。a を決めたトレースで cnt に何が数え上がっているかを確かめてから、定義（個数そのものか、その偶奇か）に合う式を選びましょう。',
-        ],
+        hints: [hint1, hint2],
         exp,
-        traceVars: ['x', 'x mod 2', 'cnt'],
+        traceVars: ['x', '判定結果（0/1）', 'cnt'],
       };
     }
   };
@@ -1359,6 +1619,7 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
             { v: t0.L[N], why: '基底ケースに到達して値を直接返した呼出しだけを数え，途中の呼出しを数え落とした場合の値' },
             { v: t0.T[N] - t0.L[N], why: '再帰呼出しを行った呼出しだけを数え，基底ケースで返った呼出しを数え落とした場合の値' },
             { v: t0.T[N] + t0.L[N], why: '基底ケースで返った呼出しを誤って二重に数えた場合の値' },
+            { v: t0.T[N] + (t0.T[N] - t0.L[N]), why: '再帰呼出しを行った呼出し（自分自身をさらに 2 回呼び出した呼出し）を誤って二重に数えた場合の値' },
             { v: chP.cnt, why: 'f(n − ' + p + ') 側だけをたどり，f(n − ' + q + ') 側で行われる呼出しを数えなかった場合の値' },
             { v: dcnt, why: '引数の値が同じ呼出しをまとめて 1 回と数えた場合の値（実際には毎回改めて呼び出される）' },
             { v: tLe.T[N], why: '基底ケースの条件を「n が ' + q + ' 以下」と読み違えた場合の値' },
@@ -1381,15 +1642,29 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
           ];
         }
 
-        /* 桁違いの肢は見ただけで捨てられるので，正解の 0.4〜2.5 倍に絞る
-         * （絞りすぎて候補が 3 種を切るときだけ緩和）。その上でシャッフルし，
-         * 正解より大きい誤答を k 個だけ先頭に置いて正解の並び位置を回す */
-        let poolF = pool.filter(c => c.v >= Math.max(1, Math.round(correct * 0.4)) && c.v <= Math.round(correct * 2.5) && c.v !== correct);
-        if (new Set(poolF.map(c => c.v)).size < 4) poolF = pool.filter(c => c.v !== correct);
+        /* 桁違いの肢は見ただけで捨てられるので，正解の 0.3〜3.0 倍に絞る
+         * （絞りすぎて候補が 4 種を切るときだけ緩和）。
+         * ⚠️ 2026-08-08 修正: 以前は「正解より大きい誤答を先頭に k 個だけ置く」やり方で，
+         *   誤答モデルの構成上ずっと sUnder（正解より小さい値）の方が多かったため，
+         *   正解の順位（昇順の並びの何番目か）が高い方（ウ・エ）に恒常的に偏っていた
+         *   （選択肢アに来るのは実測 4.4%）。正解の最終順位を先に一様乱数で決め，
+         *   その順位になるだけの「正解より小さい候補」と「正解より大きい候補」を
+         *   個数指定で取り出す方式に変え，供給が許す範囲で順位を散らす。 */
+        const dedupByVal = arr => {
+          const seen = new Set(); const out = [];
+          for (const c of arr) { const k2 = String(c.v); if (seen.has(k2)) continue; seen.add(k2); out.push(c); }
+          return out;
+        };
+        let poolF = dedupByVal(pool.filter(c => c.v !== correct));
+        const ranged = poolF.filter(c => c.v >= Math.max(1, Math.round(correct * 0.3)) && c.v <= Math.round(correct * 3.0));
+        if (ranged.length >= 4) poolF = ranged;
         const sOver = H.shuffle(rng, poolF.filter(c => c.v > correct));
         const sUnder = H.shuffle(rng, poolF.filter(c => c.v < correct));
-        const k = sOver.length ? H.ri(rng, 0, Math.min(4, sOver.length)) : 0;
-        const cands = sOver.slice(0, k).concat(sUnder, sOver.slice(k));
+        const NEED = 4;                                 // count:5 なので誤答は最大4件
+        const maxUnder = Math.min(sUnder.length, NEED);
+        const minUnder = Math.max(0, NEED - sOver.length);
+        const rTarget = (minUnder > maxUnder) ? maxUnder : H.ri(rng, minUnder, maxUnder);
+        const cands = sUnder.slice(0, rTarget).concat(sOver.slice(0, NEED - rTarget));
 
         const uniq = new Set([correct].concat(cands.map(c => c.v)));
         const draw = { uniq: uniq.size, p, q, a0, a1, N, ex, t0, correct, cands };
@@ -4693,13 +4968,28 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
       if (!atTop) bSame.push(mkB('rawvar', isSet ? argN : 'x', bDir, s));
       const bOpp = [mkB('opp', bVar, oppDir, s)];
 
-      /* ── 解答群の形（3×2 か 2×3）と誤答の抽選 ── */
+      /* ── 解答群の形（3×2 か 2×3）と誤答の抽選 ──
+       * ⚠️ 2026-08-08 修正: aCorrect と aForced は仕様上どちらも必ず ∧ 型（AND）になる
+       *   （「∧ の肢を選ぶ」対策で aForced を固定しているため）。表示は演算子の文字コード順
+       *   （∧＜∨＜▽）で辞書順に並ぶので、nA=3 のとき3枠目が ∧ 以外（∨/▽）だと
+       *   必ず最後の順位に回り、aCorrect は「最後の順位」に来られなくなる
+       *   （実測: 3枠目が∧型でない確率が約70〜75%あり、その間 aCorrect の最終順位は0%）。
+       *   これが正解位置の偏り（イ=27.9%／カ=3.6%）の主因だった。
+       *   対策として、3枠目の抽選で ∧ 型（off）を優先して引く（供給を増やす）ことで、
+       *   aCorrect がどの順位にも来られる確率を底上げする（jb04で使った
+       *   「反対側の誤答モデルを増やす」の手口と同じ考え方）。b 側も同様に、
+       *   bCorrect と bFirst は必ず同方向（bSame）なので、3枠目に反対方向（bOpp）を
+       *   優先して混ぜ、bCorrect が同方向どうしの比較だけで順位を決められてしまうのを防ぐ。 */
       const nA = rng() < 0.5 ? 2 : 3;
       const nB = (nA === 3) ? 2 : 3;
-      const aWrong = [aForced].concat(H.take(rng, aFree, nA - 2));
+      const offCand = aFree.find(c => c.key === 'off');
+      const restFree = aFree.filter(c => c.key !== 'off');
+      const aExtra = (rng() < 0.75) ? offCand : H.pick(rng, restFree);
+      const aWrong = (nA === 3) ? [aForced, aExtra] : [aForced];
       const bFirst = H.pick(rng, bSame);
-      const bRest = bSame.filter(c => c.key !== bFirst.key).concat(bOpp);
-      const bWrong = [bFirst].concat(H.take(rng, bRest, nB - 2));
+      const bRestSame = bSame.filter(c => c.key !== bFirst.key);
+      const bExtra = (rng() < 0.75 || bRestSame.length === 0) ? bOpp[0] : H.pick(rng, bRestSame);
+      const bWrong = (nB === 3) ? [bFirst, bExtra] : [bFirst];
 
       const cmp = (u, v) => (u.t < v.t ? -1 : u.t > v.t ? 1 : 0);
       const aCands = [aCorrect].concat(aWrong).sort(cmp);      // 実物の解答群は辞書順
@@ -4841,13 +5131,13 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
         if (isSet) {
           if (key === 'less') return 'シフトするビット数が1つ足りません。新しい' + noun + 'が1ビット下にずれて入るので、第' + p + 'ビットの位置に収まらず、下の設定のビットを壊します';
           if (key === 'more') return 'シフトするビット数が1つ多すぎます。新しい' + noun + 'が1ビット上にずれて入るので、第' + q + 'ビットより上の設定のビットを壊す（またははみ出して消える）ことになります';
-          if (key === 'opp') return 'シフトの向きが逆です。' + '>>' + ' は右へずらす演算なので、下位側へ追い出されてしまい、第' + p + 'ビットの位置には届きません';
+          if (key === 'opp') return 'シフトの向きが逆です。' + H.esc('>>') + ' は右へずらす演算なので、下位側へ追い出されてしまい、第' + p + 'ビットの位置には届きません';
           return 'm ではなく引数 ' + argN + ' をそのまま使っています。' + argN + ' の第' + (w + 1)
             + 'ビットから第8ビットまでは無視すると決めたのに、その余分なビットまで一緒に運ばれて、ほかの設定のビットを壊します';
         }
         if (key === 'less') return '右へずらすビット数が1つ足りません。' + noun + 'の値が第1ビットまで下りきらず、下に 0 が1つ付いた値になります';
         if (key === 'more') return '右へずらしすぎです。' + noun + 'の最下位のビットが右へはみ出して捨てられてしまいます';
-        if (key === 'opp') return 'シフトの向きが逆です。' + '<<' + ' は左へずらす演算なので、最下位へ寄せるどころか上位へ追い出されてしまいます';
+        if (key === 'opp') return 'シフトの向きが逆です。' + H.esc('<<') + ' は左へずらす演算なので、最下位へ寄せるどころか上位へ追い出されてしまいます';
         return 'マスクをかける前の x をそのまま右へずらしています。' + noun + 'より上位にあるほかの設定のビットが残ったままになります';
       }
 
@@ -5234,6 +5524,601 @@ window.B2 = { list: [], byId: {}, register(def){ this.list.push(def); this.byId[
         ],
         traceVars: ['曜日', 'バックアップ', '適用'],
         exp
+      };
+    }
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = def;
+  else root.B2.register(def);
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+/* ---- jb16 ---- */
+'use strict';
+/* ============================================================
+ * jb16: 配列の配列（ジャグ配列）× 論理型フラグ × ラベル付き早期脱出
+ *   — 人数がばらばらな集団（クラス・店舗など）の記録を配列の配列で表し，
+ *     条件に合う要素を探して，フラグを立てて繰返しを制御する
+ *
+ * 型の出典:
+ *   ・令和5年度 公開問題 問1（素数列挙。`// α` ラベルを付けた for 文を，
+ *     内側の繰返しの中から「αの行から始まる繰返し処理を終了する」で脱出する型）
+ *   ・令和4年4月 公開サンプル問題 問4（疎行列を3本の配列に変換。
+ *     整数型配列の配列 で「行ごとに長さが違う」データを表す型）
+ *   ・論理型の使用は shiken_yougo_ver5_1.pdf 別紙2（擬似言語の記述形式）の
+ *     型名一覧（整数型／実数型／文字型／文字列型／論理型／8ビット型）に基づく。
+ *   題材はオリジナル。
+ *
+ * ============================================================
+ * 2026-08-08 改訂: 正解の (a,b) の中身がほぼ固定だった問題を修正。
+ * 旧版は「a は常に内側の要素数，b は常にラベル付き脱出」で，正解の位置と
+ * ラベル文字（α/β）しか揺れなかった（正解内容の種類=2）。この結果，
+ * 「a に "[i]" を含み，b に "から始まる" を含む肢を選ぶ」だけで乱択の
+ * 1.85倍（24.73%）当たってしまう，トレース不要のメタ攻略が成立していた。
+ *
+ * 今回は次の2軸を導入し，正解の (a,b) の中身そのものをシードで変える:
+ *   - boundMode: 空欄a がどちらの for 文の上限を問うか
+ *       'inner' … 内側 for（jの上限）を問う。正解 a = t[i]の要素数
+ *       'outer' … 外側 for（iの上限）を問う。正解 a = tの要素数
+ *   - contractMode: 関数の仕様（何を返すか）
+ *       'first' … 最初に見つかった集団番号を返す。正解 b = 外側ラベルの脱出
+ *                 （見つけたら全部やめないと，後ろの一致で上書きされる）
+ *       'last'  … 最後に見つかった集団番号を返す。正解 b = ラベル無しの脱出
+ *                 （外側を止めてはいけない。内側だけ抜けるのが正しい）
+ * boundMode と contractMode を単純な直積にはせず，3つの組合せ（シナリオ）
+ * だけを使う（'innerFirst' / 'outerFirst' / 'innerLast'）。'outerLast' は
+ * 採用していない（目的は「正解内容の種類を増やす」ことなので，3シナリオで
+ * 十分な種類数が出ており，4つ目は実装・検証コストに見合わない）。
+ *
+ * 各シナリオの正解 (a,b) の中身:
+ *   innerFirst: a='t[i]の要素数'（固定） b=LABEL_OUTER+'の行から始まる…'（α/βで揺れる）
+ *   outerFirst: a='tの要素数'（固定）    b=LABEL_OUTER+'の行から始まる…'（α/βで揺れる）
+ *   innerLast : a='t[i]の要素数'（固定） b='繰返し処理を終了する'（固定・ラベル不使用）
+ * → 少なくとも5種類の異なる正解テキストが出る（実測は verify・報告参照）。
+ * ============================================================ */
+(function (root) {
+  const H = (typeof module !== 'undefined' && module.exports) ? require('./contract.js') : root.B2H;
+  const E = s => H.esc(s);
+
+  const STORIES = [
+    { grp: 'クラス', mem: '生徒', idx: '出席番号', val: '小テストの得点' },
+    { grp: '店舗', mem: 'レジ', idx: 'レジ番号', val: '当日の会計件数' },
+    { grp: '工場', mem: 'ライン', idx: 'ライン番号', val: '当日の不良品数' },
+    { grp: '営業所', mem: '担当者', idx: '担当者番号', val: '今月の受注件数' }
+  ];
+
+  const LABELS = ['α', 'β'];
+  /* シナリオの選択比率は均等（各1/3）ではない。正解の文面は全部で5種類あるが，
+   * innerFirst と outerFirst はそれぞれラベル文字（α/β）で2種類に分かれるのに対し，
+   * innerLast はラベルを使わない（正解文面が「繰返し処理を終了する」の1種類だけ）。
+   * シナリオを単純に均等（各1/3）にすると，innerLast 1シナリオの取り分がまるごと
+   * 正解文面1種類に集中し，「その1文面を常に選ぶ」だけで乱択の3倍以上当たって
+   * しまう（実測45.5%，answer-mode-sweep.js で検出）。5種類の文面をほぼ均等
+   * （各20%前後）にするには，2種類に分かれる innerFirst・outerFirst を厚く，
+   * 1種類しかない innerLast を薄く（40%:40%:20%）配分する必要がある。 */
+  const SCENARIOS = ['innerFirst', 'innerFirst', 'outerFirst', 'outerFirst', 'innerLast'];
+
+  /* ── a候補プール（boundMode ごと） ──
+   * inner: 正解=t[i]の要素数。fixed1(t[1]の要素数)は正解と同じ文字数。
+   *        noCount(t[i]の要素)は正解から「数」を1文字落としただけの誤答で，
+   *        "[i]" を含み，かつ演算子（−／÷／＋のどれも）を一切含まない。
+   *        「"[i]" を含み演算子なし」という，より踏み込んだカンニング
+   *        （マイナスだけでなく÷や＋も除外するもの）にも ok と区別が
+   *        付かないようにするための候補（halfLen の ÷ だけでは，演算子を
+   *        まとめて除外するカンニングに抜けられることが実測で分かった）。
+   *        fixed1・noCount を常に表示することで，文字数だけ／"[i]"の
+   *        有無だけ／演算子の有無だけでは絞れないようにする。
+   *        halfLen（t[i]の要素数 ÷ 2 の商）・off1（− 1）は，"[i]"は
+   *        含むが演算子も含む，補助的な誤答として任意で追加する。
+   *        ※「t[i]の要素数 ＋ 1」のような上限を大きくする側の誤りは使わない:
+   *        はみ出した分は単に「未定義」（不一致）として無視されるだけで，
+   *        実際の戻り値が正解と一致してしまう（発散しない＝誤答にならない）。
+   * outer: 正解=tの要素数。badIdx(t[i]の要素数)は「外側forの上限を決める時点
+   *        ではiはまだ決まっていない」ことを踏まえた誤答で，"[i]"を含む。
+   *        こちらは正解自体が最短・無括弧の表現なので，文字数や括弧の有無を
+   *        見るカンニングには依然として弱い（実測は verify・報告に明記）。 */
+  const A_POOL_INNER = [
+    { key: 'ok', txt: 't[i]の要素数' },
+    { key: 'fixed1', txt: 't[1]の要素数' },
+    { key: 'noCount', txt: 't[i]の要素' },
+    { key: 'halfLen', txt: 't[i]の要素数 ÷ 2 の商' },
+    { key: 'rowlen', txt: 'tの要素数' },
+    { key: 'off1', txt: 't[i]の要素数 − 1' }
+  ];
+  const A_POOL_OUTER = [
+    { key: 'ok', txt: 'tの要素数' },
+    { key: 'firstLen', txt: 't[1]の要素数' },
+    { key: 'badIdx', txt: 't[i]の要素数' }
+  ];
+  /* off1（tの要素数 − 1）は outer 側では意図的に外してある: off1(outer) が
+   * 正解と食い違うのは「正しい最初の一致が最後の集団にあるとき」だけだが，
+   * その条件は「もっと後ろの集団に複製を置く」という b 側の発散条件
+   * （wrongLabel/unlabeled が正解と食い違うために必須）と両立しない
+   * （最後の集団より後ろは存在しないため）。両立しない制約を同時に満たそうと
+   * すると生成が常に失敗する（実際に発生した）ので，このプールには入れない。
+   * badIdx（t[i]の要素数）は，外側forの上限を決める時点ではまだ i が定義
+   * されていないという誤りで，シミュレータでは「未定義→0」（外側forが
+   * 一度も回らない＝必ず −1）として扱う（常に不一致になるので安全）。 */
+
+  /* ── b候補プール（contractMode ごと。ラベル文字は gen 内で決める） ──
+   * first: 正解=外側ラベルの脱出。wrongLabel(内側自身のラベル)は正解と同じ
+   *        文字数。unlabeled と wrongLabel は挙動が同じ（内側だけ終了）だが，
+   *        誤答どうしが挙動一致するのは構わない（本試験でも別の勘違いが
+   *        同じ結果になることはある）。
+   * last : 正解=ラベル無しの脱出（内側だけ終了）。wrongLabel は入れない
+   *        （内側自身のラベルを指しても内側だけ終了＝正解と同じ挙動になり，
+   *        「正解が2つ表示される」事故になるため）。 */
+  function bPoolFirst(labelOuter, labelInner) {
+    return [
+      { key: 'exitOuter', txt: labelOuter + 'の行から始まる繰返し処理を終了する' },
+      { key: 'wrongLabel', txt: labelInner + 'の行から始まる繰返し処理を終了する' },
+      { key: 'unlabeled', txt: '繰返し処理を終了する' },
+      { key: 'resetFlag', txt: 'found ← false' }
+    ];
+  }
+  function bPoolLast(labelOuter) {
+    return [
+      { key: 'unlabeled', txt: '繰返し処理を終了する' },
+      { key: 'exitOuter', txt: labelOuter + 'の行から始まる繰返し処理を終了する' },
+      { key: 'resetFlag', txt: 'found ← false' }
+    ];
+  }
+
+  /* ── 候補を当てはめたときの実際の上限値 ── */
+  function boundOfInner(aKey, t, i) {
+    const row = t[i - 1];
+    if (aKey === 'ok') return row.length;
+    if (aKey === 'fixed1') return t[0].length;
+    if (aKey === 'noCount') return 0; // 「t[i]の要素」は数ではないので上限として使えない＝0回
+    if (aKey === 'halfLen') return Math.floor(row.length / 2);
+    if (aKey === 'rowlen') return t.length;
+    return Math.max(0, row.length - 1); // off1
+  }
+  function boundOfOuter(aKey, t) {
+    if (aKey === 'ok') return t.length;
+    if (aKey === 'firstLen') return t[0].length;
+    return 0; // badIdx（未定義のiを参照→外側forが一度も回らない）
+  }
+  function bBehavior(bKey) {
+    if (bKey === 'exitOuter') return 'outer';
+    if (bKey === 'resetFlag') return 'reset';
+    return 'inner'; // wrongLabel, unlabeled ── 挙動は同じ
+  }
+
+  /* ── 〔プログラム〕をそのまま実行する（boundMode・a・bの候補を当てはめた場合の戻り値） ──
+   * contractMode は渡さない。「見つかったら全部終了する」なら最初の一致，
+   * 「内側だけ終了 or 何もしない」なら最後の一致が自然に出る，という
+   * プログラムの実際の挙動だけで決まるため，シミュレータ自体は
+   * contractMode を知る必要がない（正解判定は，どちらの値を目標にするかで行う）。 */
+  function runProg(boundMode, aKey, bKey, t, key) {
+    const outerBound = (boundMode === 'outer') ? boundOfOuter(aKey, t) : t.length;
+    let found = false, row = null;
+    outerLoop:
+    for (let i = 1; i <= outerBound; i++) {
+      const rowArr = (i - 1 < t.length) ? t[i - 1] : null;
+      const innerBound = (boundMode === 'inner') ? boundOfInner(aKey, t, i) : (rowArr ? rowArr.length : 0);
+      for (let j = 1; j <= innerBound; j++) {
+        const v = (rowArr && j <= rowArr.length) ? rowArr[j - 1] : undefined; // 領域外は「未定義」として不一致扱い
+        if (v === key) {
+          found = true; row = i;
+          const beh = bBehavior(bKey);
+          if (beh === 'outer') break outerLoop;
+          else if (beh === 'inner') break;
+          else { found = false; } // reset
+        }
+      }
+    }
+    return found ? row : -1;
+  }
+
+  /* 表を先頭から走査し，見つかった (行,列) を全部記録する（1始まり）。
+   * 解説のトレース表と，'last' 契約の答え合わせに使う。 */
+  function findAll(t, key) {
+    const hits = [];
+    for (let i = 1; i <= t.length; i++) {
+      const row = t[i - 1];
+      for (let j = 1; j <= row.length; j++) if (row[j - 1] === key) hits.push({ row: i, col: j });
+    }
+    return hits;
+  }
+
+  const def = {
+    id: 'jb16', cat: 'arr', type: 'fill',
+    title: '配列の配列を探索する繰返し処理の制御',
+    est: 10, ref: 'fe-algo.html#al-5',
+    origin: '令和5年度 公開問題 問1（`// α` ラベルを付けた for 文を，内側の繰返しの中から「αの行から始まる繰返し処理を終了する」で脱出する型）＋令和4年4月 公開サンプル問題 問4（整数型配列の配列 で行ごとに長さが違うデータを表す型）。論理型の使用は shiken_yougo_ver5_1.pdf 別紙2（擬似言語の記述形式）の型名一覧に基づく。題材はオリジナル。',
+
+    gen(rng) {
+      const story = H.pick(rng, STORIES);
+      const grp = story.grp, mem = story.mem, idx = story.idx, val = story.val;
+
+      const SCENARIO = H.pick(rng, SCENARIOS);
+      const boundMode = (SCENARIO === 'outerFirst') ? 'outer' : 'inner';
+      const contractMode = (SCENARIO === 'innerLast') ? 'last' : 'first';
+      const fname = (contractMode === 'first') ? 'firstMatch' : 'lastMatch';
+
+      const LABEL_OUTER = H.pick(rng, LABELS);
+      const LABEL_INNER = LABELS.find(l => l !== LABEL_OUTER);
+      const A_POOL = (boundMode === 'inner') ? A_POOL_INNER : A_POOL_OUTER;
+      const B_POOL = (contractMode === 'first') ? bPoolFirst(LABEL_OUTER, LABEL_INNER) : bPoolLast(LABEL_OUTER);
+      const correctAKey = 'ok';
+      const correctBKey = (contractMode === 'first') ? 'exitOuter' : 'unlabeled';
+
+      /* ── 表とkeyの抽選（最大800回引き直し，シナリオごとに作り方を変える） ── */
+      let best = null;
+      for (let attempt = 0; attempt < 800; attempt++) {
+        let t = null, key = null;
+
+        if (SCENARIO === 'innerFirst') {
+          const nRows = H.ri(rng, 3, 4);
+          let lens = null;
+          for (let t2 = 0; t2 < 30; t2++) {
+            const cand = Array.from({ length: nRows }, () => H.ri(rng, 2, 5));
+            if (new Set(cand).size >= 2 && Math.max(...cand) > nRows) { lens = cand; break; }
+          }
+          if (!lens) continue;
+          t = lens.map(len => Array.from({ length: len }, () => H.ri(rng, 0, 10)));
+          const maxLen = Math.max(...lens);
+          const riCands = [];
+          lens.forEach((l, i2) => { if (l === maxLen) riCands.push(i2); });
+          const ri_ = H.pick(rng, riCands);            // 最長の集団（複数あれば抽選）の末尾に置く
+          key = t[ri_][lens[ri_] - 1];
+          if (ri_ < nRows - 1 && rng() < 0.6) {          // 60%で後ろの集団にも複製
+            const dupRow = H.ri(rng, ri_ + 1, nRows - 1);
+            const dupCol = H.ri(rng, 0, t[dupRow].length - 1);
+            t[dupRow][dupCol] = key;
+          }
+        } else if (SCENARIO === 'outerFirst') {
+          /* firstLen(outer) は t[1]の要素数 が対象行の番号より小さいときに外れる。
+           * wrongLabel/unlabeled は対象行より後ろに複製があるときに外れる。
+           * この2つは互いに独立（前者は t[0].length と対象行番号の関係，後者は
+           * 対象行より後ろに空きがあるかどうか）なので，innerFirst と同じ
+           * 「複製は確率的に」で両立できる（off1 のときのような「対象行は
+           * 必ず最後の集団」という強い制約が要らない）。 */
+          const nRows = H.ri(rng, 3, 4);
+          let lens = null;
+          for (let t2 = 0; t2 < 30; t2++) {
+            const cand = Array.from({ length: nRows }, () => H.ri(rng, 2, 5));
+            if (new Set(cand).size >= 2) { lens = cand; break; }
+          }
+          if (!lens) continue;
+          t = lens.map(len => Array.from({ length: len }, () => H.ri(rng, 0, 10)));
+          const r0 = H.ri(rng, 0, nRows - 1);              // 0始まり。対象行（全行から一様に選ぶ）
+          key = t[r0][H.ri(rng, 0, lens[r0] - 1)];
+          let dupEarlier = false;
+          for (let r = 0; r < r0; r++) if (t[r].includes(key)) { dupEarlier = true; break; }
+          if (dupEarlier) continue;                         // r0より前に同じ値があると「最初の一致」がずれる
+          if (r0 < nRows - 1 && rng() < 0.6) {               // 60%で後ろの集団にも複製
+            const dupRow = H.ri(rng, r0 + 1, nRows - 1);
+            const dupCol = H.ri(rng, 0, t[dupRow].length - 1);
+            t[dupRow][dupCol] = key;
+          }
+        } else { // innerLast
+          const nRows = H.ri(rng, 3, 4);
+          let lens = null;
+          for (let t2 = 0; t2 < 30; t2++) {
+            const cand = Array.from({ length: nRows }, () => H.ri(rng, 2, 5));
+            if (new Set(cand).size >= 2) { lens = cand; break; }
+          }
+          if (!lens) continue;
+          t = lens.map(len => Array.from({ length: len }, () => H.ri(rng, 0, 10)));
+          const r2 = H.ri(rng, 1, nRows - 1);             // 0始まり。「最後の一致」になる集団
+          const r1 = H.ri(rng, 0, r2 - 1);                 // 0始まり。それより前の集団にも同じ値を置く
+          key = t[r2][lens[r2] - 1];                       // r2側の末尾に置く→ off1(inner)がr2側で必ず外れる
+          t[r1][H.ri(rng, 0, lens[r1] - 1)] = key;
+        }
+
+        const target = runProg(boundMode, correctAKey, correctBKey, t, key);
+        if (target < 1) continue;
+
+        let hits = 0;
+        for (const A of A_POOL) for (const B of B_POOL) {
+          if (runProg(boundMode, A.key, B.key, t, key) === target) hits++;
+        }
+        if (hits !== 1) continue;
+
+        best = { t, key, target };
+        break;
+      }
+      if (!best) throw new Error('jb16: 正答が一意になる表を引けませんでした（800回, scenario=' + SCENARIO + '）');
+
+      const t = best.t, key = best.key, target = best.target;
+
+      /* ── 解答群（a候補 × b候補 の直積） ──
+       * innerLast だけの注意点: b の正解 unlabeled（繰返し処理を終了する，10字）は，
+       * ラベル付き脱出（18字）や found ← false（13字）よりも必ず短い（この言語で
+       * 「ただ内側を抜けるだけ」の表現はこれより短くしようがない）。a 側が
+       * ok/fixed1 の2択（同じ8字）だけだと，「文字列が一番短い肢を選ぶ」だけで
+       * 50%前後当ててしまう（実測48.16%，乱択の3.75倍）。rowlen（tの要素数，5字）
+       * を a に必ず混ぜて「一番短いaはむしろ不正解」という状況を作ることで，
+       * 「短い方を選ぶ」という発想そのものを機能させなくする。 */
+      let shape;
+      if (SCENARIO === 'innerFirst') shape = H.pick(rng, [[3, 2], [3, 3], [4, 2]]);
+      else if (SCENARIO === 'outerFirst') {
+        /* a側(ok='tの要素数',5字)は他候補(8字)より必ず短いので，b側の形を
+         * 固定すると「一番短い/真ん中の長さの肢を選ぶ」のどちらか一方に
+         * 必ず付け入られる（[3,3]固定なら最短28.14%，[3,2]相当なら中央値
+         * 51.12%を実測）。b=2（exitOuter/wrongLabelのみ，18字2つ）と
+         * b=3（+unlabeled/resetFlagのどちらか，10-13字）を半々に混ぜることで，
+         * 「最短」と「中央値」のどちらの統計量も，束ねた形（a×bの直積）の
+         * 中で正解だけを指し示さないようにしている（実測は報告参照）。 */
+        shape = [3, H.pick(rng, [2, 3])];
+      }
+      else {
+        /* innerLast を常に肢数8（[4,2]）に固定すると，今度は「肢数がちょうど8個なら
+         * innerLast の正解（t[i]の要素数／繰返し処理を終了する）を機械的に答える」
+         * という，中身を一切読まない選び方に約62%当てられてしまう（実測）。
+         * [4,2] の頻度を下げ，[3,3]/[3,2]（この必勝パターンが生じない形）を
+         * 多めに混ぜることで，「肢数だけでシナリオを当てる」攻略の効きを弱める
+         * （[3,3]/[3,2] 側は「最短の肢を選ぶ」に約50%当てられる別の弱点が
+         * あるため，完全な排除はできていない。実測は報告参照）。 */
+        shape = H.pick(rng, [[4, 2], [3, 3], [3, 2]]);
+      }
+
+      const pickCands = (pool, corKey, twinKey, cnt) => {
+        const cor = pool.find(x => x.key === corKey);
+        const tw = pool.find(x => x.key === twinKey);
+        const rest = H.shuffle(rng, pool.filter(x => x.key !== corKey && x.key !== twinKey));
+        return H.shuffle(rng, [cor, tw].concat(rest.slice(0, cnt - 2)));
+      };
+
+      /* a側の必ず出す3つは ok・fixed1・noCount（"[i]"を含み演算子なし，
+       * かつ正解と同じ/近い文字数の候補が常に同居する）。4つ目が要るときは，
+       * innerLast なら必ず rowlen（上のコメント参照），innerFirst なら
+       * rowlen/off1/halfLen から抽選で足す。 */
+      let aList;
+      if (boundMode === 'inner') {
+        const aBase = ['ok', 'fixed1', 'noCount'].map(k => A_POOL.find(x => x.key === k));
+        if (shape[0] === 4 && SCENARIO === 'innerLast') {
+          aList = H.shuffle(rng, aBase.concat([A_POOL.find(x => x.key === 'rowlen')]));
+        } else {
+          const aRest = H.shuffle(rng, A_POOL.filter(x => !['ok', 'fixed1', 'noCount'].includes(x.key)));
+          aList = H.shuffle(rng, aBase.concat(aRest.slice(0, shape[0] - 3)));
+        }
+      } else {
+        aList = H.shuffle(rng, A_POOL); // outer: 常に全部（3つ）
+      }
+
+      let bList;
+      if (contractMode === 'first') bList = pickCands(B_POOL, 'exitOuter', 'wrongLabel', shape[1]);
+      else if (shape[1] === 3) bList = H.shuffle(rng, B_POOL); // last，全部
+      else bList = pickCands(B_POOL, 'unlabeled', 'exitOuter', shape[1]); // last，a=4のときはbを2つに絞る
+
+      const optRows = [], options = [];
+      for (const A of aList) for (const B of bList) {
+        optRows.push({ A, B, correct: A.key === correctAKey && B.key === correctBKey });
+        options.push({ html: H.pair(E(A.txt), E(B.txt)) });
+      }
+      const answer = optRows.findIndex(r => r.correct);
+
+      /* ── 表（t の中身。行ごとに要素数が異なる） ── */
+      const cap = '表　t の例';
+      const tbl = '<table class="qtbl"><caption>' + E(cap) + '</caption><thead><tr><th>'
+        + E(grp + '番号') + '</th><th>' + E(val + '（' + idx + 'の順）') + '</th></tr></thead><tbody>'
+        + t.map((row, i) => '<tr><td>' + (i + 1) + '</td><td>{' + row.join(', ') + '}</td></tr>').join('')
+        + '</tbody></table>';
+
+      /* ── 関数の契約（前書き。contractMode で文面が変わる） ── */
+      const contractP = (contractMode === 'first')
+        ? '関数 ' + E(fname) + ' は，整数型配列の配列 t と整数型 key を受け取り，t の要素を'
+          + E(grp) + '番号の小さい方から，同じ' + E(grp) + 'の中では' + E(idx) + 'の小さい方から順に調べ，'
+          + '値が key と等しい最初の要素が見つかった' + E(grp) + 'の番号を返す。値が key と等しい要素が一つも無い場合は，−1 を返す。'
+        : '関数 ' + E(fname) + ' は，整数型配列の配列 t と整数型 key を受け取り，t の要素を'
+          + E(grp) + '番号の小さい方から，同じ' + E(grp) + 'の中では' + E(idx) + 'の小さい方から順に調べる。'
+          + '値が key と等しい要素が見つかるたびに，その時点の' + E(grp) + '番号を記録し直す。全ての' + E(grp)
+          + 'を調べ終えたときに記録されている' + E(grp) + '番号（値が key と等しい要素を含む' + E(grp) + 'のうち，'
+          + E(grp) + '番号が最も大きいもの）を返す。値が key と等しい要素が一つも無い場合は，−1 を返す。';
+
+      /* ── 〔プログラム〕 ── */
+      const aBlank = H.blank('a');
+      const outerBoundHtml = (boundMode === 'outer') ? aBlank : E('tの要素数');
+      const innerBoundHtml = (boundMode === 'inner') ? aBlank : E('t[i]の要素数');
+      const outerCommentHtml = E('  // ' + LABEL_OUTER);
+      const innerCommentHtml = (contractMode === 'first') ? E('  // ' + LABEL_INNER) : '';
+
+      const intro = [
+        {
+          t: 'p', html: 'ある管理システムでは，' + E(grp) + 'ごとに，所属する' + E(mem) + 'の' + E(val)
+            + 'を記録している。' + E(grp) + 'によって所属する' + E(mem) + 'の人数が異なるため，記録は整数型配列の配列 t で表す。'
+            + 't[i] は，i 番目の' + E(grp) + 'に割り当てられた' + E(mem) + 'の' + E(val) + 'を，' + E(idx)
+            + 'の小さい順に格納した配列であり，' + E(grp) + 'ごとに' + E(mem) + 'の人数が異なるので，'
+            + 't[i]の要素数 は ' + E(grp) + 'によって異なる値になる。'
+        },
+        { t: 'p', html: contractP },
+        { t: 'p', html: 't の例を表に示す。' },
+        { t: 'table', html: tbl },
+        {
+          t: 'p', html: '例えば，表に示す t を渡して関数 ' + E(fname) + ' を ' + E(fname) + '(t, ' + key
+            + ') として呼び出すと，戻り値は ' + target + ' となる。'
+        },
+        {
+          t: 'code', lines: (function () {
+            const L = [];
+            L.push(E('○整数型: ' + fname + '(整数型配列の配列: t, 整数型: key)'));
+            L.push(E('  整数型: i, j, row'));
+            L.push(E('  論理型: found ← false'));
+            L.push(E('  for (i を 1 から ') + outerBoundHtml + E(' まで 1 ずつ増やす)') + outerCommentHtml);
+            L.push(E('    for (j を 1 から ') + innerBoundHtml + E(' まで 1 ずつ増やす)') + innerCommentHtml);
+            L.push(E('      if (t[i][j] が key と等しい)'));
+            L.push(E('        found ← true'));
+            L.push(E('        row ← i'));
+            L.push(E('        ') + H.blank('b'));
+            L.push(E('      endif'));
+            L.push(E('    endfor'));
+            L.push(E('  endfor'));
+            L.push(E('  if (found が true と等しい)'));
+            L.push(E('    return row'));
+            L.push(E('  else'));
+            L.push(E('    return −1'));
+            L.push(E('  endif'));
+            return L;
+          })()
+        }
+      ];
+
+      /* ── 解説：正解（a=ok, b=correctBKey）を入れたときのトレース ──
+       * contract='first' は最初の一致で打ち切り，'last' は表の最後まで続ける。 */
+      const allHits = findAll(t, key);
+      let scanUntil = allHits[0];
+      if (contractMode === 'last') scanUntil = allHits[allHits.length - 1];
+      const trRows = [];
+      for (let i = 1; i <= scanUntil.row; i++) {
+        const row = t[i - 1];
+        const upTo = (i === scanUntil.row) ? scanUntil.col : row.length;
+        for (let j = 1; j <= upTo; j++) {
+          const v = row[j - 1];
+          let status;
+          if (v === key) {
+            status = (contractMode === 'first')
+              ? '真 → found←true，row←' + i + '，' + LABEL_OUTER + 'の行から始まる繰返し処理を終了する'
+              : '真 → found←true，row←' + i + '（記録を更新し，次の' + grp + 'へ進む）';
+          } else status = '偽';
+          trRows.push([String(i), String(j), String(v), v + ' ＝ ' + key + ' か', status]);
+        }
+      }
+
+      /* ── 解説：表示された誤答が例の表でどう外れるかを1件ずつ実測して書く ── */
+      function whyA(k) {
+        if (boundMode === 'inner') {
+          if (k === 'fixed1') return 't[1]の要素数 を使うと，どの' + grp + 'を調べるときも，常に1番目の' + grp + 'の'
+            + mem + '数を使い回すことになります。' + grp + 'によって' + mem + 'の人数が違う（配列の配列の特徴です）ので，'
+            + '1番目の' + grp + 'より' + mem + 'が多い' + grp + 'では末尾の' + mem + 'を確認しないまま次の' + grp + 'に進み，'
+            + '少ない' + grp + 'では存在しない' + mem + 'まで確認しようとします（存在しない要素は key と一致しないものとして扱われます）';
+          if (k === 'rowlen') return 'tの要素数は' + grp + 'の数（表の行数）であって，i 番目の' + grp + 'に何'
+            + mem + 'いるかとは無関係です。' + grp + 'によって' + mem + 'の人数が違うのに全ての' + grp + 'で同じ回数だけ'
+            + '内側の for 文を回してしまうため，' + mem + '数の多い' + grp + 'では末尾の' + mem + 'を確認しないまま次の'
+            + grp + 'に進み，少ない' + grp + 'では存在しない' + mem + 'まで確認しようとします（存在しない要素は key と一致しないものとして扱われます）';
+          if (k === 'off1') return 't[i]の要素数 から 1 引いているため，' + grp + 'ごとに，末尾の1' + mem
+            + '（' + idx + 'が最も大きい' + mem + '）だけを確認しないまま次の' + grp + 'に進んでしまいます';
+          if (k === 'halfLen') return 't[i]の要素数 を 2 で割った商にしているため，' + grp + 'ごとに，' + mem + '数のおよそ半分'
+            + '（' + idx + 'が大きい方の半分）を確認しないまま次の' + grp + 'に進んでしまいます';
+          if (k === 'noCount') return 't[i]の要素 は' + mem + 'そのもの（の集まり）であって，数ではありません。for 文の上限には'
+            + '整数の値が必要なので，これでは内側の for 文の回数が定まらず，' + grp + 'ごとに1' + mem + 'も確認できないまま'
+            + '次の' + grp + 'に進んでしまいます';
+        } else {
+          if (k === 'firstLen') return '1番目の' + grp + 'の' + mem + '数（t[1]の要素数）を，' + grp + 'の総数の代わりに'
+            + '使ってしまっています。' + grp + 'によって' + mem + 'の人数が違う（配列の配列の特徴です）ので，1番目の'
+            + grp + 'の' + mem + '数と，' + grp + 'の総数（tの要素数）は無関係です。1番目の' + grp + 'の' + mem
+            + '数の方が' + grp + 'の総数より小さいと，後ろの' + grp + 'を確認しないまま外側の for 文が終わってしまいます';
+          if (k === 'badIdx') return 'この行（外側の for 文の上限）が実行される時点では，まだ i に値は入っていません。'
+            + 't[i]の要素数 のように i を使った式をここで書いても値が定まらないため，外側の for 文は一度も回らず，'
+            + '一致があっても必ず −1 になってしまいます';
+        }
+        return '';
+      }
+      function whyB(k) {
+        if (contractMode === 'first') {
+          if (k === 'wrongLabel') return LABEL_INNER + ' は内側の for 文（j の for 文）自身に付いているラベルです。'
+            + 'ここで「' + LABEL_INNER + 'の行から始まる繰返し処理を終了する」としても，終了するのは結局，内側の for 文だけです。'
+            + '外側の for 文（i の for 文，// ' + LABEL_OUTER + ' のラベルが付いている方）はそのまま次の' + grp + 'に進んでしまうため，'
+            + '後ろの' + grp + 'にも key と同じ値があると，row の値がそちらで上書きされてしまいます';
+          if (k === 'unlabeled') return 'ラベルの無い「繰返し処理を終了する」は，最も内側の for 文（j の for 文）だけを終了させます。'
+            + '外側の for 文（i の for 文，// ' + LABEL_OUTER + ' のラベルが付いている方）はそのまま次の' + grp + 'に進んでしまうため，'
+            + '後ろの' + grp + 'にも key と同じ値があると，row の値がそちらで上書きされてしまいます';
+          if (k === 'resetFlag') return '見つけた直後に found を false に戻してしまうと，2つの for 文はどちらも止まらずに'
+            + '最後まで実行され続けます。このあと別の' + grp + 'で key と一致する' + mem + 'が見つからない限り，found は false のまま'
+            + '関数の最後まで進み，実際には見つかっているのに「見つからなかった（−1）」という誤った結果になります';
+        } else {
+          if (k === 'exitOuter') return 'この問題は「最後に見つかった' + grp + '番号」を返す必要があるのに，' + LABEL_OUTER
+            + 'の行から始まる繰返し処理を終了する を使うと，最初に一致が見つかった時点で外側の for 文（i の for 文）まで'
+            + '終了してしまいます。あとの' + grp + 'に一致があっても確認できず，記録が更新されません';
+          if (k === 'resetFlag') return '見つけた直後に found を false に戻してしまうと，見つかったこと自体が記録されません。'
+            + 'このあと別の' + grp + 'で key と一致する' + mem + 'が見つからない限り，found は false のまま関数の最後まで進み，'
+            + '実際には見つかっているのに「見つからなかった（−1）」という誤った結果になります';
+        }
+        return '';
+      }
+      const badLi = optRows.map((r, i3) => ({ r, idx: i3 })).filter(o => !o.r.correct).map(o => {
+        const A = o.r.A, B = o.r.B;
+        const out = runProg(boundMode, A.key, B.key, t, key);
+        const aSame = A.key === correctAKey, bSame = B.key === correctBKey;
+        const head = '（a ' + (aSame ? 'は正解と同じ' : 'が <code>' + E(A.txt) + '</code>')
+          + '，b ' + (bSame ? 'は正解と同じ' : 'が <code>' + E(B.txt) + '</code>') + '）';
+        const whys = [];
+        if (!aSame) whys.push(whyA(A.key));
+        if (!bSame) whys.push(whyB(B.key));
+        return '<li><b>' + H.kana[o.idx] + '</b>' + head + ' … ' + whys.join('。また，')
+          + '。例の呼出しでは戻り値が ' + out + ' となり，正しい ' + target + ' と一致しません。</li>';
+      }).join('');
+
+      const correctAtxt = (boundMode === 'inner') ? 't[i]の要素数' : 'tの要素数';
+      const correctBtxt = (contractMode === 'first') ? (LABEL_OUTER + 'の行から始まる繰返し処理を終了する') : '繰返し処理を終了する';
+
+      const expA = (boundMode === 'inner')
+        ? '<p>まず a です。i 番目の' + E(grp) + 'を調べるとき，内側の for 文を回す回数は，i 番目の'
+          + E(grp) + 'に実際に何' + E(mem) + 'いるか，つまり <code>t[i]の要素数</code> でなければなりません。'
+          + E(grp) + 'ごとに' + E(mem) + 'の人数が違う（配列の配列の特徴です）ので，' + E(grp) + 'の数（<code>tの要素数</code>）や'
+          + '1番目の' + E(grp) + 'の' + E(mem) + '数（<code>t[1]の要素数</code>）のような，i によらず全ての' + E(grp) + 'で共通の数を使うと合いません。</p>'
+        : '<p>まず a です。全ての' + E(grp) + 'を調べ切るために，外側の for 文を回す回数は，' + E(grp) + 'の総数，'
+          + 'つまり <code>tの要素数</code> でなければなりません。1番目の' + E(grp) + 'の' + E(mem) + '数（<code>t[1]の要素数</code>）'
+          + 'のような，特定の1つの' + E(grp) + 'だけに関する数を使うと，' + E(grp) + 'の総数とは限らないため合いません。</p>';
+
+      const expB = (contractMode === 'first')
+        ? '<p>次に b です。この行は，if 文の中で「key と等しい' + E(mem) + 'が見つかった」直後，つまりまだ内側の for 文'
+          + '（j の for 文）の中にいる場所にあります。ここで外側の for 文（i の for 文）まで一気に終了させるには，外側の for 文に'
+          + '付いている <code>// ' + LABEL_OUTER + '</code> のラベルを指定して <code>' + LABEL_OUTER + 'の行から始まる繰返し処理を終了する</code> としなければなりません。'
+          + '内側の for 文自身に付いた <code>// ' + LABEL_INNER + '</code> を指定してしまうと，終了するのは内側の for 文だけです。</p>'
+        : '<p>次に b です。この問題は「最後に見つかった' + E(grp) + '番号」を返すので，一致が見つかっても外側の for 文'
+          + '（i の for 文）を止めてはいけません。次の' + E(grp) + 'に進んで，記録を更新し続ける必要があります。'
+          + '内側の for 文（j の for 文）だけを終了する <code>繰返し処理を終了する</code> であれば，同じ' + E(grp) + '内の残りの'
+          + E(mem) + 'を確認せずに次の' + E(grp) + 'へ進めます（結果は変わりませんが，むだな確認を省けます）。外側の for 文まで'
+          + '終了させる <code>' + LABEL_OUTER + 'の行から始まる繰返し処理を終了する</code> を使うと，最初に見つかった時点で'
+          + '止まってしまい，あとの' + E(grp) + 'の一致を見逃します。</p>';
+
+      const expAfter = (contractMode === 'first')
+        ? '<p>i=' + scanUntil.row + '，j=' + scanUntil.col + ' で t[i][j] が key（＝' + key + '）と一致するので，found ← true，'
+          + 'row ← ' + scanUntil.row + ' としたあと，<code>' + correctBtxt + '</code> によって，外側・内側どちらの for 文'
+          + 'もここで終了します。ループを抜けたあとの <code>if (found が true と等しい)</code> は真なので，<code>return row</code> により'
+          + '戻り値は ' + target + ' となり，前書きの例と一致します ✓</p>'
+          + '<p>検算：上のトレース表のとおり，i=' + scanUntil.row + '，j=' + scanUntil.col + ' より前に確認した組はすべて key と一致していないので，'
+          + 'これが表の中で最初に見つかる一致です ✓</p>'
+        : '<p>表の全ての' + E(grp) + 'を調べ終えるまで外側の for 文は止まらないので，一致するたびに row が更新され，'
+          + '最後に更新されたのは i=' + scanUntil.row + '（j=' + scanUntil.col + '）です。ループを抜けたあとの'
+          + ' <code>if (found が true と等しい)</code> は真なので，<code>return row</code> により戻り値は ' + target
+          + ' となり，前書きの例と一致します ✓</p>'
+          + '<p>検算：i=' + scanUntil.row + ' より後ろの' + E(grp) + 'には key と一致する' + E(mem) + 'が無いので，'
+          + 'これが表の中で最後に見つかる一致です ✓</p>';
+
+      const exp = expA + expB
+        + '<p>正解は ' + H.pair(E(correctAtxt), E(correctBtxt)) + ' です。表の t を' + E(grp) + '番号1から順にトレースします。</p>'
+        + H.traceTable([grp + '番号 i', idx + ' j', '値 t[i][j]', 'key（' + key + '）との比較', '状態'], trRows)
+        + expAfter
+        + (badLi ? '<p><b>誤答の作られ方</b>（a と b の<b>組</b>で正誤が決まるので，片方だけ合っていても不正解です。'
+          + '表示された ' + (optRows.length - 1) + ' 行を上から順に見ていきます）：</p><ul>' + badLi + '</ul>' : '');
+
+      /* ── ヒント（2つ読んでも選択肢は1つに絞れない粒度にする） ── */
+      let hint1 = (boundMode === 'inner')
+        ? 'tの要素数 と，t[i]の要素数 は別の数を表しています。前者と後者がそれぞれ何を数えているのかを，'
+          + '宣言部分と2つの for 文を見比べて確認しましょう。'
+        : 'tの要素数 は' + E(grp) + 'の総数，t[1]の要素数 は1番目の' + E(grp) + 'だけの' + E(mem) + '数です。'
+          + '外側の for 文を何回まわす必要があるかを考えるとき，どちらの数を使うべきかを確認しましょう。';
+      hint1 += (contractMode === 'first')
+        ? 'また，外側の for 文にも内側の for 文にも，行末にそれぞれ別の文字（<code>// ' + LABEL_OUTER + '</code> と'
+          + ' <code>// ' + LABEL_INNER + '</code>）のラベルが付いています。「指定したラベルの行から始まる繰返し処理を終了する」は，'
+          + 'どのラベルを指すかによって，実際に終了する for 文が外側なのか内側なのかが変わることに注意しましょう。'
+        : 'また，この問題の前書き（契約）をよく読み，「最初に一致が見つかった時点で処理を止めてよいか，それとも全ての'
+          + E(grp) + 'を確認し終えるまで続ける必要があるか」を確認しましょう。';
+
+      const hint2 = (contractMode === 'first')
+        ? '表の内容を' + E(grp) + '番号の小さい方から，同じ' + E(grp) + 'の中では' + E(idx) + 'の小さい方から順に，'
+          + 'key と1件ずつ照らし合わせてトレースしましょう。key と同じ値が複数の' + E(grp) + 'にまたがって存在する場合，'
+          + '「一致したらすぐに外側・内側どちらの for 文も終了する」書き方と，「内側の for 文だけを終了して次の' + E(grp) + 'に'
+          + '進んでしまう」書き方とで，最終的に返る row の値が変わることがあります。前書きの契約（最初に見つかった' + E(grp)
+          + 'の番号を返す）と実際の値を照らし合わせて確認してください。'
+        : '表の内容を' + E(grp) + '番号の小さい方から，同じ' + E(grp) + 'の中では' + E(idx) + 'の小さい方から順に，'
+          + 'key と1件ずつ照らし合わせてトレースしましょう。key と同じ値が複数の' + E(grp) + 'にまたがって存在する例を選び，'
+          + '「一致するたびに記録を更新して次の' + E(grp) + 'へ進む」書き方と，「一致した時点で処理をすべて終了する」書き方とで，'
+          + '最終的に返る row の値が変わることを確認してください。前書きの契約（最後に見つかった' + E(grp)
+          + 'の番号を返す）と実際の値を照らし合わせましょう。';
+
+      return {
+        intro,
+        question: '次のプログラム中の ' + H.blank('a') + ' と ' + H.blank('b')
+          + ' に入れる正しい答えの組合せを，解答群の中から選べ。ここで，配列の要素番号は 1 から始まる。',
+        options,
+        answer,
+        hints: [hint1, hint2],
+        exp,
+        traceVars: ['i', 'j', 'found', 'row']
       };
     }
   };
