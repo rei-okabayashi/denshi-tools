@@ -15,6 +15,8 @@
 
 part = "assembly";
 
+use <ripple_pattern.scad>   // 側面パネルの「波紋」模様（tools/gen_ripple.py で生成）
+
 /* ---------- 本体寸法（メーカー公称値。手持ちの実機をノギスで測って上書き推奨） ---------- */
 model   = "AG03";                            // "AG03"(初代) or "AG03MK2"
 dev_w   = model == "AG03" ? 128.8 : 126;     // 幅 [mm]（初代はノギス実測 128.8。公称 129）
@@ -280,8 +282,8 @@ module rbox(l, w, h, r) linear_extrude(h) offset(r = r) offset(delta = -r) squar
 //  ・裏の「リム」が台の肉抜き穴（下段の長穴・上段の三角2つ）に差し込まれて摩擦で留まる。ネジ・接着剤なし、台は刷り直し不要
 //  ・表面をプレートに付けて印刷。表面に彫った模様は、0.4mm でフィラメントを替えると 2 色になる
 // ============================================================
-face_col = "DimGray"; accent_col = "Orange";   // プレビューの色（表の色／模様の色）
-panel_style = "eq";  // "eq"（イコライザー）/ "wave"（波形）/ "grille"（スピーカーグリル）/ "lines"（40°ライン）/ "plain"
+face_col = "#3C3A36"; accent_col = "#D6B260";   // プレビューの色（表の色／模様の色）
+panel_style = "ripple";  // "ripple"（波紋）/ "eq" / "wave" / "grille" / "lines" / "relic" / "rune" / "stone" / "plain"
 pnl_t       = 2.4;   // パネルの厚み [mm]
 pnl_gap     = 0.2;   // 台の外形より内側に下げる量 [mm]（縁がはみ出さないように）
 pnl_chamfer = 0.6;   // 表側の縁の面取り [mm]
@@ -394,6 +396,7 @@ module pattern2d() intersection() {
     else if (panel_style == "relic")  relic_circuit2d();
     else if (panel_style == "rune")   rune_circle2d();
     else if (panel_style == "stone")  stone_spiral2d();
+    else if (panel_style == "ripple") ripple_pattern2d();
 }
 
 // 台の外面（Z=0）に付けた状態の座標：表面が Z=-pnl_t、リムが +Z 側へ穴に入る
