@@ -97,7 +97,8 @@ module holes2d()
 t_ceil   = 3;                               // 天井板の厚み [mm]
 ceil_top = P(-lip_t, -t_top)[1];            // 天井板の上面：手前の横桁の一番低い所にそろえる
 ceil_bot = ceil_top - t_ceil;
-module ceiling2d() intersection() { sil2d(); translate([xL - 1, ceil_bot]) square([xr - xL + 2, t_ceil]); }
+// 前端は前面の斜面（front_slope2d）が受け持つので、斜面の内側から始めて段差を出さない
+module ceiling2d() intersection() { sil2d(); translate([P(10, -t_top)[0] - 2, ceil_bot]) square([xr, t_ceil]); }
 
 module frame2d() difference() { sil2d(); holes2d(); }
 
@@ -110,7 +111,19 @@ module mid_rung2d()   rnd() intersection() { frame2d(); band(S*0.45 - 8, S*0.45 
 module rear_rung2d()  rnd() intersection() { frame2d(); band(S - 30, S + 1, -t_top, 0); }
 module rear_base2d()  rnd() intersection() { frame2d(); translate([xr - 18, -1]) square([19, t_base + 1]); }
 module bars2d() { front_rung2d(); mid_rung2d(); rear_rung2d(); rear_base2d(); }   // 手前下は引き出しの通り道なので横桁なし
-module plates2d() { bars2d(); ceiling2d(); }
+module plates2d() { bars2d(); ceiling2d(); front_slope2d(); floor2d(); back2d(); }
+
+// 床板と背板：机に接する底面と、AG03 の後ろに隠れる背面をふさぐ（横の肉抜き穴はそのまま）
+t_floor = 2.4;   // 床板の厚み [mm]（引き出しはこの上を滑る）
+t_back  = 2.4;   // 背板の厚み [mm]
+module floor2d() intersection() { sil2d(); translate([xL - 1, -1]) square([xr - xL + 2, t_floor + 1]); }
+module back2d()  intersection() { sil2d(); translate([xr - t_back, -1]) square([t_back + 1, 500]); }
+
+// 前面の斜面：天井板の前端から AG03 の手前下端まで一直線につなぎ、前から見て段差・すき間のない面にする
+// （本体の底面の延長より下なので、前面端子のプラグには当たらない）
+module front_slope2d() offset(r = R_out) offset(delta = -R_out) polygon([
+    [xL, ceil_bot], [xL, ceil_top], P(0, 0), P(10, 0), P(10, -t_top), [P(10, -t_top)[0], ceil_bot]
+]);
 module rnd() offset(r = 2.5) offset(delta = -2.5) children();       // 横桁の角も丸める
 
 // ダボ位置 [x, y, 直径]
@@ -164,7 +177,7 @@ module assembly_raw() {
         [0, 0, 1, 0], [0, 0, 0, 1]])
         linear_extrude(dev_w) polygon([[0, 0], [dev_d, 0], [dev_d, dev_h_rear], [0, dev_h_front]]);
     // 引き出し（drawer_open だけ手前に引き出した状態で表示）
-    color("Goldenrod") translate([dr_x0 - drawer_open, 0, dr_z0])
+    color("Goldenrod") translate([dr_x0 - drawer_open, dr_y0, dr_z0])
         multmatrix([[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]]) drawer();
 }
 
@@ -189,7 +202,8 @@ dr_z0 = g + frame_w + dr_clr_side;                // 左右：フレームの内
 dr_z1 = 2*Zc - (g + frame_w) - dr_clr_side;
 dr_L  = dr_x1 - dr_x0;                            // 奥行（外寸）
 dr_W  = dr_z1 - dr_z0;                            // 幅（外寸）
-dr_H  = ceil_bot - dr_clr_top;                    // 高さ（外寸）：天井板の下
+dr_y0 = t_floor;                                  // 底：床板の上に乗る
+dr_H  = ceil_bot - dr_clr_top - dr_y0;            // 高さ（外寸）：床板の上〜天井板の下
 
 // 印刷向き（底が下、開口が上）。u: 奥行（0 が前面）、v: 幅、w: 高さ
 module drawer() {
