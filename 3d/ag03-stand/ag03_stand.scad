@@ -275,6 +275,78 @@ module chamfer_box(l, w, h, r, c) hull() {
 
 module rbox(l, w, h, r) linear_extrude(h) offset(r = r) offset(delta = -r) square([l, w]);
 
+// ============================================================
+//  側面の化粧パネル（台の外側の面＝印刷時のプレート面をおおう）
+//  ・裏の「リム」が台の肉抜き穴（下段の長穴・上段の三角2つ）に差し込まれて摩擦で留まる。ネジ・接着剤なし、台は刷り直し不要
+//  ・表面をプレートに付けて印刷。表面に彫った模様は、0.4mm でフィラメントを替えると 2 色になる
+// ============================================================
+panel_style = "eq";  // "eq"（イコライザー）/ "wave"（波形）/ "grille"（スピーカーグリル）/ "lines"（40°ライン）/ "plain"
+pnl_t       = 2.4;   // パネルの厚み [mm]
+pnl_gap     = 0.2;   // 台の外形より内側に下げる量 [mm]（縁がはみ出さないように）
+pnl_chamfer = 0.6;   // 表側の縁の面取り [mm]
+pnl_border  = 7;     // 模様を入れない縁の幅 [mm]
+deboss      = 0.8;   // 模様の彫りの深さ [mm]
+color_layer = 0.4;   // ここでフィラメントを替えると模様が 2 色になる [mm]
+plug_len    = 6;     // 差し込みリムの長さ [mm]
+plug_wall   = 1.6;   // リムの壁厚 [mm]
+plug_tol    = 0.1;   // リムと穴のすき間 [mm]（ダボのテスト結果と同じ値）
+
+module side_outline2d() offset(delta = -pnl_gap) union() { sil2d(); guide2d(); }
+module pattern_area2d() offset(delta = -pnl_border) side_outline2d();
+function y_top(x) = H0 + x*tan(tilt) + guide_h/cos(tilt);      // 外形の上辺（傾斜面＋側板）
+
+// --- 模様 ---
+eq_f = [0.34, 0.52, 0.66, 0.8, 0.92, 0.7, 0.86, 0.97, 0.78, 0.62, 0.9, 0.74, 0.56, 0.82, 0.6, 0.46, 0.64, 0.42, 0.5, 0.36];
+module eq2d() {                       // イコライザー：底から立ち上がる角丸のバー。高さは台の傾斜に沿って伸びる
+    pitch = 6.4; w = 3.6; yb = pnl_border + 4;
+    n = floor((xr - 10 - (xL + 12))/pitch) + 1;
+    for (i = [0:n-1]) let(x = xL + 12 + i*pitch, avail = y_top(x) - pnl_border - 5 - yb, h = max(w, avail*eq_f[i % len(eq_f)]))
+        hull() { translate([x, yb + w/2]) circle(d = w, $fn = 24); translate([x, yb + h - w/2]) circle(d = w, $fn = 24); }
+}
+wv_g = [0.42, 0.7, 0.55, 0.92, 0.66, 1.0, 0.78, 0.5, 0.88, 0.62, 0.97, 0.72, 0.84, 0.46, 0.76, 0.58, 0.9, 0.68, 0.52, 0.8, 0.6, 0.38, 0.7, 0.48, 0.64, 0.44, 0.56, 0.34];
+module wave2d() {                     // 波形：傾斜と平行な中心線から上下に伸びる録音波形
+    s0 = 0; s1 = 108; pitch = 4.4; w = 2.6; hc = -44; A = 30;
+    n = floor((s1 - s0)/pitch) + 1;
+    for (i = [0:n-1]) let(s = s0 + i*pitch, t = i/(n-1), env = pow(sin(180*t), 0.6), a = max(w/2, A*env*wv_g[i % len(wv_g)]))
+        hull() { translate(P(s, hc - a)) circle(d = w, $fn = 20); translate(P(s, hc + a)) circle(d = w, $fn = 20); }
+}
+module grille2d() {                   // スピーカーグリル：六方格子の丸穴。前は小さく奥ほど大きいグラデーション
+    pitch = 6.6;
+    for (j = [0:30], i = [0:26]) let(x = xL - 4 + i*pitch + (j % 2)*pitch/2, y = 2 + j*pitch*0.866,
+                                     t = max(0, min(1, (x - xL)/(xr - xL))), d = 1.8 + 3.4*t)
+        translate([x, y]) circle(d = d, $fn = 16);
+}
+module lines2d() {                    // 40°ライン：傾斜面と平行な溝。下へ行くほど間隔が広がる
+    for (k = [0:16]) let(h = -(4 + 1.8*k + 0.22*k*k)) hull() {
+        translate(P(-60, h)) circle(d = 1.4, $fn = 12); translate(P(S + 60, h)) circle(d = 1.4, $fn = 12); }
+}
+module pattern2d() intersection() {
+    pattern_area2d();
+    if      (panel_style == "eq")     eq2d();
+    else if (panel_style == "wave")   wave2d();
+    else if (panel_style == "grille") grille2d();
+    else if (panel_style == "lines")  lines2d();
+}
+
+// 台の外面（Z=0）に付けた状態の座標：表面が Z=-pnl_t、リムが +Z 側へ穴に入る
+module panel_local() difference() {
+    union() {
+        translate([0, 0, -pnl_t + pnl_chamfer]) linear_extrude(pnl_t - pnl_chamfer) side_outline2d();
+        for (k = [0:2]) translate([0, 0, -pnl_t + k*pnl_chamfer/3])            // 表側の縁の45°面取り（3段で近似）
+            linear_extrude(pnl_chamfer/3 + 0.01) offset(delta = -(pnl_chamfer - k*pnl_chamfer/3)) side_outline2d();
+        linear_extrude(plug_len - 1) plug_rim2d(plug_tol);                    // 差し込みリム
+        translate([0, 0, plug_len - 1 - 0.01]) linear_extrude(1) plug_rim2d(plug_tol + 0.4);   // 先端は細くして入れやすく
+    }
+    translate([0, 0, -pnl_t - 1]) linear_extrude(deboss + 1) pattern2d();
+}
+module plug_rim2d(tol) difference() { offset(delta = -tol) holes2d(); offset(delta = -tol - plug_wall) holes2d(); }
+
+// 2 色表示用（表面から color_layer までを表の色、それより奥を模様の色で）
+module panel_colored(c_face = "DimGray", c_accent = "Orange") {
+    color(c_face)   intersection() { panel_local(); translate([-500, -500, -pnl_t - 1]) cube([1000, 1000, 1 + color_layer]); }
+    color(c_accent) intersection() { panel_local(); translate([-500, -500, -pnl_t + color_layer]) cube([1000, 1000, 100]); }
+}
+
 // 手前ストッパー・側板が本体の手前の高さを超えないこと（超えると天板やつまみに当たる）
 assert(lip_h   < dev_h_front, "lip_h が本体の手前の高さ以上です");
 assert(guide_h < dev_h_front, "guide_h が本体の手前の高さ以上です");
@@ -297,5 +369,11 @@ module fit_test() {
 if      (part == "half_a")   half(true);
 else if (part == "half_b")   mirror([1, 0, 0]) half(false);   // 裏返して外面を下にした向き
 else if (part == "drawer")   drawer();
+else if (part == "panel_a")  translate([0, 0, pnl_t]) panel_local();                     // 左パネル（表面を下にして印刷）
+else if (part == "panel_b")  mirror([1, 0, 0]) translate([0, 0, pnl_t]) panel_local();  // 右パネル
+else if (part == "panel_view") rotate([90, 0, 0]) { color("Gainsboro") half(true); panel_colored();
+    color("Goldenrod") translate([dr_x0, dr_y0, dr_z0]) multmatrix([[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]]) drawer();
+    %translate([0, 0, g + clr]) multmatrix([[cos(tilt), -sin(tilt), 0, 0], [sin(tilt), cos(tilt), 0, H0], [0, 0, 1, 0], [0, 0, 0, 1]])
+        linear_extrude(dev_w) polygon([[0, 0], [dev_d, 0], [dev_d, dev_h_rear], [0, dev_h_front]]); }
 else if (part == "fit_test") fit_test();
 else                         assembly();
