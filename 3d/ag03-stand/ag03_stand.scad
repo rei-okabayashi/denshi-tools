@@ -169,10 +169,13 @@ dr_clr_top  = 2;    // 手前の横桁の下とのすき間 [mm]
 dr_wall     = 1.6;  // 壁の厚み [mm]
 dr_floor    = 1.6;  // 底の厚み [mm]
 dr_r        = 3;    // 外形の角R [mm]
-pull_w      = 32;   // 指掛けの切り欠き幅 [mm]
-pull_d      = 14;   // 指掛けの切り欠き深さ [mm]
+dr_front    = 2.4;  // 前板の厚み [mm]（つまみを支えるので少し厚め）
+knob_w      = 40;   // つまみの幅 [mm]
+knob_p      = 9;    // つまみの出っ張り [mm]
+knob_t      = 5;    // つまみ先端の縦の厚み [mm]（下側は45°の斜面でサポート不要）
+knob_top    = 4;    // 前板の上端からつまみ上面までの距離 [mm]
 
-dr_x0 = xL;                                       // 前面：前脚の前面とツライチ
+dr_x0 = xL;                                       // 前面：閉めたとき前脚の前面と面一
 dr_x1 = xr - 18 - 1.5;                            // 背面：後ろの横桁の手前（ここで止まる）
 dr_z0 = g + frame_w + dr_clr_side;                // 左右：フレームの内面の間
 dr_z1 = 2*Zc - (g + frame_w) - dr_clr_side;
@@ -181,12 +184,26 @@ dr_W  = dr_z1 - dr_z0;                            // 幅（外寸）
 dr_H  = P(-lip_t, -t_top)[1] - dr_clr_top;        // 高さ（外寸）：手前の横桁の一番低い所の下
 
 // 印刷向き（底が下、開口が上）。u: 奥行（0 が前面）、v: 幅、w: 高さ
-module drawer() difference() {
-    rbox(dr_L, dr_W, dr_H, dr_r);
-    translate([dr_wall, dr_wall, dr_floor]) rbox(dr_L - 2*dr_wall, dr_W - 2*dr_wall, dr_H, max(0.5, dr_r - dr_wall));
-    // 前面上辺の中央に半円の指掛け
-    translate([-1, dr_W/2, dr_H]) rotate([0, 90, 0]) scale([2*pull_d/pull_w, 1, 1])
-        cylinder(d = pull_w, h = dr_wall + 2, $fn = 96);
+module drawer() {
+    difference() {
+        rbox(dr_L, dr_W, dr_H, dr_r);
+        translate([dr_front, dr_wall, dr_floor])
+            rbox(dr_L - dr_front - dr_wall, dr_W - 2*dr_wall, dr_H, max(0.5, dr_r - dr_wall));
+    }
+    knob();
+}
+
+// 前板中央のつまみ：上面は水平、下面は45°の斜面（印刷時にサポート不要）。外側の角は丸める
+module knob() {
+    w1 = dr_H - knob_top;               // つまみ上面の高さ
+    w0 = w1 - knob_t - knob_p;          // 斜面が前板に付く高さ
+    intersection() {
+        translate([0, dr_W/2 + knob_w/2, 0]) rotate([90, 0, 0]) linear_extrude(knob_w)
+            offset(r = 1.5) offset(delta = -1.5)
+            polygon([[0.01, w0], [-knob_p, w0 + knob_p], [-knob_p, w1], [0.01, w1]]);
+        linear_extrude(dr_H) offset(r = 4) offset(delta = -4)
+            translate([-knob_p, dr_W/2 - knob_w/2]) square([knob_p + 6, knob_w]);
+    }
 }
 module rbox(l, w, h, r) linear_extrude(h) offset(r = r) offset(delta = -r) square([l, w]);
 
