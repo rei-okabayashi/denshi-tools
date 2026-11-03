@@ -90,7 +90,14 @@ module holes2d()
             translate([xr - 18, t_base]) circle(d = 8);
             translate(P(S*0.45, -t_top)) circle(d = 8);
         }
+        translate([xL - 1, ceil_top - m]) square([xr - xL + 2, m]);   // 天井の高さの横材
     }
+
+// 引き出しの天井板：引き出しを閉めたとき上から中が見えないようにふさぐ（前脚の前面〜背面まで全長）
+t_ceil   = 3;                               // 天井板の厚み [mm]
+ceil_top = P(-lip_t, -t_top)[1];            // 天井板の上面：手前の横桁の一番低い所にそろえる
+ceil_bot = ceil_top - t_ceil;
+module ceiling2d() intersection() { sil2d(); translate([xL - 1, ceil_bot]) square([xr - xL + 2, t_ceil]); }
 
 module frame2d() difference() { sil2d(); holes2d(); }
 
@@ -103,6 +110,7 @@ module mid_rung2d()   rnd() intersection() { frame2d(); band(S*0.45 - 8, S*0.45 
 module rear_rung2d()  rnd() intersection() { frame2d(); band(S - 30, S + 1, -t_top, 0); }
 module rear_base2d()  rnd() intersection() { frame2d(); translate([xr - 18, -1]) square([19, t_base + 1]); }
 module bars2d() { front_rung2d(); mid_rung2d(); rear_rung2d(); rear_base2d(); }   // 手前下は引き出しの通り道なので横桁なし
+module plates2d() { bars2d(); ceiling2d(); }
 module rnd() offset(r = 2.5) offset(delta = -2.5) children();       // 横桁の角も丸める
 
 // ダボ位置 [x, y, 直径]
@@ -122,7 +130,7 @@ module half(male = true) {
         union() {
             linear_extrude(g + frame_w) frame2d();                     // 側面フレーム（ストッパー・前脚込み）
             linear_extrude(g) guide2d();                               // 側板（横ズレ防止）
-            linear_extrude(Zc) bars2d();                               // 横桁
+            linear_extrude(Zc) plates2d();                             // 横桁＋引き出しの天井板
             if (male) for (p = pegs) translate([p[0], p[1], Zc - 0.01]) peg(p[2]);
         }
         if (!male) for (p = pegs)
@@ -165,7 +173,7 @@ module assembly_raw() {
 // ============================================================
 drawer_open = 0;    // プレビュー用：引き出した量 [mm]
 dr_clr_side = 0.5;  // 左右のすき間 [mm]
-dr_clr_top  = 2;    // 手前の横桁の下とのすき間 [mm]
+dr_clr_top  = 0.8;  // 天井板の下とのすき間 [mm]
 dr_wall     = 1.6;  // 壁の厚み [mm]
 dr_floor    = 1.6;  // 底の厚み [mm]
 dr_r        = 3;    // 外形の角R [mm]
@@ -181,7 +189,7 @@ dr_z0 = g + frame_w + dr_clr_side;                // 左右：フレームの内
 dr_z1 = 2*Zc - (g + frame_w) - dr_clr_side;
 dr_L  = dr_x1 - dr_x0;                            // 奥行（外寸）
 dr_W  = dr_z1 - dr_z0;                            // 幅（外寸）
-dr_H  = P(-lip_t, -t_top)[1] - dr_clr_top;        // 高さ（外寸）：手前の横桁の一番低い所の下
+dr_H  = ceil_bot - dr_clr_top;                    // 高さ（外寸）：天井板の下
 
 // 印刷向き（底が下、開口が上）。u: 奥行（0 が前面）、v: 幅、w: 高さ
 module drawer() {
