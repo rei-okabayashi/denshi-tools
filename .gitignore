@@ -29,3 +29,6 @@
 !/logic-lab.html
 !/privacy.html
 !/3d/
+
+# Python のキャッシュ
+__pycache__/
