@@ -74,6 +74,14 @@ module holes2d()
 
 module rail2d() difference() { outer2d(); holes2d(); }
 
+// 手前ストッパー＋前脚：ストッパー先端から机まで垂直に落とした面で埋める（前倒れ防止）
+// 左右の角（幅 lip_w）だけに設けるので、前面中央の端子・プラグの通り道はふさがない
+xL = P(-lip_t, lip_h)[0];  // ストッパー先端の x（＝前脚の前面）
+module front_foot2d() hull() {
+    band(-lip_t, 0, -m, lip_h);
+    translate([xL, 0]) square([xf - xL, 0.01]);
+}
+
 // 中央へ渡す横桁（左右パーツの合わせ面まで伸びる）
 module front_bar2d() intersection() { outer2d(); translate([xf - 1, -1]) square([15, 200]); }
 module rear_rung2d() intersection() { outer2d(); band(S - 22, S + 1, -12, 0); }
@@ -97,7 +105,7 @@ module half(male = true) {
         union() {
             linear_extrude(g + rail_w) rail2d();                       // 側面トラス
             linear_extrude(g) band(-lip_t, S, -m, guide_h);            // 側板（横ズレ防止）
-            linear_extrude(g + lip_w) band(-lip_t, 0, -m, lip_h);      // 手前ストッパー
+            linear_extrude(g + lip_w) front_foot2d();                  // 手前ストッパー＋前脚（前倒れ防止）
             linear_extrude(Zc) {                                       // 横桁
                 front_bar2d(); rear_rung2d(); mid_rung2d(); rear_base2d();
             }
