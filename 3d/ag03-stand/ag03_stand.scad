@@ -48,7 +48,7 @@ R_out   = 3;     // 外形の角R [mm]（外に向かって凸の角だけ丸め
 R_hole  = 9;     // 肉抜き穴の角R [mm]
 
 /* ---------- 圧入ダボ ---------- */
-peg_d   = 5;     // ダボ直径 [mm]
+peg_d   = 6;     // ダボ直径 [mm]（5→6で根元の層間せん断に強く）
 peg_len = 6;     // ダボ長さ [mm]
 fit_tol = 0.10;  // 穴の半径方向クリアランス [mm]（テスト片で①0.10がぴったり、②0.15・③0.20は緩かった）
 
@@ -122,10 +122,19 @@ module front_wall2d() intersection() {
 }
 
 // 床板と背板：机に接する底面と、AG03 の後ろに隠れる背面をふさぐ（横の肉抜き穴はそのまま）
-t_floor = 2.4;   // 床板の厚み [mm]（引き出しはこの上を滑る）
-t_back  = 2.4;   // 背板の厚み [mm]
+t_floor = 3;     // 床板の厚み [mm]（引き出しはこの上を滑る）
+t_back  = 3;     // 背板の厚み [mm]
 module floor2d() intersection() { sil2d(); translate([xL - 1, -1]) square([xr - xL + 2, t_floor + 1]); }
 module back2d()  intersection() { sil2d(); translate([xr - t_back, -1]) square([t_back + 1, 500]); }
+
+// 床板の継ぎ目は相欠き（重ね継ぎ）：A の床板の下半分が舌として B 側へ lap_len 伸び、B の床板の下半分に入る
+// → 左右の床板が上下にずれず、前の下側も開きにくい。印刷向きでは薄い壁が上に伸びるだけなのでサポート不要
+lap_len = 8;                                    // 重ねる長さ [mm]
+lap_t   = t_floor/2;                            // 舌の厚み [mm]
+lap_x0  = xL + 3;                               // 前後の範囲（後ろ下の横桁は避ける）
+lap_x1  = xr - 18 - 3;
+module lap_tongue2d() translate([lap_x0, 0]) square([lap_x1 - lap_x0, lap_t]);
+module lap_recess2d() translate([lap_x0 - 0.3, -1]) square([lap_x1 - lap_x0 + 0.6, lap_t + 0.1 + 1]);
 
 // 前面の斜面：天井板の前端から AG03 の手前下端まで一直線につなぎ、前から見て段差・すき間のない面にする
 // （本体の底面の延長より下なので、前面端子のプラグには当たらない）
@@ -136,11 +145,14 @@ module rnd() offset(r = 2.5) offset(delta = -2.5) children();       // 横桁の
 
 // ダボ位置 [x, y, 直径]
 pegs = [
-    concat(P(1,        -5), [peg_d]),
+    [xL + 4.5, ceil_bot + 5.5, peg_d],     // 前板の下部（前の下側の開き止め）
+    [-1.8,     ceil_bot + 5.5, peg_d],     // 〃
+    concat(P(5,        -5), [peg_d]),      // 手前の横桁
     concat(P(13,       -5), [peg_d]),
-    concat(P(S*0.45,   -5), [peg_d]),
-    concat(P(S - 20,   -5), [peg_d]),
-    [xr - 9,  5, peg_d],
+    concat(P(S*0.45,   -5), [peg_d]),      // 中の横桁
+    concat(P(S - 25,   -5), [peg_d]),      // 奥の横桁
+    concat(P(S - 12,   -5), [peg_d]),
+    [xr - 9,  5, peg_d],                   // 後ろ下の横桁
 ];
 
 // ============================================================
@@ -153,9 +165,11 @@ module half(male = true) {
             linear_extrude(g) guide2d();                               // 側板（横ズレ防止）
             linear_extrude(Zc) plates2d();                             // 横桁＋引き出しの天井板
             if (male) for (p = pegs) translate([p[0], p[1], Zc - 0.01]) peg(p[2]);
+            if (male) translate([0, 0, Zc - 0.01]) linear_extrude(lap_len) lap_tongue2d();
         }
         if (!male) for (p = pegs)
             translate([p[0], p[1], Zc - peg_len - 0.6]) peg_hole(p[2]);
+        if (!male) translate([0, 0, Zc - lap_len - 0.3]) linear_extrude(lap_len + 1) lap_recess2d();
     }
 }
 
@@ -190,7 +204,7 @@ module assembly_raw() {
 }
 
 // ============================================================
-//  引き出し（左右フレームの内面にガイドされて机の上を滑る。レール・ネジ不要）
+//  引き出し（左右フレームの内面にガイドされて床板の上を滑る。レール・ネジ不要）
 // ============================================================
 drawer_open = 0;    // プレビュー用：引き出した量 [mm]
 dr_clr_side = 0.5;  // 左右のすき間 [mm]
@@ -203,6 +217,16 @@ knob_w      = 40;   // つまみの幅 [mm]
 knob_p      = 9;    // つまみの出っ張り [mm]
 knob_t      = 5;    // つまみ先端の縦の厚み [mm]（下側は45°の斜面でサポート不要）
 knob_top    = 4;    // 前板の上端からつまみ上面までの距離 [mm]
+dr_chamfer  = 0.4;  // 底の外周の面取り [mm]（1層目の広がり＝象の足でこすれないように）
+// 抜け止め：左右の側壁を縦に切った「ツメ」。外向きの突起が側面フレームの下段の穴に入り、
+// 引き出すと穴の前の縁に当たって止まる。外すときは横の穴からツメを内側へ押す
+stop_u      = 89;   // 突起の前面の位置（前面からの距離）[mm]：閉めた状態で穴の中に来る位置
+tab_len     = 9;    // ツメの幅 [mm]
+tab_slit    = 0.8;  // ツメの両脇の切り込み幅 [mm]
+tab_base    = 8;    // ツメの付け根の高さ（引き出しの底から）[mm]
+bump_p      = 1.5;  // 突起の出っ張り [mm]（すき間0.5を引いて約1mm掛かる）
+bump_w0     = 17;   // 突起の下端の高さ（引き出しの底から）[mm]：穴の縁がまっすぐな範囲に入れる
+bump_w1     = 24;   // 突起の上端の高さ [mm]
 
 dr_x0 = xL;                                       // 前面：閉めたとき前脚の前面と面一
 dr_x1 = xr - 18 - 1.5;                            // 背面：後ろの横桁の手前（ここで止まる）
@@ -216,11 +240,29 @@ dr_H  = ceil_bot - dr_clr_top - dr_y0;            // 高さ（外寸）：床板
 // 印刷向き（底が下、開口が上）。u: 奥行（0 が前面）、v: 幅、w: 高さ
 module drawer() {
     difference() {
-        rbox(dr_L, dr_W, dr_H, dr_r);
+        chamfer_box(dr_L, dr_W, dr_H, dr_r, dr_chamfer);
         translate([dr_front, dr_wall, dr_floor])
             rbox(dr_L - dr_front - dr_wall, dr_W - 2*dr_wall, dr_H, max(0.5, dr_r - dr_wall));
+        for (side = [0, 1]) side_mirror(side)                       // ツメの両脇の切り込み（上は開放）
+            for (u = [stop_u - tab_slit, stop_u + tab_len])
+                translate([u, -1, tab_base]) cube([tab_slit, dr_wall + 2, dr_H]);
     }
     knob();
+    for (side = [0, 1]) side_mirror(side) stop_bump();
+}
+module side_mirror(side) if (side == 0) children(); else translate([0, dr_W, 0]) mirror([0, 1, 0]) children();
+
+// 突起：前面は垂直（止まる面）、後ろ側は斜面（差し込むとき押し込まれる）、下面は45°（サポート不要）
+module stop_bump() intersection() {
+    translate([0, 0, bump_w0]) linear_extrude(bump_w1 - bump_w0)
+        polygon([[stop_u + 0.5, 0.01], [stop_u + 0.5, -bump_p], [stop_u + 3, -bump_p], [stop_u + tab_len - 0.5, 0.01]]);
+    translate([0, 0.01, 0]) rotate([90, 0, 90]) linear_extrude(dr_L)
+        polygon([[0.01, bump_w0], [-bump_p, bump_w0 + bump_p], [-bump_p, bump_w1], [0.01, bump_w1]]);
+}
+// 底の外周だけ45°で面取りした角丸の箱
+module chamfer_box(l, w, h, r, c) hull() {
+    translate([0, 0, c]) rbox(l, w, h - c, r);
+    linear_extrude(c + 0.01) offset(delta = -c) offset(r = r) offset(delta = -r) square([l, w]);
 }
 
 // 前板中央のつまみ：上面は水平、下面は45°の斜面（印刷時にサポート不要）。外側の角は丸める
