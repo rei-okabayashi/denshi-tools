@@ -36,7 +36,7 @@ clr     = 0.6;   // 本体側面と側板の片側すき間 [mm]
 g       = 4;     // 側板（ガイド壁）の厚み [mm]
 guide_h = 14;    // ガイド壁の高さ（本体底面から）[mm]
 frame_w = 14;    // 側面フレーム（＝手前ストッパー）の横幅（側板の内側へ）[mm]
-                 //   左右の角だけなので前面中央の端子・プラグの通り道はふさがない
+                 //   （手前ストッパー自体は前板 front_wall2d で全幅につながる）
 m       = 7;     // フレーム部材の太さ [mm]
 t_top   = 10;    // 傾斜面（本体を受ける部材）の厚み [mm]
 t_base  = 10;    // 底の部材の厚み [mm]
@@ -111,7 +111,15 @@ module mid_rung2d()   rnd() intersection() { frame2d(); band(S*0.45 - 8, S*0.45 
 module rear_rung2d()  rnd() intersection() { frame2d(); band(S - 30, S + 1, -t_top, 0); }
 module rear_base2d()  rnd() intersection() { frame2d(); translate([xr - 18, -1]) square([19, t_base + 1]); }
 module bars2d() { front_rung2d(); mid_rung2d(); rear_rung2d(); rear_base2d(); }   // 手前下は引き出しの通り道なので横桁なし
-module plates2d() { bars2d(); ceiling2d(); front_slope2d(); floor2d(); back2d(); }
+module plates2d() { bars2d(); ceiling2d(); front_slope2d(); front_wall2d(); floor2d(); back2d(); }
+
+// 前板：左右の手前ストッパーを全幅でつなぐ（AG03 初代は前面のこの範囲に端子がない）
+// 天井板の上から前脚の前面と面一に立ち上げ、ストッパーの上端まで。AG03 の前面を高さ lip_h で受ける
+module front_wall2d() intersection() {
+    sil2d();
+    band(-500, 0, -500, 500);                                  // AG03 の前面より手前だけ
+    translate([xL - 1, ceil_bot]) square([200, 200]);          // 天井板より上だけ（下は引き出しの口）
+}
 
 // 床板と背板：机に接する底面と、AG03 の後ろに隠れる背面をふさぐ（横の肉抜き穴はそのまま）
 t_floor = 2.4;   // 床板の厚み [mm]（引き出しはこの上を滑る）
