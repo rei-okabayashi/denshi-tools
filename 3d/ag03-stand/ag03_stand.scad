@@ -134,6 +134,9 @@ lap_t   = t_floor/2;                            // 舌の厚み [mm]
 lap_x0  = xL + 3;                               // 前後の範囲（後ろ下の横桁は避ける）
 lap_x1  = xr - 18 - 3;
 module lap_tongue2d() translate([lap_x0, 0]) square([lap_x1 - lap_x0, lap_t]);
+// 抜け止めの山：前（差し込む側）はゆるい斜面、奥（引き出す側）は急な斜面
+module detent_bump2d() let(x0 = xL + det_bx) polygon([
+    [x0 - 3.5, t_floor - 0.01], [x0, t_floor + det_bh], [x0 + 0.6, t_floor + det_bh], [x0 + 1.2, t_floor - 0.01]]);
 module lap_recess2d() translate([lap_x0 - 0.3, -1]) square([lap_x1 - lap_x0 + 0.6, lap_t + 0.1 + 1]);
 
 // 前面の斜面：天井板の前端から AG03 の手前下端まで一直線につなぎ、前から見て段差・すき間のない面にする
@@ -166,6 +169,7 @@ module half(male = true) {
             linear_extrude(Zc) plates2d();                             // 横桁＋引き出しの天井板
             if (male) for (p = pegs) translate([p[0], p[1], Zc - 0.01]) peg(p[2]);
             if (male) translate([0, 0, Zc - 0.01]) linear_extrude(lap_len) lap_tongue2d();
+            if (male) translate([0, 0, Zc - 8 - det_bw/2]) linear_extrude(det_bw) detent_bump2d();   // 抜け止めの山（A 側の床板）
         }
         if (!male) for (p = pegs)
             translate([p[0], p[1], Zc - peg_len - 0.6]) peg_hole(p[2]);
@@ -210,23 +214,22 @@ drawer_open = 0;    // プレビュー用：引き出した量 [mm]
 dr_clr_side = 0.5;  // 左右のすき間 [mm]
 dr_clr_top  = 0.8;  // 天井板の下とのすき間 [mm]
 dr_wall     = 1.6;  // 壁の厚み [mm]
-dr_floor    = 1.6;  // 底の厚み [mm]
+dr_floor    = 2.4;  // 底の厚み [mm]（抜け止めの溝を入れるので厚め）
 dr_r        = 3;    // 外形の角R [mm]
 dr_front    = 2.4;  // 前板の厚み [mm]（つまみを支えるので少し厚め）
-knob_w      = 40;   // つまみの幅 [mm]
-knob_p      = 9;    // つまみの出っ張り [mm]
-knob_t      = 5;    // つまみ先端の縦の厚み [mm]（下側は45°の斜面でサポート不要）
-knob_top    = 4;    // 前板の上端からつまみ上面までの距離 [mm]
+pull_p      = 8;    // 取っ手（前板上端の全幅のひさし）の出っ張り [mm]
+pull_t      = 4;    // 取っ手の先端の厚み [mm]（下面は45°の斜面でサポート不要・指が掛かる）
 dr_chamfer  = 0.4;  // 底の外周の面取り [mm]（1層目の広がり＝象の足でこすれないように）
-// 抜け止め：左右の側壁を縦に切った「ツメ」。外向きの突起が側面フレームの下段の穴に入り、
-// 引き出すと穴の前の縁に当たって止まる。外すときは横の穴からツメを内側へ押す
-stop_u      = 89;   // 突起の前面の位置（前面からの距離）[mm]：閉めた状態で穴の中に来る位置
-tab_len     = 9;    // ツメの幅 [mm]
-tab_slit    = 0.8;  // ツメの両脇の切り込み幅 [mm]
-tab_base    = 8;    // ツメの付け根の高さ（引き出しの底から）[mm]
-bump_p      = 1.5;  // 突起の出っ張り [mm]（すき間0.5を引いて約1mm掛かる）
-bump_w0     = 17;   // 突起の下端の高さ（引き出しの底から）[mm]：穴の縁がまっすぐな範囲に入れる
-bump_w1     = 24;   // 突起の上端の高さ [mm]
+// 抜け止め（外から見えない）：引き出しの底の溝に、台の床板の小さな山が入る。
+// 溝の途中にある「歯」が山に当たって止まる。強めに引けば歯が山を乗り越えて外せる（ソフトストップ）
+det_v       = Zc - 8 - (g + frame_w + dr_clr_side);   // 溝の位置（引き出しの左端から）：左右の継ぎ目を避けて A 側
+det_gw      = 8;    // 溝の幅 [mm]
+det_gd      = 1.2;  // 溝の深さ [mm]
+det_tooth   = 3;    // 歯の長さ [mm]
+det_u       = 97;   // 歯の位置（前面から）[mm]
+det_bx      = 12;   // 台の山の位置（前脚の前面から奥へ）[mm]
+det_bh      = 0.9;  // 山の高さ [mm]
+det_bw      = 5;    // 山の幅 [mm]
 
 dr_x0 = xL;                                       // 前面：閉めたとき前脚の前面と面一
 dr_x1 = xr - 18 - 1.5;                            // 背面：後ろの横桁の手前（ここで止まる）
@@ -240,24 +243,29 @@ dr_H  = ceil_bot - dr_clr_top - dr_y0;            // 高さ（外寸）：床板
 // 印刷向き（底が下、開口が上）。u: 奥行（0 が前面）、v: 幅、w: 高さ
 module drawer() {
     difference() {
-        chamfer_box(dr_L, dr_W, dr_H, dr_r, dr_chamfer);
+        union() {
+            chamfer_box(dr_L, dr_W, dr_H, dr_r, dr_chamfer);
+            front_pull();
+        }
         translate([dr_front, dr_wall, dr_floor])
             rbox(dr_L - dr_front - dr_wall, dr_W - 2*dr_wall, dr_H, max(0.5, dr_r - dr_wall));
-        for (side = [0, 1]) side_mirror(side)                       // ツメの両脇の切り込み（上は開放）
-            for (u = [stop_u - tab_slit, stop_u + tab_len])
-                translate([u, -1, tab_base]) cube([tab_slit, dr_wall + 2, dr_H]);
+        // 抜け止めの溝（奥側は開放、前端は前板の裏で止める。途中に歯を残す）。溝の天井は幅8mmのブリッジなのでサポート不要
+        for (seg = [[5, det_u], [det_u + det_tooth, dr_L + 1]])   // 前端は閉じて前面に切り欠きを見せない
+            translate([seg[0], det_v - det_gw/2, -1]) cube([seg[1] - seg[0], det_gw, det_gd + 1]);
     }
-    knob();
-    for (side = [0, 1]) side_mirror(side) stop_bump();
 }
-module side_mirror(side) if (side == 0) children(); else translate([0, dr_W, 0]) mirror([0, 1, 0]) children();
 
-// 突起：前面は垂直（止まる面）、後ろ側は斜面（差し込むとき押し込まれる）、下面は45°（サポート不要）
-module stop_bump() intersection() {
-    translate([0, 0, bump_w0]) linear_extrude(bump_w1 - bump_w0)
-        polygon([[stop_u + 0.5, 0.01], [stop_u + 0.5, -bump_p], [stop_u + 3, -bump_p], [stop_u + tab_len - 0.5, 0.01]]);
-    translate([0, 0.01, 0]) rotate([90, 0, 90]) linear_extrude(dr_L)
-        polygon([[0.01, bump_w0], [-bump_p, bump_w0 + bump_p], [-bump_p, bump_w1], [0.01, bump_w1]]);
+// 取っ手：前板の上端を全幅で手前へ張り出した「ひさし」。上面は引き出しの縁と面一、下面は45°。
+// 平面形は引き出しの外形をそのまま前へ延ばした形（左右は側面と面一、前の角だけ丸める）
+module front_pull() intersection() {
+    translate([0, dr_W + 1, 0]) rotate([90, 0, 0]) linear_extrude(dr_W + 2)
+        offset(r = 1.5) offset(delta = -1.5)
+        polygon([[dr_front, dr_H - pull_t - pull_p - 2], [0, dr_H - pull_t - pull_p], [-pull_p, dr_H - pull_t],
+                 [-pull_p, dr_H], [dr_front, dr_H]]);
+    linear_extrude(dr_H) intersection() {
+        offset(r = dr_r) offset(delta = -dr_r) translate([-pull_p, 0]) square([dr_L + pull_p, dr_W]);
+        translate([-pull_p - 1, -1]) square([pull_p + 1 + dr_front, dr_W + 2]);
+    }
 }
 // 底の外周だけ45°で面取りした角丸の箱
 module chamfer_box(l, w, h, r, c) hull() {
@@ -265,18 +273,6 @@ module chamfer_box(l, w, h, r, c) hull() {
     linear_extrude(c + 0.01) offset(delta = -c) offset(r = r) offset(delta = -r) square([l, w]);
 }
 
-// 前板中央のつまみ：上面は水平、下面は45°の斜面（印刷時にサポート不要）。外側の角は丸める
-module knob() {
-    w1 = dr_H - knob_top;               // つまみ上面の高さ
-    w0 = w1 - knob_t - knob_p;          // 斜面が前板に付く高さ
-    intersection() {
-        translate([0, dr_W/2 + knob_w/2, 0]) rotate([90, 0, 0]) linear_extrude(knob_w)
-            offset(r = 1.5) offset(delta = -1.5)
-            polygon([[0.01, w0], [-knob_p, w0 + knob_p], [-knob_p, w1], [0.01, w1]]);
-        linear_extrude(dr_H) offset(r = 4) offset(delta = -4)
-            translate([-knob_p, dr_W/2 - knob_w/2]) square([knob_p + 6, knob_w]);
-    }
-}
 module rbox(l, w, h, r) linear_extrude(h) offset(r = r) offset(delta = -r) square([l, w]);
 
 // 手前ストッパー・側板が本体の手前の高さを超えないこと（超えると天板やつまみに当たる）
