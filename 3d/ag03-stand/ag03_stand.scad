@@ -280,6 +280,7 @@ module rbox(l, w, h, r) linear_extrude(h) offset(r = r) offset(delta = -r) squar
 //  ・裏の「リム」が台の肉抜き穴（下段の長穴・上段の三角2つ）に差し込まれて摩擦で留まる。ネジ・接着剤なし、台は刷り直し不要
 //  ・表面をプレートに付けて印刷。表面に彫った模様は、0.4mm でフィラメントを替えると 2 色になる
 // ============================================================
+face_col = "DimGray"; accent_col = "Orange";   // プレビューの色（表の色／模様の色）
 panel_style = "eq";  // "eq"（イコライザー）/ "wave"（波形）/ "grille"（スピーカーグリル）/ "lines"（40°ライン）/ "plain"
 pnl_t       = 2.4;   // パネルの厚み [mm]
 pnl_gap     = 0.2;   // 台の外形より内側に下げる量 [mm]（縁がはみ出さないように）
@@ -320,12 +321,79 @@ module lines2d() {                    // 40°ライン：傾斜面と平行な�
     for (k = [0:16]) let(h = -(4 + 1.8*k + 0.22*k*k)) hull() {
         translate(P(-60, h)) circle(d = 1.4, $fn = 12); translate(P(S + 60, h)) circle(d = 1.4, $fn = 12); }
 }
+// --- 古代遺跡ファンタジー風（オリジナル模様。特定作品のロゴ・紋章は使わない） ---
+module stroke(pts, w) for (i = [0:len(pts)-2]) hull() { translate(pts[i]) circle(d = w, $fn = 16); translate(pts[i+1]) circle(d = w, $fn = 16); }
+module ring(c, r, w) translate(c) difference() { circle(r = r + w/2, $fn = 96); circle(r = r - w/2, $fn = 96); }
+function onr(c, r, a) = [c[0] + r*cos(a), c[1] + r*sin(a)];
+
+module relic_circuit2d() {            // 古代テック回路：直角と45°で折れる光の配線が、中央の円環ノードに集まる
+    C = [74, 68]; w = 1.8;
+    ring(C, 24, 2.2); ring(C, 17, 1.2); translate(C) circle(d = 7, $fn = 32);
+    for (a = [0:30:330]) stroke([onr(C, 19.5, a), onr(C, 21.5, a)], 1.0);            // 円環の目盛り
+    stroke([[-20, 18], [22, 18], [35, 31], [50, 31], onr(C, 24, 214)], w);
+    stroke([[-20, 42], [8, 42], [24, 58], onr(C, 24, 180)], w);
+    stroke([[74, -10], onr(C, 24, 270)], w);
+    stroke([onr(C, 24, 0), [104, 68], [118, 82], [140, 82]], w);
+    stroke([onr(C, 24, 62), [88, 106], [100, 118], [100, 138]], w);
+    stroke([[40, -10], [40, 6], [52, 18]], w);
+    stroke([[112, -10], [112, 30], [98, 44]], w);
+    stroke([onr(C, 24, 120), [56, 104], [44, 104], [32, 92]], w);
+    for (n = [[52, 18], [98, 44], [32, 92], [100, 138], [22, 18]]) ring(n, 3.2, 1.4);  // 端子
+    stroke([onr(C, 24, 100), [62, 100], [50, 100]], w); ring([50, 100], 3.2, 1.4);
+    stroke([[8, 42], [8, 62], [16, 70]], w); ring([16, 70], 3.2, 1.4);
+    for (n = [[8, 42], [104, 68], [88, 106], [40, 6]]) translate(n) circle(d = 3.4, $fn = 20);
+}
+
+module rune_circle2d() {              // ルーンの円環：二重の円の間にオリジナルの古代文字を 16 個並べた紋章
+    C = [56, 56]; R = 42;
+    ring(C, R, 2.2); ring(C, R - 9, 1.2); ring(C, 20, 1.6);
+    for (k = [0:15]) let(a = 90 - k*22.5) translate(onr(C, R - 4.5, a)) rotate(a - 90) glyph(k);
+    for (a = [0:45:315]) stroke([onr(C, 21, a), onr(C, R - 10, a)], 1.0);
+    translate(C) for (r = [0, 45]) rotate(r) difference() {                        // 中心：八方の星（重ねた正方形）
+        square(17, center = true); square(17 - 3.2, center = true); }
+    translate(C) circle(d = 4.5, $fn = 24);
+    // 奥の縁に沿った「文字の柱」：2 本の線の間に記号を縦に並べる
+    stroke([[99, 22], [99, 138]], 1.2); stroke([[109, 22], [109, 146]], 1.2);
+    for (k = [0:11]) translate([104, 30 + k*9.6]) glyph(k + 3);
+    for (q = [[104, 14], [2, 14]]) translate(q) rotate(45) difference() { square(7, center = true); square(3.6, center = true); }
+}
+module glyph(k) {                     // 古代文字風の記号（縦画＋4種の付属）。幅 1mm の線
+    w = 1.0; m = k % 4;
+    stroke([[0, -2.2], [0, 2.2]], w);
+    if (m == 0) stroke([[-1.6, 2.2], [1.6, 2.2]], w);
+    if (m == 1) translate([1.7, 0]) circle(d = 1.3, $fn = 12);
+    if (m == 2) stroke([[-1.7, -0.6], [0, 1.0], [1.7, -0.6]], w);
+    if (m == 3) { stroke([[-1.5, -2.2], [1.5, -2.2]], w); stroke([[-1.5, 0.4], [-0.2, 0.4]], w); }
+}
+
+// 角ばった渦：外側の角から右→上→左→下と、2辺ごとに step ずつ短くしながら内側へ巻き込む
+module square_spiral(c, step, turns, w) let(a = step*turns, p0 = c + [-a, -a])
+    stroke(concat([p0], spiral_pts(p0, step, 2*a, 0, 4*turns - 1)), w);
+function spiral_pts(p, step, L2a, i, n) =
+    i >= n ? [] :
+    let(L = i == 0 ? L2a : L2a - step*floor((i - 1)/2),
+        q = p + [[1, 0], [0, 1], [-1, 0], [0, -1]][i % 4]*L)
+    concat([q], spiral_pts(q, step, L2a, i + 1, n));
+module stone_spiral2d() {             // 石板の渦紋：外枠の彫り線＋角ばった渦＋雷文の帯
+    difference() { pattern_area2d(); offset(delta = -2) pattern_area2d(); }          // 内側の枠線
+    square_spiral([46, 74], 5.4, 5, 2.0);
+    translate([96, 112]) mirror([1, 0]) square_spiral([0, 0], 5.4, 3, 2.0);       // 逆巻きの渦で対に
+    for (i = [0:7]) translate([-6 + i*16, 10]) {                                  // 雷文（メアンダー）の帯
+        stroke([[0, 0], [16, 0]], 1.8);
+        stroke([[13, 0], [13, 13], [3, 13], [3, 4], [9, 4], [9, 9]], 1.8);
+    }
+    stroke([[-20, 31], [140, 31]], 1.8);
+}
+
 module pattern2d() intersection() {
     pattern_area2d();
     if      (panel_style == "eq")     eq2d();
     else if (panel_style == "wave")   wave2d();
     else if (panel_style == "grille") grille2d();
     else if (panel_style == "lines")  lines2d();
+    else if (panel_style == "relic")  relic_circuit2d();
+    else if (panel_style == "rune")   rune_circle2d();
+    else if (panel_style == "stone")  stone_spiral2d();
 }
 
 // 台の外面（Z=0）に付けた状態の座標：表面が Z=-pnl_t、リムが +Z 側へ穴に入る
@@ -371,7 +439,7 @@ else if (part == "half_b")   mirror([1, 0, 0]) half(false);   // 裏返して外
 else if (part == "drawer")   drawer();
 else if (part == "panel_a")  translate([0, 0, pnl_t]) panel_local();                     // 左パネル（表面を下にして印刷）
 else if (part == "panel_b")  mirror([1, 0, 0]) translate([0, 0, pnl_t]) panel_local();  // 右パネル
-else if (part == "panel_view") rotate([90, 0, 0]) { color("Gainsboro") half(true); panel_colored();
+else if (part == "panel_view") rotate([90, 0, 0]) { color("Gainsboro") half(true); panel_colored(face_col, accent_col);
     color("Goldenrod") translate([dr_x0, dr_y0, dr_z0]) multmatrix([[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]]) drawer();
     %translate([0, 0, g + clr]) multmatrix([[cos(tilt), -sin(tilt), 0, 0], [sin(tilt), cos(tilt), 0, H0], [0, 0, 1, 0], [0, 0, 0, 1]])
         linear_extrude(dev_w) polygon([[0, 0], [dev_d, 0], [dev_d, dev_h_rear], [0, dev_h_front]]); }
