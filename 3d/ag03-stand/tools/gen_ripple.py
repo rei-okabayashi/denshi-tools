@@ -1,16 +1,20 @@
 """側面パネル用「波紋」模様の生成スクリプト
 
-大小の同心円（波紋）を散らし、そのすき間を、円をよけて流れる波線で埋める。
-出力: ../ripple_pattern.scad（module ripple_pattern2d() を定義。ag03_stand.scad から use する）
+参考画像を分析して決めた描画ルール（下の層から順に描き、上の層が下の層を隠す）:
+  1. 波線（一番下の層）  … 全面に水平の線を一定間隔で引く。どの線も同じ形のゆるい波（＝間隔は常に一定）。
+                           円をよけて曲がることはなく、上に描かれた円に隠されるだけ。
+  2. 大きな同心円        … 波線の上に重ねる。円の内側（＋すき間1本分）の下の線は消える。
+  3. 中・小の同心円      … 大きな円の「縁」にかぶさる位置に置き、下の円の輪を途中で断ち切る。
+  共通: 円の輪も波線も同じ太さ・同じ間隔。円の中心は小さな点。
+        上の円の一番外側の輪と下の線の間には、ふつうの線間と同じ幅のすき間を空ける。
+        大きな円はパネルの縁で切れてよい。
 
-  python3 gen_ripple.py [--seed N]
-
-必要: numpy, shapely, contourpy
-寸法は ag03_stand.scad の既定値（tilt=40, H0=55, S=150 ...）に合わせてある。
+出力: ../ripple_pattern.scad（module ripple_pattern2d()。ag03_stand.scad から use する）
+  python3 gen_ripple.py [--seed N] [--preview out.png]
+必要: numpy, shapely（寸法は ag03_stand.scad の既定値に合わせてある）
 """
 import argparse, math, random, os
 import numpy as np
-import contourpy
 from shapely.geometry import Polygon, Point, LineString, MultiPolygon
 from shapely.ops import unary_union
 
@@ -23,78 +27,131 @@ def P(s, h): return (s*c - h*s_, H0 + s*s_ + h*c)
 xr, xL = P(S, -t_top)[0], P(-lip_t, lip_h)[0]
 sil = Polygon([(xL, 0), (xr, 0), P(S, -t_top), P(S, 0), P(0, 0), P(0, lip_h), P(-lip_t, lip_h)])
 guide = Polygon([P(-lip_t, -t_top), P(S, -t_top), P(S, guide_h), P(-lip_t, guide_h)])
-area = unary_union([sil, guide]).buffer(-(pnl_gap + pnl_border), join_style=2)
+outline = unary_union([sil, guide]).buffer(-pnl_gap, join_style=2)
+area = outline.buffer(-pnl_border, join_style=2)
 
-# ---- 模様のパラメータ ----
-W_LINE = 1.3      # 溝の幅 [mm]
-PITCH = 3.0       # 線の間隔 [mm]
-GAP = 2.2         # 円と円・円と波線のすき間 [mm]
+# ---- 線のルール ----
+PITCH = 3.0            # 線の間隔（波線も輪も共通）[mm]
+W = 1.4                # 線（溝）の太さ [mm]
+GAP = PITCH - W        # 線と線のすき間 [mm]
+WAVE = [(0.75, 19.0, 0.0), (0.25, 7.3, 1.3)]   # 波線の形（振幅, 波長, 位相）— 全部の線で共通
 
-def place_circles(seed):
-    rnd = random.Random(seed)
-    radii = [27, 23, 20, 17, 15, 14, 12, 11, 10, 9, 8, 8, 7, 7, 6, 6]
-    minx, miny, maxx, maxy = area.bounds
-    circles = []
-    for R in radii:
-        for _ in range(4000):
-            x, y = rnd.uniform(minx - R*0.4, maxx + R*0.4), rnd.uniform(miny - R*0.4, maxy + R*0.4)
-            if not area.contains(Point(x, y)):          # 中心は模様の範囲内（円は縁で切れてよい）
-                continue
-            if all(math.hypot(x - a, y - b) >= R + r + GAP + PITCH for a, b, r in circles):
-                circles.append((x, y, R)); break
-    return circles
+# 円の大きさ：輪の本数（半径 = 本数 × PITCH）
+LARGE = [11, 10, 10, 9, 9]
+MEDIUM = [6, 6, 5, 5]
+SMALL = [4, 3, 3, 3, 3]
 
-def rings(circles):
-    shapes = []
-    for x, y, R in circles:
-        r = R
-        while r > 2.2:
-            shapes.append(Point(x, y).buffer(r + W_LINE/2, 64).difference(Point(x, y).buffer(r - W_LINE/2, 64)))
-            r -= PITCH
-        shapes.append(Point(x, y).buffer(max(1.0, r*0.6), 32))   # 中心の点
+def wave_y(x): return sum(a*math.sin(2*math.pi*x/l + p) for a, l, p in WAVE)
+
+def background():
+    minx, miny, maxx, maxy = outline.bounds
+    xs = np.arange(minx - 2, maxx + 2, 0.4)
+    lines = []
+    y0 = miny - 2
+    while y0 < maxy + 2:
+        lines.append(LineString([(x, y0 + wave_y(x)) for x in xs]).buffer(W/2, 8))
+        y0 += PITCH
+    return unary_union(lines)
+
+def rings(cx, cy, n):
+    shapes = [Point(cx, cy).buffer(W*0.75, 24)]                       # 中心の点
+    for k in range(1, n + 1):
+        r = k*PITCH
+        shapes.append(Point(cx, cy).buffer(r + W/2, 96).difference(Point(cx, cy).buffer(r - W/2, 96)))
     return unary_union(shapes)
 
-def flow_lines(circles, seed):
-    rnd = random.Random(seed + 1)
+def mask(cx, cy, n):                    # この円が下の層を隠す範囲：外側の輪＋すき間 1 本分
+    return Point(cx, cy).buffer(n*PITCH + W/2 + GAP, 96)
+
+def place(seed):
+    """大→中→小の順に、参考画像の配置ルールで円の位置を決める（ベストキャンディデート法で均等に散らす）"""
+    rnd = random.Random(seed)
     minx, miny, maxx, maxy = area.bounds
-    xs = np.arange(minx - 5, maxx + 5, 0.25); ys = np.arange(miny - 5, maxy + 5, 0.25)
-    X, Y = np.meshgrid(xs, ys)
-    # 流れ関数：ゆるい波＋円の位置に「湧き出し」を置いて線が円をよけて曲がる
-    psi = Y.copy()
-    psi += 2.2*np.sin(2*np.pi*X/58 + 0.7) + 1.4*np.sin(2*np.pi*(X + 0.6*Y)/31 + 2.1)
-    for x, y, R in circles:
-        Re = R + GAP
-        r2 = (X - x)**2 + (Y - y)**2
-        psi -= 0.5*Re*Re*(Y - y)/np.maximum(r2, Re*Re*0.25)
-    gen = contourpy.contour_generator(xs, ys, psi)
-    lines = []
-    for lv in np.arange(psi.min(), psi.max(), PITCH):
-        for seg in gen.lines(lv):
-            if len(seg) >= 2:
-                lines.append(LineString(seg).simplify(0.05))
-    band = unary_union([ln.buffer(W_LINE/2, 8) for ln in lines])
-    holes = unary_union([Point(x, y).buffer(R + GAP + W_LINE/2, 64) for x, y, R in circles])
-    return band.difference(holes)
+    placed = []                          # (x, y, n, layer)
+
+    def candidates(k=600, out=0.0):
+        for _ in range(k):
+            x, y = rnd.uniform(minx - out, maxx + out), rnd.uniform(miny - out, maxy + out)
+            if area.buffer(out).contains(Point(x, y)):
+                yield x, y
+
+    # 2. 大きな円：互いにあまり重ならず、パネル全体に散らばる。縁から少しはみ出してよい
+    for n in LARGE:
+        R = n*PITCH; best = None
+        for x, y in candidates(out=R*0.35):
+            ds = [math.hypot(x - a, y - b) - (R + m*PITCH) for a, b, m, _ in placed]
+            if ds and min(ds) < -0.12*R: continue                   # 大どうしの重なりは少しだけ
+            score = min(ds) if ds else 0
+            score += 0.5*min(0, area.boundary.distance(Point(x, y)) - 0.4*R)   # 縁に寄りすぎない
+            if best is None or score > best[0]: best = (score, x, y)
+        if best: placed.append((best[1], best[2], n, 1))
+
+    # 3. 中・小の円：大きい円（小は中も）の縁にかぶさる位置。下の円の中心の点は隠さない
+    def ride(n, layer, under_layers):
+        r = n*PITCH; best = None
+        unders = [p for p in placed if p[3] in under_layers]
+        for x, y in candidates(k=1500, out=r*0.3):
+            on_rim = [abs(math.hypot(x - a, y - b) - m*PITCH) for a, b, m, _ in unders]
+            if not on_rim or min(on_rim) > 0.45*r + PITCH: continue      # どこかの円の縁の上にいる
+            if any(math.hypot(x - a, y - b) < r + 3*PITCH for a, b, m, _ in placed):   # 下の円の中心を隠さない
+                continue
+            same = [math.hypot(x - a, y - b) - (r + m*PITCH) for a, b, m, l in placed if l >= layer]
+            if same and min(same) < -0.2*r: continue                       # 同じ層どうしは重なりすぎない
+            spread = min([math.hypot(x - a, y - b) for a, b, m, l in placed if l >= layer] or [999])
+            score = min(spread, 60) - 3*min(on_rim)
+            if best is None or score > best[0]: best = (score, x, y)
+        if best: placed.append((best[1], best[2], n, layer))
+
+    for n in MEDIUM: ride(n, 2, (1,))
+    for n in SMALL:  ride(n, 3, (1, 2))
+    return placed
+
+def build(seed):
+    placed = place(seed)
+    geom = background()
+    for x, y, n, layer in sorted(placed, key=lambda p: p[3]):        # 下の層から順に描き、上の円で隠す
+        geom = geom.difference(mask(x, y, n)).union(rings(x, y, n))
+    return geom.intersection(area.buffer(0.01)).simplify(0.02), placed
 
 def to_scad(geom, path):
     polys = list(geom.geoms) if isinstance(geom, MultiPolygon) else [geom]
     with open(path, "w") as f:
         f.write("// 自動生成: tools/gen_ripple.py（手で編集しない）\nmodule ripple_pattern2d() {\n")
         for pg in polys:
-            if pg.is_empty: continue
-            rings_ = [pg.exterior] + list(pg.interiors)
+            if pg.is_empty or pg.area < 0.3: continue
             pts, paths, n = [], [], 0
-            for rg in rings_:
+            for rg in [pg.exterior] + list(pg.interiors):
                 cs = list(rg.coords)[:-1]
                 pts += cs; paths.append(list(range(n, n + len(cs)))); n += len(cs)
             f.write("  polygon(points=[%s], paths=%s);\n" % (",".join("[%.2f,%.2f]" % p for p in pts), paths))
         f.write("}\n")
     return len(polys)
 
+def preview(geom, path, scale=5, face=(60, 58, 54), accent=(214, 178, 96)):
+    from PIL import Image, ImageDraw
+    minx, miny, maxx, maxy = outline.bounds
+    Wd, Hd = int((maxx - minx + 10)*scale), int((maxy - miny + 10)*scale)
+    T = lambda p: ((p[0] - minx + 5)*scale, Hd - (p[1] - miny + 5)*scale)
+    im = Image.new("RGB", (Wd, Hd), (250, 250, 250)); d = ImageDraw.Draw(im)
+    d.polygon([T(p) for p in outline.exterior.coords], fill=accent)     # 表の面（溝でない所）
+    mask_im = Image.new("L", (Wd, Hd), 0)
+    for pg in (geom.geoms if hasattr(geom, "geoms") else [geom]):
+        m = Image.new("L", (Wd, Hd), 0); dm = ImageDraw.Draw(m)
+        dm.polygon([T(p) for p in pg.exterior.coords], fill=255)
+        for it in pg.interiors: dm.polygon([T(p) for p in it.coords], fill=0)
+        mask_im.paste(255, (0, 0), m)
+    im.paste(face, (0, 0), mask_im)                                       # 溝（線）
+    im.save(path)
+
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("--seed", type=int, default=7); a = ap.parse_args()
-    circles = place_circles(a.seed)
-    pattern = unary_union([rings(circles), flow_lines(circles, a.seed)]).intersection(area.buffer(1)).simplify(0.03)
-    out = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "ripple_pattern.scad")
-    n = to_scad(pattern, out)
-    print("circles:", len(circles), "polygons:", n, "->", os.path.normpath(out))
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--seed", type=int, default=2)
+    ap.add_argument("--preview")
+    ap.add_argument("--no-scad", action="store_true")
+    a = ap.parse_args()
+    geom, placed = build(a.seed)
+    print("circles:", [(l, n) for *_, n, l in placed])
+    if a.preview: preview(geom, a.preview)
+    if not a.no_scad:
+        out = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "ripple_pattern.scad"))
+        print("polygons:", to_scad(geom, out), "->", out)

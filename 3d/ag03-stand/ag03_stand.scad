@@ -282,7 +282,7 @@ module rbox(l, w, h, r) linear_extrude(h) offset(r = r) offset(delta = -r) squar
 //  ・裏の「リム」が台の肉抜き穴（下段の長穴・上段の三角2つ）に差し込まれて摩擦で留まる。ネジ・接着剤なし、台は刷り直し不要
 //  ・表面をプレートに付けて印刷。表面に彫った模様は、0.4mm でフィラメントを替えると 2 色になる
 // ============================================================
-face_col = "#3C3A36"; accent_col = "#D6B260";   // プレビューの色（表の色／模様の色）
+face_col = "#D6B260"; accent_col = "#34322F";   // プレビューの色（表の色／模様の色）
 panel_style = "ripple";  // "ripple"（波紋）/ "eq" / "wave" / "grille" / "lines" / "relic" / "rune" / "stone" / "plain"
 pnl_t       = 2.4;   // パネルの厚み [mm]
 pnl_gap     = 0.2;   // 台の外形より内側に下げる量 [mm]（縁がはみ出さないように）

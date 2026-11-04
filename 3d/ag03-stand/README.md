@@ -55,7 +55,8 @@ YAMAHA AG03（初代。AG03MK2 にも切替可）を **底面40°** に傾けて
 | `ripple_pattern.scad` | 「波紋」模様のデータ（`tools/gen_ripple.py` で自動生成。`--seed` を変えると円の配置が変わる） |
 
 - 厚み 2.4mm。表面に模様を 0.8mm 彫ってある。**0.4mm（2層目のあと）でフィラメントを替える**と、表の色と模様の色の 2 色になる（Bambu Studio：レイヤーを右クリック →「フィラメント交換を追加」）
-- 既定の模様は「波紋」（大小の同心円のすき間を、円をよけて流れる波線で埋める）。`panel_style` で `eq` / `wave` / `grille` / `lines` / `relic` / `rune` / `stone` / `plain` にも切り替えられる（比較：`side_panel_concepts.png`、`side_panel_concepts_fantasy.png`）
+- 既定の模様は「波紋」（参考画像を分析した描画ルール：①一番下に、同じ形の波線を一定間隔で全面に引く → ②その上に大きな同心円（輪10本前後）を重ねて下の線を隠す → ③さらにその上に中（輪5〜6本）・小（輪3〜4本）の同心円を、下の円の縁にかぶせて重ねる。線の太さ・間隔は波線も輪も共通、円の中心は小さな点、上の円の外側にはふつうの線間と同じすき間を空けて下の線を断つ）。比較は `ripple_vs_reference.png`。`panel_style` で `eq` / `wave` / `grille` / `lines` / `relic` / `rune` / `stone` / `plain` にも切り替えられる（比較：`side_panel_concepts.png`、`side_panel_concepts_fantasy.png`）
+- 参考画像と同じ「金の地に黒い線」にするなら、**最初の 0.4mm を金（表の色）で刷り、そこで黒に替える**
 - リムと穴のすき間は 0.10mm（`plug_tol`）。緩ければ 0.05、固ければ 0.15 に
 - 付けると左右に 2.4mm ずつ厚くなる（幅 約143mm）。AG03 の収まる内寸は変わらない
 
