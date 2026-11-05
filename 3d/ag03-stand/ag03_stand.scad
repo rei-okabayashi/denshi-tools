@@ -475,6 +475,16 @@ module m5_support2d() intersection() {  // M5Stack の座面（傾斜面その�
     sil2d();
     union() { band(-1, S, -3, 0); band(S*0.45 - 8, S*0.45 + 8, -t_top, 0); }
 }
+// 機器の上側の空き：AG03 に合わせた傾斜の長さが余る部分を、前板の上端（lip_h）まで埋めて上面を面一にする
+module side_outline_raw2d() union() { sil2d(); guide2d(); }
+module kin_top2d() intersection() { side_outline_raw2d(); band(kin_h + dev_clr, S + 1, kin_riser - 1, lip_h); }
+module m5_top2d()  intersection() { side_outline_raw2d(); band(m5_h + dev_clr, S + 1, -1, lip_h); }
+notch_w = 36;                                          // 取り出し用の指掛けの幅 [mm]
+// 指掛け（機器の上端の中央）。両端を 45° の斜面にして、どちらの向きで印刷してもサポート不要
+module dev_notch(s0, h0, zc) hull() {
+    translate([0, 0, zc - notch_w/2 + 14]) linear_extrude(notch_w - 28) offset(r = 2) offset(delta = -2) band(s0 - 2, s0 + 12, h0, lip_h + 3);
+    translate([0, 0, zc - notch_w/2]) linear_extrude(notch_w) band(s0 - 2, s0 - 1.9, h0, lip_h + 3);
+}
 module chan_block2d() band(-lip_t, 6, -t_top, lip_h);   // 通り道の手前の角：Kindle の右下・M5Stack の左下の角を受ける
 module chan_rblock2d() band(118, S, -t_top, lip_h);     // 通り道の奥の受け台（カバーの奥側を受ける）
 
@@ -512,6 +522,9 @@ mz_bump = (ez_c0 + 3 + ez_end - g - frame_w)/2 - 4;   // （M5Stack 側は継ぎ
 
 module ext_solid() difference() { ext_solid_body(); cover_recess(); ext_cable_holes(); }
 module ext_cable_holes() {
+    // 機器を取り出すときの指掛け（上側を埋めた面の、機器の上端の中央）
+    dev_notch(kin_h + dev_clr, kin_riser + 0.3, ez_k0 + kin_w/2);     // 底は座面より 0.3mm 上（同じ高さにすると微小な辺ができる）
+    dev_notch(m5_h + dev_clr, 0.3, ez_m0 + m5_w/2);
     // 通り道の下の天井の穴：通り道から下段（M5Stack 側）へケーブルを落とす。仕切りの右から通り道の右端まで（P3 の上面まで抜く）
     translate([0, 0, ez_c0 + 3]) linear_extrude(chan_w - 3)
         translate([P(18, -t_top)[0], ceil_bot - 1]) square([rear_beam_x - 2 - P(18, -t_top)[0], t_ceil + 2]);
@@ -526,6 +539,8 @@ module ext_solid_body() {
     translate([0, 0, g])     linear_extrude(ez_c0 - g)          kin_support2d();
     translate([0, 0, ez_c0]) linear_extrude(chan_w)             { chan_block2d(); chan_rblock2d(); }
     translate([0, 0, ez_c1]) linear_extrude(ez_end - g - ez_c1) m5_support2d();
+    translate([0, 0, g - 1]) linear_extrude(ez_c0 - g + 1)      kin_top2d();     // Kindle の上側を面一に（側板に 1mm 重ねる）
+    translate([0, 0, ez_c1]) linear_extrude(ez_end - g - ez_c1 + 1) m5_top2d();  // M5Stack の上側を面一に（同上）
     translate([0, 0, ez_c0]) linear_extrude(3)                  ext_div2d();
     for (z = [kz_bump, mz_bump]) translate([0, 0, z - det_bw/2]) linear_extrude(det_bw) detent_bump2d();
 }
