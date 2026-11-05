@@ -476,18 +476,38 @@ module m5_support2d() {                // M5Stack の座面（傾斜面そのも
     band(S*0.45 - 8, S*0.45 + 8, -t_top, 0);
 }
 module chan_block2d() band(-lip_t, 6, -t_top, lip_h);   // 通り道の手前の角：Kindle の右下・M5Stack の左下の角を受ける
+module chan_rblock2d() band(118, S, -t_top, lip_h);     // 通り道の奥の受け台（カバーの奥側を受ける）
+
+// ケーブルカバー：通り道の上にかぶせて L字プラグとケーブルを隠す。手前・奥の受け台の溝に差し込むだけ（摩擦で留まる）
+cov_t   = 1.6;                 // カバーの厚み [mm]
+cov_s0  = 3;  cov_s1 = 121;    // カバーの範囲（傾斜に沿って）
+cov_clr = 0.3;                 // 通り道の壁（機器）とのすき間 [mm]
+cov_h0  = lip_h;               // カバーの下面の高さ（受け台の上面）。L字アダプタ（厚み約 7mm）の上に余裕を残す
+plug_w  = 16; plug_s = 2.0; plug_dp = 2.4;              // 差し込み部（幅・奥行・深さ）
+cov_W   = chan_w - 2*cov_clr;
+module cover_local() {          // u: 傾斜に沿って、v: 幅、w: 厚み方向（上面 w=0）
+    translate([0, 0, -cov_t]) linear_extrude(cov_t) offset(r = 2) offset(delta = -2) translate([cov_s0, 0]) square([cov_s1 - cov_s0, cov_W]);
+    for (u = [(cov_s0 + 6)/2 + 0.0, 119.5]) translate([u - plug_s/2, (cov_W - plug_w)/2, -cov_t - plug_dp]) cube([plug_s, plug_w, plug_dp + 0.01]);
+}
+module cover_placed() multmatrix([[cos(tilt), 0, -sin(tilt), -sin(tilt)*(cov_h0 + cov_t)],
+                                  [sin(tilt), 0,  cos(tilt), H0 + cos(tilt)*(cov_h0 + cov_t)],
+                                  [0, -1, 0, ez_c1 - cov_clr], [0, 0, 0, 1]]) cover_local();
+module cover_recess() for (u = [(cov_s0 + 6)/2, 119.5])                  // 受け台の溝（差し込み部より 0.2mm ずつ大きい）
+    translate([0, 0, ez_c0 + cov_clr + (cov_W - plug_w)/2 - 0.2]) linear_extrude(plug_w + 0.4)
+        band(u - plug_s/2 - 0.2, u + plug_s/2 + 0.2, cov_h0 - plug_dp - 0.2, cov_h0 + 0.01);
 // 通り道の奥の柱：通り道のパーツの手前側と奥の横桁をつなぐ（通り道の左端に幅 4mm だけ。残り 20mm はケーブルが通れる）
 module chan_post2d() intersection() { sil2d(); translate([rear_open_x - 3, ceil_bot]) square([3, 135 - ceil_bot]); }
 module ext_div2d() intersection() { sil2d(); translate([xL - 1, 0]) square([rear_open_x - xL + 1, ceil_top]); }  // 引き出しの仕切り
 kz_bump = (g + frame_w + ez_c0)/2 + 8;              // 抜け止めの山（引き出しを付けたとき用）
 mz_bump = (ez_c0 + 3 + ez_end - g - frame_w)/2 - 4;   // （M5Stack 側は継ぎ目を避けて中央寄り）
 
-module ext_solid() {
+module ext_solid() difference() { ext_solid_body(); cover_recess(); }
+module ext_solid_body() {
     linear_extrude(g + frame_w) frame2d();  linear_extrude(g) guide2d();                         // 左の枠（穴は共通規格）
     translate([0, 0, ez_end]) mirror([0, 0, 1]) { linear_extrude(g + frame_w) frame2d(); linear_extrude(g) guide2d(); }   // 右の枠
     linear_extrude(ez_end) ext_common2d();
     translate([0, 0, g])     linear_extrude(ez_c0 - g)          kin_support2d();
-    translate([0, 0, ez_c0]) linear_extrude(chan_w)             chan_block2d();
+    translate([0, 0, ez_c0]) linear_extrude(chan_w)             { chan_block2d(); chan_rblock2d(); }
     translate([0, 0, ez_c1]) linear_extrude(ez_end - g - ez_c1) m5_support2d();
     translate([0, 0, ez_c0]) linear_extrude(3)                  ext_div2d();
     translate([0, 0, ez_c0]) linear_extrude(4)                  chan_post2d();
@@ -532,6 +552,7 @@ module full_view() rotate([90, 0, 0]) {
         translate([0, 0, ez_end]) mirror([0, 0, 1]) panel_colored(face_col, accent_col);
         dev_on(ez_k0, kin_h, kin_t, kin_w, kin_riser, "#E8E6DF");
         dev_on(ez_m0, m5_h, m5_t, m5_w, 0, "#3A6FD0");
+        color("#262626") cover_placed();
     }
     %translate([0, 0, g + clr]) multmatrix([[cos(tilt), -sin(tilt), 0, 0], [sin(tilt), cos(tilt), 0, H0], [0, 0, 1, 0], [0, 0, 0, 1]])
         linear_extrude(dev_w) polygon([[0, 0], [dev_d, 0], [dev_d, dev_h_rear], [0, dev_h_front]]);
@@ -553,6 +574,7 @@ else if (part == "ext_p2")   translate([0, 0, -ez_cut1]) ext_p2();          // �
 else if (part == "ext_p3")   translate([0, 0, -ez_c0]) ext_p3();            // 増設台 3/4（ケーブルの通り道）
 else if (part == "ext_p4")   rotate([180, 0, 0]) translate([0, 0, -ez_end]) ext_p4();   // 増設台 4/4（M5Stack。右の外面を下にして印刷）
 else if (part == "ext_keys") translate([0, 0, 0.6]) ext_keys();             // 連結キー 3 個
+else if (part == "ext_cover") rotate([180, 0, 0]) cover_local();          // ケーブルカバー（上面を下にして印刷）
 else if (part == "full_view") full_view();
 else if (part == "fit_test") fit_test();
 else                         assembly();
