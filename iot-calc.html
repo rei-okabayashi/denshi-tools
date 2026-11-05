@@ -309,7 +309,7 @@
             <option value="8">8 bit（0〜255）</option>
             <option value="10">10 bit（0〜1023・Arduino Uno）</option>
             <option value="12" selected>12 bit（0〜4095・ESP32）</option>
-            <option value="16">16 bit（0〜65535・ADS1115 など）</option>
+            <option value="16">16 bit（0〜65535）</option>
           </select>
         </div>
         <div class="field">
@@ -367,7 +367,7 @@
         </div>
         <div class="field">
           <label for="i2c-cb">バス容量 C<sub>b</sub> <span class="sub">配線＋各デバイスの合計</span></label>
-          <div class="inrow"><input type="number" id="i2c-cb" value="100" step="any" min="1" inputmode="decimal"><span class="unit">pF</span></div>
+          <div class="inrow"><input type="number" id="i2c-cb" value="50" step="any" min="1" inputmode="decimal"><span class="unit">pF</span></div>
           <div class="chips" data-target="i2c-cb">
             <button class="chip" type="button" data-v="50">50pF（短い配線・1台）</button>
             <button class="chip" type="button" data-v="100">100pF</button>
@@ -390,6 +390,7 @@
       <ul>
         <li><b>下限</b>はデバイスが Low に引き下げられる電流で決まる：R<sub>min</sub> = (V<sub>CC</sub> − 0.4V) / I<sub>OL</sub>。</li>
         <li><b>上限</b>は立ち上がりの遅さで決まる：R<sub>max</sub> = t<sub>r</sub> / (0.8473 × C<sub>b</sub>)。配線が長い・台数が多いほど C<sub>b</sub> が増えて上限が下がる。</li>
+        <li>規格の 400pF は最悪値の上限。<b>短い配線で数台なら実際は数十 pF</b> 程度のことが多い。長い配線やケーブル延長で増える。</li>
         <li>センサー基板には 4.7k〜10kΩ のプルアップが<b>最初から載っていることが多い</b>。何台もつなぐと並列になって抵抗値が下がり、下限を割ることがある。</li>
       </ul>
     </div>
@@ -406,7 +407,7 @@
           <div class="inrow"><input type="number" id="bat-cap" value="2000" step="any" min="0" inputmode="decimal"><span class="unit">mAh</span></div>
           <div class="chips" data-target="bat-cap">
             <button class="chip" type="button" data-v="220">CR2032 ≈220</button>
-            <button class="chip" type="button" data-v="2000">単3×2 / 18650 小 ≈2000</button>
+            <button class="chip" type="button" data-v="2000">単3 アルカリ ≈2000</button>
             <button class="chip" type="button" data-v="3000">18650 ≈3000</button>
           </div>
         </div>
@@ -439,6 +440,7 @@
       <ul>
         <li>平均電流 = (起きている電流 × 起きている時間 ＋ スリープ電流 × 寝ている時間) / 周期。<b>「時間で重みをつけた平均」</b>。</li>
         <li>ESP32 チップ単体のディープスリープは 10µA 前後でも、<b>開発ボードは USB 変換 IC や電源 IC が電流を食う</b>ので数百µA〜数 mA になることがある。実測するのが確実。</li>
+        <li>電池を<b>直列</b>につなぐと電圧は増えるが<b>容量（mAh）は増えない</b>。容量を増やすのは並列。</li>
         <li>Wi-Fi の接続が一番電気を食う。<b>起きている時間を短くする</b>（接続を速くする、送信をまとめる）のが一番効く。</li>
       </ul>
     </div>
@@ -537,12 +539,13 @@ function calcLED(){
   if (vr <= 0) { out.innerHTML = invalid(`電源電圧 ${fx(vs)}V が V<sub>F</sub> ${fx(vf)}V 以下なので、この LED は点灯しません（抵抗以前の問題）。電源電圧を上げるか V<sub>F</sub> の低い LED を使います。`); return; }
   const r = vr / ifA;
   const r12 = nextUp(r, 'E12'), r24 = nearest(r, 'E24');
+  if (!r12) { out.innerHTML = invalid(`必要な抵抗が ${ohm(r)} と大きすぎて、手に入る抵抗（10MΩ まで）の範囲を超えています。電流の値を見直してください。`); return; }
   const iReal = vr / r12, p = iReal * iReal * r12;
   let h = `<div class="r-label">計算上の抵抗値</div><div class="r-big">${ohm(r)}</div>`;
   h += `<div class="r-grid">${kv('おすすめ（E12・1つ上）', ohm(r12), true)}${kv('そのときの電流', si(iReal, 'A'))}${kv('抵抗の消費電力', si(p, 'W'))}${kv('E24 で一番近い値', ohm(r24))}</div>`;
   h += formula([
     `抵抗にかかる電圧 = ${fx(vs)} − ${fx(vf)} = ${fx(vr)} V`,
-    `R = ${fx(vr)} V ÷ ${fx(ifA * 1000)} mA = ${ohm(r)}`,
+    `R = ${fx(vr)} V ÷ ${fx(ifA * 1000, 6)} mA = ${ohm(r)}`,
     `${ohm(r12)} を使うと I = ${fx(vr)} ÷ ${fx(r12)} = ${si(iReal, 'A')}`,
     `P = I² × R = (${si(iReal, 'A')})² × ${ohm(r12)} = ${si(p, 'W')}`,
   ]);
@@ -612,7 +615,7 @@ function calcDiv(){
 let adcMode = 'r2v';
 function calcADC(){
   const out = $('adc-out'), bits = parseInt($('adc-bits').value, 10), vref = num('adc-vref'), k = num('adc-k');
-  const max = Math.pow(2, bits) - 1, lsb = vref / Math.pow(2, bits);
+  const max = Math.pow(2, bits) - 1, lsb = vref / max;
   $('adc-raw-f').hidden = adcMode !== 'r2v';
   $('adc-v-f').hidden = adcMode !== 'v2r';
   $('adc-raw').max = max;
@@ -625,8 +628,9 @@ function calcADC(){
     h = `<div class="r-label">ピンの電圧</div><div class="r-big">${fx(v, 4)} <small>V</small></div>`;
     h += `<div class="r-grid">${k !== 1 ? kv('分圧前の元の電圧', fx(v * k, 4) + ' V', true) : ''}${kv('1 目盛り（1LSB）', si(lsb, 'V'))}${kv('満点の読み値', max)}</div>`;
     const lines = [`V = ${raw} ÷ ${max} × ${fx(vref)} = ${fx(v, 4)} V`];
-    if (k !== 1) lines.push(`元の電圧 = ${fx(v, 4)} × ${fx(k, 4)} = ${fx(v * k, 4)} V`);
-    lines.push(`1LSB = ${fx(vref)} ÷ 2^${bits} = ${si(lsb, 'V')}`);
+    if (k !== 1) lines.push(`元の電圧 = ${fx(v, 6)} × ${fx(k, 4)} = ${fx(v * k, 4)} V`);
+    lines.push(`1LSB = ${fx(vref)} ÷ ${max} = ${si(lsb, 'V')}`);
+    lines.push(`（教科書では ${fx(vref)} ÷ 2^${bits} と書くことも多い。差はごくわずか）`);
     h += formula(lines);
   } else {
     const vin = num('adc-v');
@@ -636,9 +640,9 @@ function calcADC(){
     h += `<div class="r-grid">${k !== 1 ? kv('ピンにかかる電圧', fx(vp, 4) + ' V', true) : ''}${kv('1 目盛り（1LSB）', si(lsb, 'V'))}${kv('満点の読み値', max)}</div>`;
     const lines = [];
     if (k !== 1) lines.push(`ピンの電圧 = ${fx(vin, 4)} ÷ ${fx(k, 4)} = ${fx(vp, 4)} V`);
-    lines.push(`読み値 = ${fx(vp, 4)} ÷ ${fx(vref)} × ${max} = ${fx(rawF, 5)} → ${raw}`);
+    lines.push(`読み値 = ${fx(vp, 6)} ÷ ${fx(vref)} × ${max} = ${fx(rawF, 5)} → ${raw > max ? max + '（上限に張り付き）' : raw}`);
     h += formula(lines);
-    if (rawF > max + 0.5) h += msg('bad', `ピンの電圧が基準電圧 ${fx(vref)}V を超えるので、読み値は ${max} に張り付きます。ESP32 なら壊れるおそれもあるので分圧してください。`);
+    if (rawF > max + 0.5) h += msg(vp > 3.3 ? 'bad' : 'warn', `ピンの電圧が基準電圧 ${fx(vref)}V を超えるので、読み値は ${max} に張り付きます。` + (vp > 3.3 ? 'しかも 3.3V を超えているので、ESP32 なら壊れるおそれがあります。分圧してください。' : '基準電圧（減衰設定）を上げるか、分圧してください。'));
   }
   h += msg('warn', 'ESP32 の ADC は直線からずれます。目安として使い、実機では analogReadMilliVolts() やテスターで補正してください。');
   out.innerHTML = h;
@@ -698,22 +702,24 @@ function calcBat(){
   const cap = num('bat-cap'), eff = num('bat-eff') / 100, ia = num('bat-ia'), ta = num('bat-ta');
   const is = num('bat-is') / 1000, tp = withUnit('bat-tp');
   if (!(cap > 0) || !(eff > 0 && eff <= 1) || !(ia >= 0) || !(ta >= 0) || !(is >= 0) || !(tp > 0)) {
-    out.innerHTML = invalid('すべての欄に 0 以上の数を入れてください（使える割合は 1〜100%）。'); return;
+    out.innerHTML = invalid('容量と間隔は正の数、電流と時間は 0 以上の数を入れてください（使える割合は 1〜100%）。'); return;
   }
   if (ta > tp) { out.innerHTML = invalid('起きている時間が起きる間隔より長くなっています。'); return; }
   const iavg = (ia * ta + is * (tp - ta)) / tp;
+  if (!(iavg > 0)) { out.innerHTML = invalid('電流がすべて 0 なので、電池は減りません（計算できません）。'); return; }
   const hours = cap * eff / iavg;
   const perDay = iavg * 24;
   const shareA = (ia * ta) / (ia * ta + is * (tp - ta) || 1);
   let h = `<div class="r-label">電池の持ち（目安）</div><div class="r-big">${fmtDur(hours)}</div>`;
   h += `<div class="r-grid">${kv('平均電流', si(iavg / 1000, 'A'), true)}${kv('1 日の消費', fx(perDay, 3) + ' mAh')}${kv('起きている時間の割合', fx(ta / tp * 100, 3) + ' %')}${kv('起きている間の消費の比率', fx(shareA * 100, 3) + ' %')}</div>`;
   h += formula([
-    `平均 = (${fx(ia)}mA × ${fx(ta)}s + ${fx(is * 1000)}µA × ${fx(tp - ta, 4)}s) ÷ ${fx(tp, 4)}s`,
+    `平均 = (${fx(ia)}mA × ${fx(ta)}s + ${fx(is * 1000)}µA × ${fx(tp - ta, 6)}s) ÷ ${fx(tp, 6)}s`,
     `     = ${si(iavg / 1000, 'A')}`,
     `持ち = ${fx(cap)}mAh × ${fx(eff * 100)}% ÷ ${si(iavg / 1000, 'A')} = ${fx(hours, 4)} 時間`,
   ]);
-  if (shareA > 0.5) h += msg('warn', `消費の ${fx(shareA * 100, 2)}% が起きている時間です。起きる時間を短くするか間隔を延ばすのが効きます。`);
+  if (shareA > 0.5) h += msg('warn', `消費の ${fx(shareA * 100, 2)}% が起きている時間です。起きている時間を短くするか、起きる間隔を延ばすのが効きます。`);
   else h += msg('warn', `消費の ${fx((1 - shareA) * 100, 2)}% がスリープ中です。スリープ電流（ボードの LDO や USB 変換 IC）を減らすのが効きます。`);
+  if (cap <= 300 && ia > 10) h += msg('bad', 'コイン電池（CR2032 など）は数 mA 程度しか流せません。Wi-Fi で 100mA 以上流れる ESP32 を直接動かすと電圧が下がってリセットします。ESP32 には単3・18650・LiPo を使いましょう。');
   h += msg('warn', '自己放電や電池の電圧が下がって動かなくなる分は含みません。実際はこれより短くなると考えてください。');
   out.innerHTML = h;
 }
