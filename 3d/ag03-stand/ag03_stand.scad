@@ -438,6 +438,107 @@ module fit_test() {
     }
 }
 
+// ============================================================
+//  増設台（Kindle Paperwhite 第10世代 横置き ＋ M5Stack Basic）
+//  ・AG03 台と同じ側面形状・同じ前の線（共通規格）。並びは左から AG03｜Kindle｜通り道｜M5Stack
+//  ・機器の前面は前板の上端（傾斜面から lip_h）にそろえる：Kindle は座面を持ち上げ、M5Stack はそのまま
+//  ・Kindle と M5Stack の間にケーブルの通り道（L字プラグ前提）。ケーブルは溝から台の中へ落とし、背面・底面の後ろの開口から出す
+//  ・下段は引き出しを後から付けられる空間（天井板・床板・仕切り・奥の止め・抜け止めの山）。今は引き出しなし
+//  ・AG03 台とは「連結キー」（側面の穴に両側から差し込むリング）でつなぐ。右端には波紋パネル（panel_b）を付けられる
+//  ・幅が 255mm あるので 4 分割（左｜Kindle｜通り道｜M5Stack）して印刷し、ダボでつなぐ。どれも下の面から立ち上がる形でサポート不要
+// ============================================================
+kin_w = 167; kin_h = 116; kin_t = 8.18;          // Kindle Paperwhite 第10世代（横置き：幅×高さ×厚み）
+m5_w = 54.1; m5_h = 54.1; m5_t = 17.6;            // M5Stack Basic（実測）
+dev_clr = 0.6;                                     // 機器と壁のすき間 [mm]
+chan_w  = 24;                                      // ケーブルの通り道の幅 [mm]（L字プラグ前提）
+kin_riser = lip_h - kin_t;                         // Kindle の座面の持ち上げ量（画面を前板の上端にそろえる）
+back_open_top = 95;                                // 背面の開口の上端（机から）[mm]
+
+// 幅方向の位置（増設台の左面＝AG03 台の右面が 0、右へ +）
+ez_k0  = g + dev_clr;                ez_k1 = ez_k0 + kin_w;
+ez_c0  = ez_k1 + dev_clr;            ez_c1 = ez_c0 + chan_w;
+ez_m0  = ez_c1 + dev_clr;            ez_m1 = ez_m0 + m5_w;
+ez_end = ez_m1 + dev_clr + g;
+ez_cut1 = 86;                                       // 印刷の分割位置：P1｜P2 = ez_cut1、P2｜P3 = ez_c0（通り道の左端）、P3｜P4 = ez_c1（右端）
+rear_open_x = dr_x1 + 3;                            // ここより後ろは床・天井なし（ケーブルの縦の通り道）
+
+module ext_floor2d()   intersection() { sil2d(); translate([xL - 1, -1]) square([rear_open_x - xL + 1, t_floor + 1]); }
+module ext_ceiling2d() intersection() { sil2d(); translate([P(10, -t_top)[0] - 2, ceil_bot]) square([rear_open_x - P(10, -t_top)[0] + 2, t_ceil]); }
+module ext_rib2d()     translate([dr_x1 + 0.3, t_floor - 0.01]) square([rear_open_x - dr_x1 - 0.3, ceil_bot - t_floor + 0.02]);   // 引き出し空間の奥の壁（床と天井をつなぎ、引き出しの奥の止めも兼ねる）
+module ext_back2d()    intersection() { back2d(); translate([-500, back_open_top]) square(1000); }
+module ext_common2d() { front_wall2d(); front_slope2d(); front_rung2d(); rear_rung2d(); ext_floor2d(); ext_ceiling2d(); ext_rib2d(); ext_back2d(); }
+module kin_support2d() {               // Kindle の座面（厚み 3mm の床）と、それを支える横桁（座面の高さまで持ち上げ）
+    band(0, S, kin_riser - 3, kin_riser);
+    for (r = [[-lip_t, 18], [S*0.45 - 8, S*0.45 + 8], [S - 30, S]]) band(r[0], r[1], -t_top, kin_riser);
+}
+module m5_support2d() {                // M5Stack の座面（傾斜面そのもの）
+    band(0, S, -3, 0);
+    band(S*0.45 - 8, S*0.45 + 8, -t_top, 0);
+}
+module chan_block2d() band(-lip_t, 6, -t_top, lip_h);   // 通り道の手前の角：Kindle の右下・M5Stack の左下の角を受ける
+// 通り道の奥の柱：通り道のパーツの手前側と奥の横桁をつなぐ（通り道の左端に幅 4mm だけ。残り 20mm はケーブルが通れる）
+module chan_post2d() intersection() { sil2d(); translate([rear_open_x - 3, ceil_bot]) square([3, 135 - ceil_bot]); }
+module ext_div2d() intersection() { sil2d(); translate([xL - 1, 0]) square([rear_open_x - xL + 1, ceil_top]); }  // 引き出しの仕切り
+kz_bump = (g + frame_w + ez_c0)/2 + 8;              // 抜け止めの山（引き出しを付けたとき用）
+mz_bump = (ez_c0 + 3 + ez_end - g - frame_w)/2 - 4;   // （M5Stack 側は継ぎ目を避けて中央寄り）
+
+module ext_solid() {
+    linear_extrude(g + frame_w) frame2d();  linear_extrude(g) guide2d();                         // 左の枠（穴は共通規格）
+    translate([0, 0, ez_end]) mirror([0, 0, 1]) { linear_extrude(g + frame_w) frame2d(); linear_extrude(g) guide2d(); }   // 右の枠
+    linear_extrude(ez_end) ext_common2d();
+    translate([0, 0, g])     linear_extrude(ez_c0 - g)          kin_support2d();
+    translate([0, 0, ez_c0]) linear_extrude(chan_w)             chan_block2d();
+    translate([0, 0, ez_c1]) linear_extrude(ez_end - g - ez_c1) m5_support2d();
+    translate([0, 0, ez_c0]) linear_extrude(3)                  ext_div2d();
+    translate([0, 0, ez_c0]) linear_extrude(4)                  chan_post2d();
+    for (z = [kz_bump, mz_bump]) translate([0, 0, z - det_bw/2]) linear_extrude(det_bw) detent_bump2d();
+}
+
+// 分割面のダボ（両側に材料がある位置）
+pegs_c1 = [[xL + 4.5, ceil_bot + 5.5, peg_d], [-1.8, ceil_bot + 5.5, peg_d],
+           concat(P(5, -5), [peg_d]), concat(P(13, -5), [peg_d]), concat(P(S*0.45, -5), [peg_d]),
+           concat(P(S - 25, -5), [peg_d]), concat(P(S - 12, -5), [peg_d])];
+pegs_c2 = [[xL + 4.5, ceil_bot + 5.5, peg_d], [-1.8, ceil_bot + 5.5, peg_d],
+           concat(P(9, -5), [peg_d]), concat(P(S - 25, -5), [peg_d]), concat(P(S - 12, -5), [peg_d])];
+pegs_c3 = pegs_c2;
+module slab(z0, z1) translate([-500, -500, z0 + 0.002]) cube([1000, 1000, z1 - z0 - 0.004]);   // 切り口ちょうどで始まる部品が厚み 0 の面を作らないよう、わずかに内側で切る
+module pegs_at(list, z)  for (p = list) translate([p[0], p[1], z - 0.01]) peg(p[2]);
+module holes_at(list, z) for (p = list) translate([p[0], p[1], z - 0.01]) peg_hole_up(p[2]);
+module peg_hole_up(d) let(dh = d + 2*fit_tol) {     // 下の面から上向きの穴（入口の面取りつき）
+    cylinder(d = dh, h = peg_len + 0.6);
+    cylinder(d1 = dh + 1.2, d2 = dh, h = 0.6);
+}
+module ext_p1() { intersection() { ext_solid(); slab(0, ez_cut1); } pegs_at(pegs_c1, ez_cut1); }
+module ext_p2() { difference() { intersection() { ext_solid(); slab(ez_cut1, ez_c0); } holes_at(pegs_c1, ez_cut1); } pegs_at(pegs_c2, ez_c0); }
+module ext_p3() difference() { intersection() { ext_solid(); slab(ez_c0, ez_c1); } holes_at(pegs_c2, ez_c0);
+    for (p = pegs_c3) translate([p[0], p[1], ez_c1 - peg_len - 0.6]) peg_hole(p[2]); }        // 上の面にも穴（P4 のダボが入る）
+module ext_p4() { intersection() { ext_solid(); slab(ez_c1, ez_end); }                       // 右の枠を下にして印刷するので、ダボは左向き
+    for (p = pegs_c3) translate([p[0], p[1], ez_c1 + 0.01]) mirror([0, 0, 1]) peg(p[2]); }
+
+// 連結キー：AG03 台の側面の穴と増設台の左の枠の穴に、両側から 6mm ずつ差し込むリング（3 個を 1 回で印刷）
+module ext_keys() {
+    c = 0.6;
+    linear_extrude(2*plug_len - 2*c) plug_rim2d(plug_tol);
+    translate([0, 0, -c]) linear_extrude(c + 0.01) plug_rim2d(plug_tol + 0.4);
+    translate([0, 0, 2*plug_len - 2*c - 0.01]) linear_extrude(c) plug_rim2d(plug_tol + 0.4);
+}
+
+// 全体の組み立て表示（AG03 台の右に増設台。両端に波紋パネル、Kindle・M5Stack・AG03 をゴースト表示）
+module full_view() rotate([90, 0, 0]) {
+    color("#2A2A2A") { half(true); translate([0, 0, 2*Zc]) mirror([0, 0, 1]) half(false); }
+    panel_colored(face_col, accent_col);
+    translate([0, 0, 2*Zc]) {
+        color("#2E2E2E") ext_solid();
+        translate([0, 0, ez_end]) mirror([0, 0, 1]) panel_colored(face_col, accent_col);
+        dev_on(ez_k0, kin_h, kin_t, kin_w, kin_riser, "#E8E6DF");
+        dev_on(ez_m0, m5_h, m5_t, m5_w, 0, "#3A6FD0");
+    }
+    %translate([0, 0, g + clr]) multmatrix([[cos(tilt), -sin(tilt), 0, 0], [sin(tilt), cos(tilt), 0, H0], [0, 0, 1, 0], [0, 0, 0, 1]])
+        linear_extrude(dev_w) polygon([[0, 0], [dev_d, 0], [dev_d, dev_h_rear], [0, dev_h_front]]);
+}
+module dev_on(z0, L, T, W, h0, col) color(col, 0.9) translate([0, 0, z0])
+    multmatrix([[cos(tilt), -sin(tilt), 0, 0], [sin(tilt), cos(tilt), 0, H0], [0, 0, 1, 0], [0, 0, 0, 1]]) translate([0, h0, 0]) cube([L, T, W]);
+
 if      (part == "half_a")   half(true);
 else if (part == "half_b")   mirror([1, 0, 0]) half(false);   // 裏返して外面を下にした向き
 else if (part == "drawer")   drawer();
@@ -447,5 +548,11 @@ else if (part == "panel_view") rotate([90, 0, 0]) { color("Gainsboro") half(true
     color("Goldenrod") translate([dr_x0, dr_y0, dr_z0]) multmatrix([[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]]) drawer();
     %translate([0, 0, g + clr]) multmatrix([[cos(tilt), -sin(tilt), 0, 0], [sin(tilt), cos(tilt), 0, H0], [0, 0, 1, 0], [0, 0, 0, 1]])
         linear_extrude(dev_w) polygon([[0, 0], [dev_d, 0], [dev_d, dev_h_rear], [0, dev_h_front]]); }
+else if (part == "ext_p1")   ext_p1();                                     // 増設台 1/4（左の枠を下にして印刷）
+else if (part == "ext_p2")   translate([0, 0, -ez_cut1]) ext_p2();          // 増設台 2/4（Kindle）
+else if (part == "ext_p3")   translate([0, 0, -ez_c0]) ext_p3();            // 増設台 3/4（ケーブルの通り道）
+else if (part == "ext_p4")   rotate([180, 0, 0]) translate([0, 0, -ez_end]) ext_p4();   // 増設台 4/4（M5Stack。右の外面を下にして印刷）
+else if (part == "ext_keys") translate([0, 0, 0.6]) ext_keys();             // 連結キー 3 個
+else if (part == "full_view") full_view();
 else if (part == "fit_test") fit_test();
 else                         assembly();
