@@ -491,16 +491,17 @@ module cover_local() {          // u: 傾斜に沿って、v: 幅、w: 厚み方
         translate([0, 0, -cov_t]) linear_extrude(cov_t) offset(r = 2) offset(delta = -2) translate([cov_s0, 0]) square([cov_s1 - cov_s0, cov_W]);
         translate([cov_s0 + 7, 2.5, -cov_t - 1]) cube([cov_s1 - cov_s0 - 14, cov_W - 5, cov_relief + 1]);   // 裏のくぼみ
     }
+    translate([cov_s0 + 6, cov_W/2 - 1.2, -cov_t]) cube([cov_s1 - cov_s0 - 12, 2.4, cov_t]);   // 中央の補強リブ（たわみ止め）
     for (u = [(cov_s0 + 6)/2 + 0.0, 119.5]) translate([u - plug_s/2, (cov_W - plug_w)/2, -cov_t - plug_dp]) cube([plug_s, plug_w, plug_dp + 0.01]);
 }
 module cover_placed() multmatrix([[cos(tilt), 0, -sin(tilt), -sin(tilt)*(cov_h0 + cov_t)],
                                   [sin(tilt), 0,  cos(tilt), H0 + cos(tilt)*(cov_h0 + cov_t)],
                                   [0, -1, 0, ez_c1 - cov_clr], [0, 0, 0, 1]]) cover_local();
 module cover_recess() {
-    for (u = [(cov_s0 + 6)/2, 119.5])                                      // 受け台の溝（差し込み部より 0.2mm ずつ大きい）
-        translate([0, 0, ez_c0 + cov_clr + (cov_W - plug_w)/2 - 0.2]) linear_extrude(plug_w + 0.4)
-            band(u - plug_s/2 - 0.2, u + plug_s/2 + 0.2, cov_h0 - plug_dp - 0.2, cov_h0 + 0.01);
-    translate([0, 0, ez_c0 + 0.01]) linear_extrude(chan_w - 0.02) {        // カバーの両端がはまる段（カバーの厚み分だけ下げる）
+    for (u = [(cov_s0 + 6)/2, 119.5])                                      // 受け台の溝（差し込み部より fit_tol ずつ大きい＝ダボと同じ締まり具合）
+        translate([0, 0, ez_c0 + cov_clr + (cov_W - plug_w)/2 - fit_tol]) linear_extrude(plug_w + 2*fit_tol)
+            band(u - plug_s/2 - fit_tol, u + plug_s/2 + fit_tol, cov_h0 - plug_dp - 0.3, cov_h0 + 0.01);
+    translate([0, 0, ez_c0 - 1]) linear_extrude(chan_w + 2) {              // カバーの両端がはまる段（カバーの厚み分だけ下げる）。通り道より少し広く切って膜を残さない
         band(cov_s0 - 0.3, 6.01, cov_h0, lip_h + 1);
         band(117.99, cov_s1 + 0.3, cov_h0, lip_h + 1);
     }
