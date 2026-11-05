@@ -482,19 +482,29 @@ module chan_rblock2d() band(118, S, -t_top, lip_h);     // 通り道の奥の受
 cov_t   = 1.6;                 // カバーの厚み [mm]
 cov_s0  = 3;  cov_s1 = 121;    // カバーの範囲（傾斜に沿って）
 cov_clr = 0.3;                 // 通り道の壁（機器）とのすき間 [mm]
-cov_h0  = lip_h;               // カバーの下面の高さ（受け台の上面）。L字アダプタ（厚み約 7mm）の上に余裕を残す
+cov_h0  = lip_h - cov_t;       // カバーの下面の高さ：上面が前板の上端（lip_h）と面一になるよう、受け台を一段下げてはめ込む
+cov_relief = 0.8;              // カバー裏の中央のくぼみ（L字アダプタの逃げ）[mm]
 plug_w  = 16; plug_s = 2.0; plug_dp = 2.4;              // 差し込み部（幅・奥行・深さ）
 cov_W   = chan_w - 2*cov_clr;
 module cover_local() {          // u: 傾斜に沿って、v: 幅、w: 厚み方向（上面 w=0）
-    translate([0, 0, -cov_t]) linear_extrude(cov_t) offset(r = 2) offset(delta = -2) translate([cov_s0, 0]) square([cov_s1 - cov_s0, cov_W]);
+    difference() {
+        translate([0, 0, -cov_t]) linear_extrude(cov_t) offset(r = 2) offset(delta = -2) translate([cov_s0, 0]) square([cov_s1 - cov_s0, cov_W]);
+        translate([cov_s0 + 7, 2.5, -cov_t - 1]) cube([cov_s1 - cov_s0 - 14, cov_W - 5, cov_relief + 1]);   // 裏のくぼみ
+    }
     for (u = [(cov_s0 + 6)/2 + 0.0, 119.5]) translate([u - plug_s/2, (cov_W - plug_w)/2, -cov_t - plug_dp]) cube([plug_s, plug_w, plug_dp + 0.01]);
 }
 module cover_placed() multmatrix([[cos(tilt), 0, -sin(tilt), -sin(tilt)*(cov_h0 + cov_t)],
                                   [sin(tilt), 0,  cos(tilt), H0 + cos(tilt)*(cov_h0 + cov_t)],
                                   [0, -1, 0, ez_c1 - cov_clr], [0, 0, 0, 1]]) cover_local();
-module cover_recess() for (u = [(cov_s0 + 6)/2, 119.5])                  // 受け台の溝（差し込み部より 0.2mm ずつ大きい）
-    translate([0, 0, ez_c0 + cov_clr + (cov_W - plug_w)/2 - 0.2]) linear_extrude(plug_w + 0.4)
-        band(u - plug_s/2 - 0.2, u + plug_s/2 + 0.2, cov_h0 - plug_dp - 0.2, cov_h0 + 0.01);
+module cover_recess() {
+    for (u = [(cov_s0 + 6)/2, 119.5])                                      // 受け台の溝（差し込み部より 0.2mm ずつ大きい）
+        translate([0, 0, ez_c0 + cov_clr + (cov_W - plug_w)/2 - 0.2]) linear_extrude(plug_w + 0.4)
+            band(u - plug_s/2 - 0.2, u + plug_s/2 + 0.2, cov_h0 - plug_dp - 0.2, cov_h0 + 0.01);
+    translate([0, 0, ez_c0 + 0.01]) linear_extrude(chan_w - 0.02) {        // カバーの両端がはまる段（カバーの厚み分だけ下げる）
+        band(cov_s0 - 0.3, 6.01, cov_h0, lip_h + 1);
+        band(117.99, cov_s1 + 0.3, cov_h0, lip_h + 1);
+    }
+}
 // 通り道の奥の柱：通り道のパーツの手前側と奥の横桁をつなぐ（通り道の左端に幅 4mm だけ。残り 20mm はケーブルが通れる）
 module chan_post2d() intersection() { sil2d(); translate([rear_open_x - 3, ceil_bot]) square([3, 135 - ceil_bot]); }
 module ext_div2d() intersection() { sil2d(); translate([xL - 1, 0]) square([rear_open_x - xL + 1, ceil_top]); }  // 引き出しの仕切り
