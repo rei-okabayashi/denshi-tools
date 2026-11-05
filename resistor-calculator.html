@@ -179,7 +179,14 @@
   .chip-name { font-size: .86rem; color: var(--text); font-weight: 600; min-width: 1.8em; }
   .chip-val { font-family: var(--mono); font-size: .82rem; color: var(--text-dim); margin-left: auto; }
 
-  .band-drop { cursor: crosshair; }
+  .band-drop { cursor: pointer; }
+  .band-drop:focus { outline: none; }
+  .band-drop:focus-visible { stroke: #A54E31; stroke-width: 3.5; }
+  .color-chip { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .band-drop { -webkit-tap-highlight-color: transparent; }
+  .color-chip:focus-visible { outline: 2.5px solid var(--accent-ink); outline-offset: 2px; }
+  .band-status { font-size: .8rem; color: var(--text-dim); min-height: 1.3em; text-align: center; }
+  .band-status.err { color: var(--error); font-weight: 600; }
 
   footer {
     font-size: .72rem; color: var(--text-dim); text-align: center;
@@ -218,14 +225,16 @@
   <div class="resistor-area">
     <svg id="resistor-svg" width="500" height="120" viewBox="0 0 500 120"></svg>
     <div id="band-labels" class="band-label-row"></div>
+    <p id="band-status" class="band-status" aria-live="polite"></p>
   </div>
 
   <div class="middle-row">
     <div class="hint-panel">
       <h2>使い方</h2>
       <ol>
-        <li>下のパレットから<span>色チップをドラッグ</span></li>
-        <li>抵抗の帯ゾーンに<span>ドロップ</span></li>
+        <li>下のパレットの<span>色をタップ</span>（PCはドラッグでも可）</li>
+        <li>色は<span>選択中の帯</span>に入り、次の帯へ進む</li>
+        <li>帯をタップすると<span>その帯を選び直せる</span></li>
         <li>全帯を埋めると<span>抵抗値を表示</span></li>
         <li>金・銀は<span>乗数帯・許容差帯専用</span></li>
       </ol>
@@ -244,7 +253,7 @@
   </div>
 
   <div class="palette-area">
-    <h2>カラーパレット — ドラッグして帯へ</h2>
+    <h2>カラーパレット — タップ（またはドラッグ）で帯へ</h2>
     <div id="palette-grid" class="palette-grid"></div>
   </div>
 </main>
@@ -273,6 +282,7 @@ let bandMode = 4;
 let displayUnit = 'kΩ';
 let bands = [];
 let draggingColor = null;
+let activeBand = 0;   // タップ/キーボードで色を入れる先の帯
 
 // SVG定数
 const SVG_W = 500, SVG_H = 120;
@@ -374,7 +384,12 @@ function renderSVG() {
       fillAttr   = `fill="rgba(190,90,56,0.12)"`;
       strokeAttr = `stroke="rgba(190,90,56,0.55)" stroke-width="1.5" stroke-dasharray="3 2.5"`;
     }
-    html += `<rect id="${id}" x="${bx}" y="${BY-4}" width="${BAND_W}" height="${END_HH*2+8}" ${fillAttr} ${strokeAttr} class="band-drop" data-index="${i}"/>`;
+    if (i === activeBand) {
+      strokeAttr = `stroke="#BE5A38" stroke-width="3"`;
+      if (!name) fillAttr = `fill="rgba(190,90,56,0.30)"`;
+    }
+    const state = name ? name : '未設定';
+    html += `<rect id="${id}" x="${bx}" y="${BY-4}" width="${BAND_W}" height="${END_HH*2+8}" ${fillAttr} ${strokeAttr} class="band-drop" data-index="${i}" tabindex="0" role="button" aria-label="${meta[i].label}の帯（${state}）${i === activeBand ? '・選択中' : ''}"/>`;
   }
   html += `</g>`;
 
@@ -394,11 +409,16 @@ function renderSVG() {
       el.setAttribute('fill', bands[idx] ? el.getAttribute('fill') : 'rgba(190,90,56,0.28)');
     });
     el.addEventListener('dragleave', () => restoreBandStyle(el, idx));
+    el.addEventListener('click', () => selectBand(idx));
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectBand(idx, true); }
+    });
     el.addEventListener('drop', e => {
       e.preventDefault();
       restoreBandStyle(el, idx);
       if (!draggingColor) return;
       if (tryDropBand(idx, draggingColor)) {
+        activeBand = nextEmptyBand(idx);
         renderSVG(); renderLabels(); calculate();
       } else {
         flashError(el, idx);
@@ -407,9 +427,56 @@ function renderSVG() {
   }
 
   renderLabels();
+  updateStatus();
+}
+
+/* ── タップ / キーボード操作（ドラッグできないスマホ・キーボード向け） ── */
+function nextEmptyBand(from) {
+  const n = bands.length;
+  for (let k = 1; k <= n; k++) {
+    const j = (from + k) % n;
+    if (!bands[j]) return j;
+  }
+  return Math.min(from + 1, n - 1);   // 全部埋まっていたら右隣へ（最後の帯ならそのまま）
+}
+
+function selectBand(idx, keepFocus) {
+  activeBand = idx;
+  renderSVG();
+  if (keepFocus) document.getElementById(`band-${idx}`).focus();
+}
+
+function placeColor(colorName) {
+  const idx = activeBand;
+  if (tryDropBand(idx, colorName)) {
+    activeBand = nextEmptyBand(idx);
+    renderSVG(); calculate();
+  } else {
+    const meta = getBandMeta(bandMode);
+    flashError(document.getElementById(`band-${idx}`), idx);
+    updateStatus(`${colorName}は「${meta[idx].label}」の帯には使えません`);
+  }
+}
+
+function updateStatus(err) {
+  const el = document.getElementById('band-status');
+  if (!el) return;
+  const meta = getBandMeta(bandMode);
+  if (err) { el.textContent = '⚠ ' + err; el.classList.add('err'); return; }
+  el.classList.remove('err');
+  el.textContent = bands.every(b => b)
+    ? `全帯セット完了。帯をタップすると選び直せます（選択中: ${meta[activeBand].label}）`
+    : `選択中: ${meta[activeBand].label} ― 下の色をタップ（PCはドラッグも可）`;
 }
 
 function restoreBandStyle(el, idx) {
+  if (idx === activeBand) {
+    el.setAttribute('stroke', '#BE5A38');
+    el.setAttribute('stroke-width', '3');
+    el.removeAttribute('stroke-dasharray');
+    if (!bands[idx]) el.setAttribute('fill', 'rgba(190,90,56,0.30)');
+    return;
+  }
   if (bands[idx]) {
     el.setAttribute('stroke', 'rgba(0,0,0,0.22)');
     el.setAttribute('stroke-width', '0.8');
@@ -542,6 +609,13 @@ function makeChip(color, valText) {
   div.className = 'color-chip' + (isGold?' is-gold':isSilver?' is-silver':'');
   div.draggable = true;
   div.dataset.colorName = color.name;
+  div.tabIndex = 0;
+  div.setAttribute('role', 'button');
+  div.setAttribute('aria-label', `${color.name}（${valText}）を選択中の帯に入れる`);
+  div.addEventListener('click', () => placeColor(color.name));
+  div.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); placeColor(color.name); }
+  });
 
   const swatch = document.createElement('div');
   swatch.className = 'chip-swatch' + (isGold?' is-gold':isSilver?' is-silver':'');
@@ -567,6 +641,7 @@ function makeChip(color, valText) {
     draggingColor = color.name;
     div.classList.add('dragging');
     e.dataTransfer.effectAllowed = 'copy';
+    e.dataTransfer.setData('text/plain', color.name);   // Firefox はこれがないとドラッグが始まらない
   });
   div.addEventListener('dragend', () => {
     div.classList.remove('dragging');
@@ -578,6 +653,7 @@ function makeChip(color, valText) {
 function setBandMode(n) {
   bandMode = n;
   bands = new Array(n).fill(null);
+  activeBand = 0;
   document.getElementById('btn4').classList.toggle('active', n === 4);
   document.getElementById('btn5').classList.toggle('active', n === 5);
   renderSVG();
@@ -586,6 +662,7 @@ function setBandMode(n) {
 
 function resetAll() {
   bands = new Array(bandMode).fill(null);
+  activeBand = 0;
   renderSVG();
   showPlaceholder();
 }
