@@ -18,6 +18,13 @@ YAMAHA AG03（初代。AG03MK2 にも切替可）を **底面40°** に傾けて
 
 ![side](preview_side.png) ![front](preview_stand_front.png) ![back](preview_stand_back.png) ![open](preview_front.png) ![drawer](preview_drawer.png)
 
+## 3Dビューア
+
+`viewer/index.html` をブラウザで開くと、全パーツを組み立てた状態（分解表示・色分け・部品ごとの表示切替・クリックで寸法表示）と、印刷用 STL を A1 mini のベッド上で、ぐりぐり回して見られる。
+
+- GitHub Pages などの Web サーバー経由で開く（ファイルを直接開くとブラウザの制限で STL を読めない。その場合は STL を画面にドロップすれば表示できる）
+- STL を変えたら `bash tools/export_viewer.sh` でビューア用の STL（`viewer/stl/`）を書き出し直す
+
 ## ファイル
 
 | ファイル | 内容 |
@@ -46,7 +53,7 @@ YAMAHA AG03（初代。AG03MK2 にも切替可）を **底面40°** に傾けて
 
 AG03 台の右に連結して、左から **AG03｜Kindle Paperwhite（第10世代・横置き）｜ケーブルの通り道｜M5Stack Basic** を同じ 40° で並べる。
 
-![full](preview_full_front.png) ![back](preview_full_back.png) ![bottom](preview_full_bottom.png) ![cover](preview_cable_cover.png)
+![full](preview_full_front.png) ![back](preview_full_back.png) ![cover](preview_cable_cover.png)
 
 - **共通規格**：側面の形・前の線（機器の手前下端＝机から55mm）・前板の高さ・天井板・床板・側面の穴はすべて AG03 台と同じ。違うのは幅と機器の座り方だけ
 - **機器の前面は前板の上端にそろえる**：Kindle（厚み8.2mm）は座面を 8.8mm 持ち上げ、M5Stack（厚み17.6mm）はそのまま置く

@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AG03 スタンド 3Dビューア</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;700&display=swap">
+<style>
+/* レイアウト：3D を主役に全面表示、操作パネルは右（スマホでは下）。工房のプリンター画面のような落ち着いたグラファイト基調 */
+:root {
+  --bg: #eef0f2;
+  --panel: #ffffff;
+  --panel-2: #f5f6f8;
+  --fg: #1c2127;
+  --muted: #5d6773;
+  --line: #d9dde2;
+  --accent: #d2601a;
+  --accent-ink: #ffffff;
+  --scene: #e3e6ea;
+  --font-ui: "IBM Plex Sans JP", "Hiragino Sans", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --radius: 8px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15181c; --panel: #1d2126; --panel-2: #23282e; --fg: #e7eaee; --muted: #9aa4af;
+    --line: #2f353c; --accent: #f08240; --accent-ink: #1a1208; --scene: #1a1e23; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15181c; --panel: #1d2126; --panel-2: #23282e; --fg: #e7eaee; --muted: #9aa4af;
+  --line: #2f353c; --accent: #f08240; --accent-ink: #1a1208; --scene: #1a1e23; color-scheme: dark;
+}
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-ui); font-size: 14px;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+header {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;
+  padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  border-bottom: 1px solid var(--line); background: var(--panel);
+}
+header h1 { font-size: 16px; font-weight: 700; margin: 0; letter-spacing: 0.02em; text-wrap: balance; }
+header .sub { color: var(--muted); font-size: 12px; }
+.tabs { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px; margin-left: auto; background: var(--panel-2); }
+.tabs button { border: 0; background: transparent; color: var(--muted); font: inherit; padding: 5px 14px; border-radius: 999px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 500; }
+main { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; }
+#stage { position: relative; min-width: 0; min-height: 0; background: var(--scene); }
+#stage canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.overlay {
+  position: absolute; left: 12px; bottom: 12px; right: 12px; display: flex; flex-wrap: wrap; gap: 6px; pointer-events: none;
+}
+.overlay > * { pointer-events: auto; }
+.chipbtn {
+  border: 1px solid var(--line); background: var(--panel); color: var(--fg); font: inherit; font-size: 12px;
+  padding: 5px 10px; border-radius: 999px; cursor: pointer;
+}
+.chipbtn:hover { border-color: var(--accent); }
+.status {
+  position: absolute; top: 12px; left: 12px; right: 12px; font-size: 12px; color: var(--muted); pointer-events: none;
+  font-family: var(--font-data);
+}
+aside {
+  border-left: 1px solid var(--line); background: var(--panel); overflow-y: auto; min-width: 0;
+  padding: 14px 16px 20px; display: flex; flex-direction: column; gap: 18px;
+}
+aside h2 { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 6px; }
+.group { display: flex; flex-direction: column; gap: 2px; }
+.group-title { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; margin-top: 4px; }
+.row {
+  display: grid; grid-template-columns: auto 12px minmax(0, 1fr) auto; align-items: center; gap: 8px;
+  padding: 4px 6px; border-radius: 6px; cursor: pointer;
+}
+.row:hover { background: var(--panel-2); }
+.row.sel { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.row input { margin: 0; accent-color: var(--accent); }
+.sw { width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--line); }
+.row .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row .meta { font-family: var(--font-data); font-size: 11px; color: var(--muted); }
+.ctl { display: flex; flex-direction: column; gap: 8px; }
+.ctl label { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ctl input[type="range"] { width: 100%; accent-color: var(--accent); }
+.seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.seg button { flex: 1 1 auto; }
+.info {
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; background: var(--panel-2);
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; font-size: 12px;
+}
+.info dt { color: var(--muted); }
+.info dd { margin: 0; font-family: var(--font-data); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.note { font-size: 12px; color: var(--muted); line-height: 1.6; margin: 0; }
+.fit-ok { color: #2f8f4e; }
+.fit-ng { color: #c2412d; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#drop { position: absolute; inset: 0; display: grid; place-items: center; background: color-mix(in srgb, var(--accent) 18%, transparent);
+  border: 2px dashed var(--accent); font-weight: 700; }
+@media (max-width: 760px) {
+  body { overflow: auto; }
+  main { grid-template-columns: minmax(0, 1fr); grid-template-rows: 58vh auto; }
+  aside { border-left: 0; border-top: 1px solid var(--line); overflow: visible;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .tabs { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>AG03 スタンド 3Dビューア</h1>
+    <div class="sub">AG03（初代）40° スタンド＋Kindle Paperwhite／M5Stack 増設台</div>
+  </div>
+  <div class="tabs" role="tablist" aria-label="表示">
+    <button id="tab-asm" role="tab" aria-selected="true">組み立て</button>
+    <button id="tab-print" role="tab" aria-selected="false">印刷用STL</button>
+  </div>
+</header>
+<main>
+  <div id="stage">
+    <div class="status" id="status">読み込み中…</div>
+    <div class="overlay" id="views">
+      <button class="chipbtn" data-view="iso">斜め前</button>
+      <button class="chipbtn" data-view="front">正面</button>
+      <button class="chipbtn" data-view="side">真横</button>
+      <button class="chipbtn" data-view="top">上</button>
+      <button class="chipbtn" data-view="back">背面</button>
+      <button class="chipbtn" data-view="bottom">底</button>
+    </div>
+    <div id="drop" hidden>STL をここにドロップ</div>
+  </div>
+  <aside>
+    <section id="asm-panel">
+      <h2>部品</h2>
+      <div id="parts"></div>
+    </section>
+    <section id="print-panel" hidden>
+      <h2>印刷用STL</h2>
+      <p class="note">印刷する向きのまま、Bambu Lab A1 mini のベッド（180 mm 角）に置いて表示します。</p>
+      <div id="prints"></div>
+    </section>
+    <section class="ctl" id="ctl-asm">
+      <h2>表示</h2>
+      <label for="explode">分解 <span class="meta" id="explode-val">0%</span></label>
+      <input type="range" id="explode" min="0" max="100" value="0">
+      <div class="seg">
+        <button class="chipbtn" id="color-mode">黒（実物の色）にする</button>
+        <button class="chipbtn" id="show-all">すべて表示</button>
+      </div>
+    </section>
+    <section>
+      <h2>選んだ部品</h2>
+      <dl class="info" id="info"><dt>部品</dt><dd>3D の部品をクリックすると寸法を表示</dd></dl>
+    </section>
+    <section>
+      <h2>操作</h2>
+      <p class="note">ドラッグで回転、右ドラッグ（2本指）で移動、ホイール（ピンチ）で拡大縮小。部品名をクリックするとその部品に寄ります。手元の STL を画面にドロップして見ることもできます。</p>
+    </section>
+  </aside>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/STLLoader.js"></script>
+<script>
+(() => {
+  // 組み立て位置の部品（OpenSCAD の座標そのまま：x=手前→奥、y=右→左が負、z=上）
+  const ASM = [
+    { g: "AG03 台", items: [
+      { id: "ag_a", name: "パーツA（左）", file: "a_ag_a.stl", color: "#3b4652", rank: 1 },
+      { id: "ag_b", name: "パーツB（右）", file: "a_ag_b.stl", color: "#4a5663", rank: 2 },
+      { id: "ag_drawer", name: "引き出し", file: "a_ag_drawer.stl", color: "#b9862f", rank: 1.5, pull: 1 },
+    ]},
+    { g: "増設台", items: [
+      { id: "ext_p1", name: "1/4 左の枠", file: "a_ext_p1.stl", color: "#3d5a66", rank: 3 },
+      { id: "ext_p2", name: "2/4 Kindle", file: "a_ext_p2.stl", color: "#4b6b78", rank: 4 },
+      { id: "ext_p3", name: "3/4 ケーブルの通り道", file: "a_ext_p3.stl", color: "#3d5a66", rank: 5 },
+      { id: "ext_p4", name: "4/4 M5Stack", file: "a_ext_p4.stl", color: "#4b6b78", rank: 6 },
+      { id: "ext_cover", name: "ケーブルカバー", file: "a_ext_cover.stl", color: "#d2601a", rank: 5, lift: 1 },
+      { id: "ext_keys", name: "連結キー ×3", file: "a_ext_keys.stl", color: "#c9a227", rank: 2.5 },
+    ]},
+    { g: "側面パネル（波紋）", items: [
+      { id: "panel_l", name: "左パネル", file: "a_panel_l.stl", color: "#2b2f35", rank: 0 },
+      { id: "panel_r", name: "右パネル", file: "a_panel_r.stl", color: "#2b2f35", rank: 7 },
+    ]},
+    { g: "機器（半透明）", items: [
+      { id: "dev_ag03", name: "AG03", file: "a_dev_ag03.stl", color: "#9fb0c2", rank: 1.5, lift: 1, ghost: true },
+      { id: "dev_kindle", name: "Kindle Paperwhite", file: "a_dev_kindle.stl", color: "#f3f1ea", rank: 3.5, lift: 1, ghost: true },
+      { id: "dev_m5", name: "M5Stack Basic", file: "a_dev_m5.stl", color: "#3a6fd0", rank: 6, lift: 1, ghost: true },
+    ]},
+  ];
+  const PRINTS = [
+    ["half_a", "AG03 台 パーツA"], ["half_b", "AG03 台 パーツB"], ["drawer", "引き出し"], ["fit_test", "圧入テスト片"],
+    ["panel_a", "側面パネル（左）"], ["panel_b", "側面パネル（右）"],
+    ["ext_p1", "増設台 1/4"], ["ext_p2", "増設台 2/4"], ["ext_p3", "増設台 3/4"], ["ext_p4", "増設台 4/4"],
+    ["ext_cover", "ケーブルカバー"], ["ext_keys", "連結キー ×3"],
+  ];
+  const BED = 180;
+
+  const $ = (s) => document.querySelector(s);
+  const stage = $("#stage"), statusEl = $("#status");
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  stage.appendChild(renderer.domElement);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, 1, 5000);
+  camera.up.set(0, 0, 1);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x445566, 0.75));
+  const key = new THREE.DirectionalLight(0xffffff, 0.75); key.position.set(-300, 250, 500); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xffffff, 0.35); rim.position.set(400, -300, 200); scene.add(rim);
+
+  const asmGroup = new THREE.Group(), printGroup = new THREE.Group(), dropGroup = new THREE.Group();
+  scene.add(asmGroup, printGroup, dropGroup);
+  printGroup.visible = false;
+  const desk = new THREE.Mesh(new THREE.PlaneGeometry(900, 600), new THREE.MeshStandardMaterial({ color: 0x888888, transparent: true, opacity: 0.12 }));
+  desk.position.set(60, -200, -0.2); asmGroup.add(desk);
+  const bedGrid = new THREE.GridHelper(BED, 18, 0xd2601a, 0x888888);
+  bedGrid.rotation.x = Math.PI / 2; bedGrid.position.set(BED / 2, BED / 2, 0); printGroup.add(bedGrid);
+
+  // 背景色をテーマのトークンに合わせる
+  function syncTheme() {
+    const c = getComputedStyle(document.documentElement).getPropertyValue("--scene").trim() || "#e3e6ea";
+    renderer.setClearColor(new THREE.Color(c));
+  }
+  syncTheme();
+  try { matchMedia("(prefers-color-scheme: dark)").addEventListener("change", syncTheme); } catch (e) {}
+  new MutationObserver(syncTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  function resize() {
+    const r = stage.getBoundingClientRect();
+    renderer.setSize(r.width, r.height, false);
+    camera.aspect = r.width / Math.max(r.height, 1); camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(stage); resize();
+
+  const loader = new THREE.STLLoader();
+  const meshes = {};          // id -> mesh（組み立て）
+  let blackMode = false, mode = "asm", selected = null;
+
+  function makeMat(item) {
+    return new THREE.MeshStandardMaterial({
+      color: blackMode && !item.ghost ? 0x2a2d31 : item.color, roughness: 0.75, metalness: 0.05,
+      transparent: !!item.ghost, opacity: item.ghost ? 0.28 : 1, depthWrite: !item.ghost,
+    });
+  }
+  // STL を読む。window.STL_B64 が true のとき（claude.ai での公開版）は base64 テキスト（.stl.txt）から復元する
+  function load(url) {
+    if (window.STL_B64) {
+      return fetch(url + ".txt").then((r) => { if (!r.ok) throw new Error(r.status); return r.text(); }).then((t) => {
+        const bin = atob(t.trim()), buf = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+        return loader.parse(buf.buffer);
+      });
+    }
+    return fetch(url).then((r) => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); }).then((b) => loader.parse(b));
+  }
+  function fmt(v) { return v.toFixed(1); }
+  function sizeOf(obj) { const b = new THREE.Box3().setFromObject(obj); const s = new THREE.Vector3(); b.getSize(s); return [b, s]; }
+
+  // 部品リスト
+  const partsEl = $("#parts");
+  ASM.forEach((grp) => {
+    const box = document.createElement("div"); box.className = "group";
+    const t = document.createElement("div"); t.className = "group-title";
+    const gcb = document.createElement("input"); gcb.type = "checkbox"; gcb.checked = true; gcb.id = "g-" + grp.g;
+    gcb.addEventListener("change", () => grp.items.forEach((it) => { const cb = $("#cb-" + it.id); cb.checked = gcb.checked; setVis(it.id, gcb.checked); }));
+    t.append(gcb, document.createTextNode(grp.g)); box.append(t);
+    grp.items.forEach((it) => {
+      const row = document.createElement("div"); row.className = "row"; row.id = "row-" + it.id;
+      const cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = true; cb.id = "cb-" + it.id;
+      cb.addEventListener("click", (e) => e.stopPropagation());
+      cb.addEventListener("change", () => setVis(it.id, cb.checked));
+      const sw = document.createElement("span"); sw.className = "sw"; sw.style.background = it.color;
+      const nm = document.createElement("span"); nm.className = "name"; nm.textContent = it.name;
+      const mt = document.createElement("span"); mt.className = "meta"; mt.id = "meta-" + it.id; mt.textContent = "…";
+      row.append(cb, sw, nm, mt);
+      row.addEventListener("click", () => { select(it.id); focusOn(meshes[it.id]); });
+      box.append(row);
+    });
+    partsEl.append(box);
+  });
+  function setVis(id, v) { if (meshes[id]) meshes[id].visible = v; }
+
+  // 読み込み
+  const all = ASM.flatMap((g) => g.items);
+  let done = 0, failed = 0;
+  Promise.all(all.map((it) => load("stl/" + it.file).then((geo) => {
+    geo.computeVertexNormals();
+    const m = new THREE.Mesh(geo, makeMat(it)); m.userData = it;
+    if (it.ghost) m.renderOrder = 2;
+    asmGroup.add(m); meshes[it.id] = m;
+    const [, s] = sizeOf(m); $("#meta-" + it.id).textContent = `${Math.round(s.x)}×${Math.round(s.y)}×${Math.round(s.z)}`;
+  }).catch(() => { failed++; $("#meta-" + it.id).textContent = "×"; }).finally(() => {
+    done++; statusEl.textContent = `読み込み中 ${done}/${all.length}`;
+  }))).then(() => {
+    all.forEach((it) => { if (meshes[it.id]) meshes[it.id].userData.base = meshes[it.id].position.clone(); });
+    if (failed === all.length) {
+      statusEl.textContent = "STL を読み込めませんでした。このページを Web サーバー経由（GitHub Pages など）で開くか、STL ファイルを画面にドロップしてください。";
+    } else {
+      statusEl.textContent = failed ? `${failed} 個の部品を読み込めませんでした` : "";
+      setView("iso");
+    }
+  });
+
+  // 分解表示
+  const explodeEl = $("#explode");
+  function applyExplode() {
+    const t = explodeEl.value / 100; $("#explode-val").textContent = Math.round(t * 100) + "%";
+    all.forEach((it) => {
+      const m = meshes[it.id]; if (!m) return;
+      m.position.set(0, -(it.rank - 3.5) * 45 * t, 0);
+      if (it.lift) m.position.z += 70 * t;
+      if (it.pull) m.position.x -= 110 * t;
+    });
+  }
+  explodeEl.addEventListener("input", applyExplode);
+
+  $("#color-mode").addEventListener("click", (e) => {
+    blackMode = !blackMode; e.currentTarget.textContent = blackMode ? "色分けにする" : "黒（実物の色）にする";
+    all.forEach((it) => { if (meshes[it.id]) meshes[it.id].material = makeMat(it); });
+    if (selected) highlight(selected, true);
+  });
+  $("#show-all").addEventListener("click", () => {
+    document.querySelectorAll("#parts input[type=checkbox]").forEach((c) => (c.checked = true));
+    all.forEach((it) => setVis(it.id, true));
+  });
+
+  // 視点
+  function visibleBox() {
+    const b = new THREE.Box3();
+    const grp = mode === "asm" ? asmGroup : printGroup;
+    grp.traverse((o) => { if (o.isMesh && o !== desk && o.visible && o.parent.visible) b.expandByObject(o); });
+    dropGroup.traverse((o) => { if (o.isMesh) b.expandByObject(o); });
+    return b;
+  }
+  const DIRS = { iso: [-1, 0.75, 0.75], front: [-1, 0, 0.12], side: [0, 1, 0.08], top: [-0.02, 0, 1], back: [1, -0.5, 0.5], bottom: [-0.3, 0.2, -1] };
+  function setView(name) {
+    const b = visibleBox(); if (b.isEmpty()) return;
+    const c = new THREE.Vector3(), s = new THREE.Vector3(); b.getCenter(c); b.getSize(s);
+    const d = new THREE.Vector3(...DIRS[name]).normalize();
+    const dist = s.length() / (2 * Math.tan((camera.fov * Math.PI) / 360)) * 1.05;
+    camera.position.copy(c).addScaledVector(d, dist); controls.target.copy(c); controls.update();
+  }
+  function focusOn(m) {
+    if (!m) return;
+    const b = new THREE.Box3().setFromObject(m), c = new THREE.Vector3(), s = new THREE.Vector3(); b.getCenter(c); b.getSize(s);
+    const d = camera.position.clone().sub(controls.target).normalize();
+    camera.position.copy(c).addScaledVector(d, Math.max(s.length() * 1.6, 120)); controls.target.copy(c); controls.update();
+  }
+  document.querySelectorAll("#views [data-view]").forEach((b) => b.addEventListener("click", () => setView(b.dataset.view)));
+
+  // 選択と寸法表示
+  function highlight(id, on) {
+    const m = meshes[id]; if (!m) return;
+    m.material.emissive = new THREE.Color(on ? 0x6a2a00 : 0x000000);
+  }
+  function showInfo(name, mesh, extra = []) {
+    const [, s] = sizeOf(mesh);
+    const tri = mesh.geometry.attributes.position.count / 3;
+    $("#info").innerHTML = "";
+    const add = (k, v, cls) => { const dt = document.createElement("dt"); dt.textContent = k; const dd = document.createElement("dd"); dd.textContent = v; if (cls) dd.className = cls; $("#info").append(dt, dd); };
+    add("部品", name);
+    add("外形", `${fmt(s.x)} × ${fmt(s.y)} × ${fmt(s.z)} mm`);
+    add("三角形", tri.toLocaleString("ja-JP"));
+    extra.forEach((e) => add(...e));
+  }
+  function select(id) {
+    if (selected) { highlight(selected, false); const r = $("#row-" + selected); if (r) r.classList.remove("sel"); }
+    selected = id; highlight(id, true); const r = $("#row-" + id); if (r) r.classList.add("sel");
+    if (meshes[id]) showInfo(meshes[id].userData.name, meshes[id], [["向き", "組み立てた位置（奥行×幅×高さ）"]]);
+  }
+  const ray = new THREE.Raycaster(), ptr = new THREE.Vector2(); let downAt = null;
+  renderer.domElement.addEventListener("pointerdown", (e) => (downAt = [e.clientX, e.clientY]));
+  renderer.domElement.addEventListener("pointerup", (e) => {
+    if (!downAt || Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 4 || mode !== "asm") return;
+    const r = renderer.domElement.getBoundingClientRect();
+    ptr.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(ptr, camera);
+    const hits = ray.intersectObjects(Object.values(meshes).filter((m) => m.visible), false);
+    const hit = hits.find((h) => !h.object.userData.ghost) || hits[0];
+    if (hit) select(hit.object.userData.id);
+  });
+
+  // 印刷用 STL
+  const printsEl = $("#prints"); let printMesh = null;
+  PRINTS.forEach(([id, name], i) => {
+    const row = document.createElement("div"); row.className = "row"; row.id = "prow-" + id;
+    const sp = document.createElement("span"); sp.style.width = "0";
+    const sw = document.createElement("span"); sw.className = "sw"; sw.style.background = "var(--accent)";
+    const nm = document.createElement("span"); nm.className = "name"; nm.textContent = name;
+    const mt = document.createElement("span"); mt.className = "meta"; mt.textContent = id + ".stl";
+    row.append(sp, sw, nm, mt); row.addEventListener("click", () => showPrint(id, name)); printsEl.append(row);
+  });
+  function showPrint(id, name) {
+    document.querySelectorAll("#prints .row").forEach((r) => r.classList.toggle("sel", r.id === "prow-" + id));
+    statusEl.textContent = "読み込み中…";
+    load("stl/p_" + id + ".stl").then((geo) => {
+      geo.computeVertexNormals(); geo.computeBoundingBox();
+      const bb = geo.boundingBox, s = new THREE.Vector3(); bb.getSize(s);
+      geo.translate(-bb.min.x + (BED - s.x) / 2, -bb.min.y + (BED - s.y) / 2, -bb.min.z);   // ベッドの中央に置く
+      if (printMesh) { printGroup.remove(printMesh); printMesh.geometry.dispose(); }
+      printMesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0x5b6672, roughness: 0.7 }));
+      printGroup.add(printMesh); statusEl.textContent = "";
+      const fits = s.x <= BED && s.y <= BED && s.z <= BED;
+      showInfo(name, printMesh, [["ファイル", "ag03_stand_" + id + ".stl"], ["A1 mini", fits ? "ベッドに収まる（180 mm 角）" : "ベッドからはみ出す", fits ? "fit-ok" : "fit-ng"]]);
+      setView("iso");
+    }).catch(() => { statusEl.textContent = "この STL を読み込めませんでした"; });
+  }
+
+  // タブ
+  function setMode(m) {
+    mode = m;
+    $("#tab-asm").setAttribute("aria-selected", m === "asm"); $("#tab-print").setAttribute("aria-selected", m === "print");
+    asmGroup.visible = m === "asm"; printGroup.visible = m === "print";
+    $("#asm-panel").hidden = m !== "asm"; $("#ctl-asm").hidden = m !== "asm"; $("#print-panel").hidden = m !== "print";
+    if (m === "print" && !printMesh) showPrint(PRINTS[0][0], PRINTS[0][1]); else setView("iso");
+  }
+  $("#tab-asm").addEventListener("click", () => setMode("asm"));
+  $("#tab-print").addEventListener("click", () => setMode("print"));
+
+  // 手元の STL をドロップして表示
+  const drop = $("#drop");
+  stage.addEventListener("dragover", (e) => { e.preventDefault(); drop.hidden = false; });
+  stage.addEventListener("dragleave", (e) => { if (e.target === drop) drop.hidden = true; });
+  stage.addEventListener("drop", (e) => {
+    e.preventDefault(); drop.hidden = true;
+    [...e.dataTransfer.files].filter((f) => /\.stl$/i.test(f.name)).forEach((f) => {
+      f.arrayBuffer().then((b) => {
+        const geo = loader.parse(b); geo.computeVertexNormals();
+        const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0x7a8794, roughness: 0.7 }));
+        dropGroup.add(m); showInfo(f.name, m); statusEl.textContent = ""; setView("iso");
+      });
+    });
+  });
+
+  (function loop() { requestAnimationFrame(loop); controls.update(); renderer.render(scene, camera); })();
+})();
+</script>
+</body>
+</html>

@@ -594,5 +594,21 @@ else if (part == "ext_p4")   rotate([180, 0, 0]) translate([0, 0, -ez_end]) ext_
 else if (part == "ext_keys") translate([0, 0, 0.6]) ext_keys();             // 連結キー 3 個
 else if (part == "ext_cover") rotate([180, 0, 0]) cover_local();          // ケーブルカバー（上面を下にして印刷）
 else if (part == "full_view") full_view();
+// --- ビューア用：組み立てた位置のまま 1 部品ずつ書き出す（viewer/ で使う） ---
+else if (part == "va_ag_a")      rotate([90, 0, 0]) half(true);
+else if (part == "va_ag_b")      rotate([90, 0, 0]) translate([0, 0, 2*Zc]) mirror([0, 0, 1]) half(false);
+else if (part == "va_ag_drawer") rotate([90, 0, 0]) translate([dr_x0, dr_y0, dr_z0]) multmatrix([[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]]) drawer();
+else if (part == "va_panel_l")   rotate([90, 0, 0]) panel_local();
+else if (part == "va_panel_r")   rotate([90, 0, 0]) translate([0, 0, 2*Zc + ez_end]) mirror([0, 0, 1]) panel_local();
+else if (part == "va_ext_p1")    rotate([90, 0, 0]) translate([0, 0, 2*Zc]) ext_p1();
+else if (part == "va_ext_p2")    rotate([90, 0, 0]) translate([0, 0, 2*Zc]) ext_p2();
+else if (part == "va_ext_p3")    rotate([90, 0, 0]) translate([0, 0, 2*Zc]) ext_p3();
+else if (part == "va_ext_p4")    rotate([90, 0, 0]) translate([0, 0, 2*Zc]) ext_p4();
+else if (part == "va_ext_cover") rotate([90, 0, 0]) translate([0, 0, 2*Zc]) cover_placed();
+else if (part == "va_ext_keys")  rotate([90, 0, 0]) translate([0, 0, 2*Zc - plug_len + 0.6]) ext_keys();
+else if (part == "va_dev_ag03")  rotate([90, 0, 0]) translate([0, 0, g + clr]) multmatrix([[cos(tilt), -sin(tilt), 0, 0], [sin(tilt), cos(tilt), 0, H0], [0, 0, 1, 0], [0, 0, 0, 1]])
+                                     linear_extrude(dev_w) polygon([[0, 0], [dev_d, 0], [dev_d, dev_h_rear], [0, dev_h_front]]);
+else if (part == "va_dev_kindle") rotate([90, 0, 0]) translate([0, 0, 2*Zc]) dev_on(ez_k0, kin_h, kin_t, kin_w, kin_riser, "white");
+else if (part == "va_dev_m5")    rotate([90, 0, 0]) translate([0, 0, 2*Zc]) dev_on(ez_m0, m5_h, m5_t, m5_w, 0, "white");
 else if (part == "fit_test") fit_test();
 else                         assembly();
