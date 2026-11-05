@@ -104,6 +104,34 @@ module ceiling2d() intersection() { sil2d(); translate([P(10, -t_top)[0] - 2, ce
 
 module frame2d() difference() { sil2d(); holes2d(); }
 
+// 引き出しの上の補強：天井板と傾斜面のあいだ（AG03 の下に隠れるデッドスペース）を、閉じた箱＋斜めの仕切りにして
+// ねじれ・たわみに強くする。左右フレームの内側（穴の奥）だけに入れるので、側面の穴・パネルのリムには影響しない
+t_ceil_up = 7;     // 天井板を上へ厚くする量 [mm]（天井板は合計 10mm。引き出しの高さは変わらない）
+deck_t    = 4;     // 傾斜面の下の板の厚み [mm]（横桁どうしを全幅でつなぐ。AG03 に触れないよう傾斜面から 1mm 下げる）
+web_t     = 5;     // 斜めの仕切りの厚み [mm]（側面フレームの斜材と同じ線）
+module upper_web2d(deck = true) intersection() {
+    sil2d();
+    union() {
+        if (deck) band(0, S, -1 - deck_t, -1);
+        intersection() {
+            hull() { translate([xr - 18, t_base]) circle(d = web_t); translate(P(S*0.45, -t_top)) circle(d = web_t); }
+            translate([-500, ceil_bot + 1]) square(1000);
+        }
+    }
+}
+web_z0 = g + frame_w - 1;    // 補強を入れ始める位置（フレームの内面に 1mm 重ねる）
+// 厚い天井板（z0〜z1）。フレームの穴の上にかぶさる端（印刷で下になる端）は 45° の斜面で立ち上げてサポート不要にする
+module thick_ceiling(z0, z1, ramp0 = true, ramp1 = false) {
+    xa = P(10, -t_top)[0] - 2;
+    rl = t_ceil_up*1.25;                 // 斜面の長さ（45° より少し急に）
+    module rect(u) translate([xa, ceil_bot]) square([xr - 1 - xa, t_ceil + u]);
+    hull() {
+        translate([0, 0, z0]) linear_extrude(0.01) rect(ramp0 ? 0 : t_ceil_up);
+        translate([0, 0, z0 + (ramp0 ? rl : 0)]) linear_extrude(z1 - z0 - (ramp0 ? rl : 0) - (ramp1 ? rl : 0)) rect(t_ceil_up);
+        translate([0, 0, z1 - 0.01]) linear_extrude(0.01) rect(ramp1 ? 0 : t_ceil_up);
+    }
+}
+
 // 側板（Z=0〜g）：傾斜面に沿った一定高さの帯。角だけ丸める
 module guide2d() offset(r = R_out) offset(delta = -R_out) band(-lip_t, S, -t_top, guide_h);
 
@@ -155,6 +183,8 @@ pegs = [
     concat(P(S - 25,   -5), [peg_d]),      // 奥の横桁
     concat(P(S - 12,   -5), [peg_d]),
     [xr - 9,  5, peg_d],                   // 後ろ下の横桁
+    [40, ceil_bot + 5, peg_d],             // 厚くした天井板（引き出しの上）
+    [95, ceil_bot + 5, peg_d],
 ];
 
 // ============================================================
@@ -166,6 +196,8 @@ module half(male = true) {
             linear_extrude(g + frame_w) frame2d();                     // 側面フレーム（ストッパー・前脚込み）
             linear_extrude(g) guide2d();                               // 側板（横ズレ防止）
             linear_extrude(Zc) plates2d();                             // 横桁＋引き出しの天井板
+            translate([0, 0, web_z0]) linear_extrude(Zc - web_z0) upper_web2d();   // 引き出しの上の補強
+            thick_ceiling(web_z0, Zc + 0.01);
             if (male) for (p = pegs) translate([p[0], p[1], Zc - 0.01]) peg(p[2]);
             if (male) translate([0, 0, Zc - 0.01]) linear_extrude(lap_len) lap_tongue2d();
         }
@@ -530,13 +562,17 @@ module ext_solid_body() {
     translate([0, 0, g - 1]) linear_extrude(ez_c0 - g + 1)      kin_top2d();     // Kindle の上側を面一に（側板に 1mm 重ねる）
     translate([0, 0, ez_c1]) linear_extrude(ez_end - g - ez_c1 + 1) m5_top2d();  // M5Stack の上側を面一に（同上）
     translate([0, 0, ez_c0]) linear_extrude(3)                  ext_div2d();
+    translate([0, 0, web_z0]) linear_extrude(ez_c0 - web_z0)    upper_web2d(false);   // 引き出しの上の補強（Kindle 側。座面があるので傾斜面の下の板は不要）
+    translate([0, 0, ez_c1]) linear_extrude(ez_end - web_z0 - ez_c1) upper_web2d(false);   // （M5Stack 側。通り道はケーブルが通るので入れない）
+    thick_ceiling(web_z0, ez_c0);
+    thick_ceiling(ez_c1, ez_end - web_z0, false, true);
 }
 
 // 分割面のダボ（両側に材料がある位置）
 pegs_c1 = [[xL + 4.5, ceil_bot + 5.5, peg_d], [-1.8, ceil_bot + 5.5, peg_d],
            concat(P(5, -5), [peg_d]), concat(P(13, -5), [peg_d]), concat(P(S*0.45, -5), [peg_d]),
            concat(P(S - 25, -5), [peg_d]), concat(P(S - 12, -5), [peg_d]),
-           [xr - 9, 9, peg_d], [xr - 9, 31, peg_d]];
+           [xr - 9, 9, peg_d], [xr - 9, 31, peg_d], [40, ceil_bot + 5, peg_d], [95, ceil_bot + 5, peg_d]];
 pegs_c2 = [[xL + 4.5, ceil_bot + 5.5, peg_d], [-1.8, ceil_bot + 5.5, peg_d],
            concat(P(9, -5), [peg_d]), concat(P(S - 25, -5), [peg_d]), concat(P(S - 12, -5), [peg_d]),
            [xr - 9, 9, peg_d], [xr - 9, 31, peg_d]];                     // 奥の下の梁にも 2 本
