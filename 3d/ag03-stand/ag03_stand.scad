@@ -136,9 +136,6 @@ lap_t   = t_floor/2;                            // 舌の厚み [mm]
 lap_x0  = xL + 3;                               // 前後の範囲（後ろ下の横桁は避ける）
 lap_x1  = xr - 18 - 3;
 module lap_tongue2d() translate([lap_x0 + 2, 0]) square([lap_x1 - lap_x0 - 2, lap_t]);   // 前端は床板の丸めた角の終わりと重ねない（微小な面を防ぐ）。B の切り欠きは据え置き
-// 抜け止めの山：前（差し込む側）はゆるい斜面、奥（引き出す側）は急な斜面
-module detent_bump2d() let(x0 = xL + det_bx) polygon([
-    [x0 - 3.5, t_floor - 0.01], [x0, t_floor + det_bh], [x0 + 0.6, t_floor + det_bh], [x0 + 1.2, t_floor - 0.01]]);
 module lap_recess2d() translate([lap_x0 - 0.3, -1]) square([lap_x1 - lap_x0 + 0.6, lap_t + 0.1 + 1]);
 
 // 前面の斜面：天井板の前端から AG03 の手前下端まで一直線につなぎ、前から見て段差・すき間のない面にする
@@ -171,7 +168,6 @@ module half(male = true) {
             linear_extrude(Zc) plates2d();                             // 横桁＋引き出しの天井板
             if (male) for (p = pegs) translate([p[0], p[1], Zc - 0.01]) peg(p[2]);
             if (male) translate([0, 0, Zc - 0.01]) linear_extrude(lap_len) lap_tongue2d();
-            if (male) translate([0, 0, Zc - 8 - det_bw/2]) linear_extrude(det_bw) detent_bump2d();   // 抜け止めの山（A 側の床板）
         }
         if (!male) for (p = pegs)
             translate([p[0], p[1], Zc - peg_len - 0.6]) peg_hole(p[2]);
@@ -216,22 +212,12 @@ drawer_open = 0;    // プレビュー用：引き出した量 [mm]
 dr_clr_side = 0.5;  // 左右のすき間 [mm]
 dr_clr_top  = 0.8;  // 天井板の下とのすき間 [mm]
 dr_wall     = 1.6;  // 壁の厚み [mm]
-dr_floor    = 2.4;  // 底の厚み [mm]（抜け止めの溝を入れるので厚め）
+dr_floor    = 1.6;  // 底の厚み [mm]
 dr_r        = 3;    // 外形の角R [mm]
 dr_front    = 2.4;  // 前板の厚み [mm]（つまみを支えるので少し厚め）
 pull_p      = 8;    // 取っ手（前板上端の全幅のひさし）の出っ張り [mm]
 pull_t      = 4;    // 取っ手の先端の厚み [mm]（下面は45°の斜面でサポート不要・指が掛かる）
 dr_chamfer  = 0.4;  // 底の外周の面取り [mm]（1層目の広がり＝象の足でこすれないように）
-// 抜け止め（外から見えない）：引き出しの底の溝に、台の床板の小さな山が入る。
-// 溝の途中にある「歯」が山に当たって止まる。強めに引けば歯が山を乗り越えて外せる（ソフトストップ）
-det_v       = Zc - 8 - (g + frame_w + dr_clr_side);   // 溝の位置（引き出しの左端から）：左右の継ぎ目を避けて A 側
-det_gw      = 8;    // 溝の幅 [mm]
-det_gd      = 1.2;  // 溝の深さ [mm]
-det_tooth   = 3;    // 歯の長さ [mm]
-det_u       = 97;   // 歯の位置（前面から）[mm]
-det_bx      = 12;   // 台の山の位置（前脚の前面から奥へ）[mm]
-det_bh      = 0.9;  // 山の高さ [mm]
-det_bw      = 5;    // 山の幅 [mm]
 
 dr_x0 = xL;                                       // 前面：閉めたとき前脚の前面と面一
 dr_x1 = xr - 18 - 1.5;                            // 背面：後ろの横桁の手前（ここで止まる）
@@ -251,9 +237,6 @@ module drawer() {
         }
         translate([dr_front, dr_wall, dr_floor])
             rbox(dr_L - dr_front - dr_wall, dr_W - 2*dr_wall, dr_H, max(0.5, dr_r - dr_wall));
-        // 抜け止めの溝（奥側は開放、前端は前板の裏で止める。途中に歯を残す）。溝の天井は幅8mmのブリッジなのでサポート不要
-        for (seg = [[5, det_u], [det_u + det_tooth, dr_L + 1]])   // 前端は閉じて前面に切り欠きを見せない
-            translate([seg[0], det_v - det_gw/2, -1]) cube([seg[1] - seg[0], det_gw, det_gd + 1]);
     }
 }
 
@@ -443,9 +426,9 @@ module fit_test() {
 //  ・AG03 台と同じ側面形状・同じ前の線（共通規格）。並びは左から AG03｜Kindle｜通り道｜M5Stack
 //  ・機器の前面は前板の上端（傾斜面から lip_h）にそろえる：Kindle は座面を持ち上げ、M5Stack はそのまま
 //  ・Kindle と M5Stack の間にケーブルの通り道（L字プラグ前提）。ケーブルは通り道の下の天井の穴から下段へ落とし、
-//    M5Stack の下の床の穴から机の穴へ通す。机の穴から上がってきた他のケーブルも、床の穴から下段を通って正面の口から引き出せる
+//    M5Stack の下の床の穴から机の穴へ通す（Kindle の下の床にも穴）。机の穴から上がってきた他のケーブルも、床の穴から下段を通って正面の口から引き出せる
 //  ・背面・床の後ろは閉じ、奥の下側は太い梁にしてダボで接合（強度アップ）
-//  ・下段は引き出しを後から付けられる空間（天井板・床板・仕切り・奥の止め・抜け止めの山）。今は引き出しなし
+//  ・下段は引き出しを後から付けられる空間（天井板・床板・仕切り・奥の止め）。今は引き出しなし（床板は 4mm なので、付けるなら dr_y0 = ext_t_floor で作る）
 //  ・AG03 台とは「連結キー」（側面の穴に両側から差し込むリング）でつなぐ。右端には波紋パネル（panel_b）を付けられる
 //  ・幅が 255mm あるので 4 分割（左｜Kindle｜通り道｜M5Stack）して印刷し、ダボでつなぐ。どれも下の面から立ち上がる形でサポート不要
 // ============================================================
@@ -454,8 +437,10 @@ m5_w = 54.1; m5_h = 54.1; m5_t = 17.6;            // M5Stack Basic（実測）
 dev_clr = 0.6;                                     // 機器と壁のすき間 [mm]
 chan_w  = 24;                                      // ケーブルの通り道の幅 [mm]（L字プラグ前提）
 kin_riser = lip_h - kin_t;                         // Kindle の座面の持ち上げ量（画面を前板の上端にそろえる）
-floor_hole_x0 = 45; floor_hole_x1 = 90;            // M5Stack の下の床の穴（前後の範囲。机の穴に合わせて調整）[mm]
-floor_hole_r  = 6;                                  // 床の穴の角R [mm]
+floor_hole_x0 = 45; floor_hole_x1 = 90;            // 床の穴（Kindle の下・M5Stack の下）の前後の範囲。机の穴に合わせて調整 [mm]
+floor_hole_c  = 14;                                 // 床の穴の角の 45° 面取り [mm]（印刷では床が立つので、穴の上辺の橋渡しを短くする）
+kin_hole_z0 = 62; kin_hole_z1 = 114;                // Kindle の下の床の穴（幅方向の範囲。Kindle の中央、P1｜P2 の継ぎ目をまたぐ）[mm]
+ext_t_floor = 4;                                    // 増設台の床板の厚み [mm]（印刷時に高さ 85mm の片持ちの壁になるので AG03 台より厚く）
 
 // 幅方向の位置（増設台の左面＝AG03 台の右面が 0、右へ +）
 ez_k0  = g + dev_clr;                ez_k1 = ez_k0 + kin_w;
@@ -466,7 +451,12 @@ ez_cut1 = 86;                                       // 印刷の分割位置：P
 rear_beam_x = dr_x1 + 0.3;                          // 奥の梁の前面（引き出しの奥の止めも兼ねる）
 
 module ext_beam2d() intersection() { sil2d(); translate([rear_beam_x, -1]) square([xr - rear_beam_x + 1, ceil_top + 1]); }   // 奥の下の梁（床〜天井、全幅）
-module ext_common2d() { front_wall2d(); front_slope2d(); front_rung2d(); rear_rung2d(); floor2d(); ceiling2d(); back2d(); ext_beam2d(); }
+module ext_floor2d() intersection() { sil2d(); translate([xL - 1, -1]) square([xr - xL + 2, ext_t_floor + 1]); }
+module ext_common2d() { front_wall2d(); front_slope2d(); front_rung2d(); rear_rung2d(); ext_floor2d(); ceiling2d(); back2d(); ext_beam2d(); }
+// 床の穴：上から見た形（x: 前後、z: 幅）。四隅を 45° に落とした八角形（角は R2）。印刷で上になる辺の橋渡しは 17mm 程度
+module floor_hole(z0, z1) translate([0, ext_t_floor + 1, 0]) rotate([90, 0, 0]) linear_extrude(ext_t_floor + 2)
+    offset(r = 2) offset(delta = -2) let(c = floor_hole_c, x0 = floor_hole_x0, x1 = floor_hole_x1)
+        polygon([[x0, z0 + c], [x0 + c, z0], [x1 - c, z0], [x1, z0 + c], [x1, z1 - c], [x1 - c, z1], [x0 + c, z1], [x0, z1 - c]]);
 module kin_support2d() {               // Kindle の座面（厚み 3mm の床）と、それを支える横桁（座面の高さまで持ち上げ）
     band(0, S, kin_riser - 3, kin_riser);
     for (r = [[-lip_t, 18], [S*0.45 - 8, S*0.45 + 8], [S - 30, S]]) band(r[0], r[1], -t_top, kin_riser);
@@ -485,8 +475,8 @@ module dev_notch(s0, h0, zc) hull() {
     translate([0, 0, zc - notch_w/2 + 14]) linear_extrude(notch_w - 28) offset(r = 2) offset(delta = -2) band(s0 - 2, s0 + 12, h0, lip_h + 3);
     translate([0, 0, zc - notch_w/2]) linear_extrude(notch_w) band(s0 - 2, s0 - 1.9, h0, lip_h + 3);
 }
-module chan_block2d() band(-lip_t, 6, -t_top, lip_h);   // 通り道の手前の角：Kindle の右下・M5Stack の左下の角を受ける
-module chan_rblock2d() band(118, S, -t_top, lip_h);     // 通り道の奥の受け台（カバーの奥側を受ける）
+module chan_block2d() band(-lip_t, 8, -t_top, lip_h);    // 通り道の手前の角：Kindle の右下・M5Stack の左下の角を受ける
+module chan_rblock2d() band(116, S, -t_top, lip_h);     // 通り道の奥の受け台（カバーの奥側を受ける）
 
 // ケーブルカバー：通り道の上にかぶせて L字プラグとケーブルを隠す。手前・奥の受け台の溝に差し込むだけ（摩擦で留まる）
 cov_t   = 1.6;                 // カバーの厚み [mm]
@@ -512,13 +502,11 @@ module cover_recess() {
         translate([0, 0, ez_c0 + cov_clr + (cov_W - plug_w)/2 - fit_tol]) linear_extrude(plug_w + 2*fit_tol)
             band(u - plug_s/2 - fit_tol, u + plug_s/2 + fit_tol, cov_h0 - plug_dp - 0.3, cov_h0 + 0.01);
     translate([0, 0, ez_c0 - 1]) linear_extrude(chan_w + 2) {              // カバーの両端がはまる段（カバーの厚み分だけ下げる）。通り道より少し広く切って膜を残さない
-        band(cov_s0 - 0.3, 6.01, cov_h0, lip_h + 1);
-        band(117.99, cov_s1 + 0.3, cov_h0, lip_h + 1);
+        band(cov_s0 - 0.3, 8.01, cov_h0, lip_h + 1);
+        band(115.99, cov_s1 + 0.3, cov_h0, lip_h + 1);
     }
 }
 module ext_div2d() intersection() { sil2d(); translate([xL - 1, 0]) square([rear_beam_x - xL + 1, ceil_top]); }  // 引き出しの仕切り
-kz_bump = (g + frame_w + ez_c0)/2 + 8;              // 抜け止めの山（引き出しを付けたとき用）
-mz_bump = (ez_c0 + 3 + ez_end - g - frame_w)/2 - 4;   // （M5Stack 側は継ぎ目を避けて中央寄り）
 
 module ext_solid() difference() { ext_solid_body(); cover_recess(); ext_cable_holes(); }
 module ext_cable_holes() {
@@ -528,9 +516,9 @@ module ext_cable_holes() {
     // 通り道の下の天井の穴：通り道から下段（M5Stack 側）へケーブルを落とす。仕切りの右から通り道の右端まで（P3 の上面まで抜く）
     translate([0, 0, ez_c0 + 3]) linear_extrude(chan_w - 3)
         translate([P(18, -t_top)[0], ceil_bot - 1]) square([rear_beam_x - 2 - P(18, -t_top)[0], t_ceil + 2]);
-    // M5Stack の下の床の穴：机の穴からケーブルを上げる。仕切りの右から M5Stack 側の枠の手前まで
-    translate([0, 0, ez_c0 + 3]) linear_extrude(ez_end - g - frame_w - 2 - (ez_c0 + 3))
-        offset(r = floor_hole_r) offset(delta = -floor_hole_r) translate([floor_hole_x0, -1]) square([floor_hole_x1 - floor_hole_x0, t_floor + 2]);
+    // 床の穴：机の穴とのあいだでケーブルを通す。Kindle の下（P1 の中）と、M5Stack の下（仕切りの右から M5Stack 側の枠の手前まで）
+    floor_hole(kin_hole_z0, kin_hole_z1);
+    floor_hole(ez_c0 + 3, ez_end - g - frame_w - 2);
 }
 module ext_solid_body() {
     linear_extrude(g + frame_w) frame2d();  linear_extrude(g) guide2d();                         // 左の枠（穴は共通規格）
@@ -542,7 +530,6 @@ module ext_solid_body() {
     translate([0, 0, g - 1]) linear_extrude(ez_c0 - g + 1)      kin_top2d();     // Kindle の上側を面一に（側板に 1mm 重ねる）
     translate([0, 0, ez_c1]) linear_extrude(ez_end - g - ez_c1 + 1) m5_top2d();  // M5Stack の上側を面一に（同上）
     translate([0, 0, ez_c0]) linear_extrude(3)                  ext_div2d();
-    for (z = [kz_bump, mz_bump]) translate([0, 0, z - det_bw/2]) linear_extrude(det_bw) detent_bump2d();
 }
 
 // 分割面のダボ（両側に材料がある位置）
