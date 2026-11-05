@@ -303,7 +303,7 @@ footer .home:hover{ color:var(--ink); text-decoration:underline; }
 </div>
 
 <main>
-  <input id="task" type="text" placeholder="いま何をやる？（任意）" maxlength="60" autocomplete="off">
+  <input id="task" type="text" aria-label="いま取り組む内容" placeholder="いま何をやる？（任意）" maxlength="60" autocomplete="off">
 
   <div class="dial">
     <svg viewBox="0 0 200 200" aria-hidden="true"><g id="ticks"></g></svg>
@@ -727,7 +727,7 @@ function bindDuration(input, key){
   input.addEventListener('change', ()=>{
     let v = Math.round(Number(input.value));
     const max = key==='work' ? 90 : 60;
-    if (!Number.isFinite(v)) v = S.settings[key];
+    if (input.value.trim()==='' || !Number.isFinite(v)) v = S.settings[key]; /* 空欄のまま確定したら元の値に戻す */
     v = Math.min(max, Math.max(1, v));
     input.value = v;
     S.settings[key] = v;

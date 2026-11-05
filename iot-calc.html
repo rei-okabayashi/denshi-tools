@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IoT 回路計算機</title>
+<meta name="description" content="ESP32・M5Stack の電子工作でよく使う計算をまとめたツール。LED の電流制限抵抗、分圧回路、ADC 換算、I2C プルアップ、電池の持ち、RC 時定数。計算式に数値を代入した検算つき。">
+<meta property="og:title" content="IoT 回路計算機">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rei-okabayashi.github.io/denshi-tools/iot-calc.html">
+<meta property="og:description" content="ESP32・M5Stack の電子工作でよく使う計算をまとめたツール。LED 抵抗・分圧・ADC・I2C プルアップ・電池の持ち・RC 時定数。">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#F1EEE5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme:light;
+    --bg:#F1EEE5; --ground:#E6E1D4; --surface:#FCFBF7; --surface2:#F2EFE6; --surface3:#EAE4D5;
+    --accent:#BE5A38; --accent-ink:#A54E31; --accent-dim:#D69B81; --accent-soft:#F3E5DA; --accent-line:#E6C3B0;
+    --text:#211F1A; --text-dim:#6B665B; --text-bright:#100F0B;
+    --ok:#46622F; --ok-soft:#E6EDDD; --ok-line:#C3D2B2;
+    --warn:#8A4F1A; --warn-soft:#F6E9D6; --warn-line:#E4C9A2;
+    --bad:#A63428; --bad-soft:#F6E0DC; --bad-line:#E5B6AE;
+    --border:#E2DCCD;
+    --sans:'Hanken Grotesk','Hiragino Kaku Gothic ProN','Meiryo','Yu Gothic',system-ui,sans-serif;
+    --mono:'SFMono-Regular','Consolas','Menlo','Courier New',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html{background:var(--bg);}
+  body{
+    font-family:var(--sans); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    color:var(--text); background:var(--bg); line-height:1.65;
+    padding:0 16px calc(40px + env(safe-area-inset-bottom));
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  :focus-visible{outline:2.5px solid var(--accent-ink);outline-offset:2px;border-radius:6px;}
+
+  /* ── ヘッダー ── */
+  header{
+    background:var(--surface); border-bottom:1px solid var(--border);
+    border-radius:0 0 22px 22px; margin:0 -16px 18px;
+    padding:calc(18px + env(safe-area-inset-top)) 22px 18px;
+    box-shadow:0 12px 28px -22px rgba(50,38,24,.40);
+  }
+  .head-in{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:14px;}
+  header h1{font-size:1.32rem;font-weight:700;line-height:1.2;letter-spacing:.005em;}
+  .tagline{font-size:.8rem;color:var(--text-dim);margin-top:3px;}
+  .home{
+    margin-left:auto; flex-shrink:0; color:var(--text-dim); font-size:.82rem; text-decoration:none;
+    padding:6px 10px; border-radius:8px; min-height:32px; display:inline-flex; align-items:center;
+  }
+  .home:hover{color:var(--accent-ink);background:var(--accent-soft);}
+
+  /* ── タブ ── */
+  .tabs{
+    display:flex; gap:6px; overflow-x:auto; padding:2px 2px 8px; margin:0 -2px 10px;
+    scrollbar-width:thin; -webkit-overflow-scrolling:touch;
+  }
+  .tab{
+    flex-shrink:0; border:1px solid var(--border); background:var(--surface); color:var(--text-dim);
+    font:600 .84rem/1 var(--sans); padding:10px 13px; border-radius:999px; cursor:pointer;
+    min-height:40px; display:inline-flex; align-items:center; gap:6px;
+    transition:background-color .14s,color .14s,border-color .14s;
+  }
+  .tab:hover{color:var(--text);border-color:var(--accent-dim);}
+  .tab[aria-selected="true"]{background:var(--accent-soft);color:var(--accent-ink);border-color:var(--accent-line);}
+  .tab .e{font-size:1rem;}
+
+  /* ── パネル ── */
+  .panel{
+    background:var(--surface); border:1px solid var(--border); border-radius:15px;
+    padding:20px; box-shadow:0 1px 2px rgba(50,38,24,.05);
+  }
+  .panel h2{font-size:1.08rem;font-weight:700;}
+  .panel .lead{font-size:.84rem;color:var(--text-dim);margin-top:3px;}
+  .cols{display:grid;gap:18px;margin-top:16px;}
+  @media(min-width:760px){ .cols{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);} }
+
+  .field{margin-bottom:13px;}
+  .field > label, .field > .lbl{display:block;font-size:.82rem;font-weight:600;margin-bottom:5px;}
+  .field .sub{font-weight:400;color:var(--text-dim);font-size:.76rem;margin-left:4px;}
+  .inrow{display:flex;gap:6px;align-items:stretch;}
+  input[type=number], select{
+    font:500 1rem var(--sans); color:var(--text); background:var(--surface2);
+    border:1px solid var(--border); border-radius:9px; padding:8px 11px; min-height:42px; width:100%;
+  }
+  input[type=number]{font-family:var(--mono);}
+  input[type=number]:focus, select:focus{outline:none;border-color:var(--accent-dim);box-shadow:0 0 0 3px var(--accent-soft);}
+  .inrow select{width:auto;flex-shrink:0;}
+  .unit{
+    flex-shrink:0; display:inline-flex; align-items:center; padding:0 10px; min-width:46px; justify-content:center;
+    font-size:.84rem; color:var(--text-dim); background:var(--surface3); border:1px solid var(--border); border-radius:9px;
+  }
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;}
+  .chip{
+    border:1px solid var(--border); background:var(--surface); color:var(--text-dim); cursor:pointer;
+    font:500 .76rem/1.2 var(--sans); padding:6px 10px; border-radius:999px; min-height:30px;
+  }
+  .chip:hover{color:var(--accent-ink);border-color:var(--accent-line);background:var(--accent-soft);}
+  .seg{display:inline-flex;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:3px;gap:3px;flex-wrap:wrap;}
+  .seg button{
+    border:none;background:none;color:var(--text-dim);cursor:pointer;font:600 .8rem/1 var(--sans);
+    padding:9px 12px;border-radius:7px;min-height:34px;
+  }
+  .seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent-ink);box-shadow:inset 0 0 0 1px var(--accent-line);}
+  .check{display:flex;gap:8px;align-items:flex-start;font-size:.84rem;cursor:pointer;min-height:28px;}
+  .check input{width:18px;height:18px;margin-top:3px;accent-color:var(--accent);flex-shrink:0;}
+
+  /* ── 結果 ── */
+  .result{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;}
+  .r-label{font-size:.78rem;color:var(--text-dim);font-weight:600;}
+  .r-big{font-family:var(--mono);font-size:2rem;font-weight:700;color:var(--text-bright);line-height:1.15;margin:2px 0 4px;word-break:break-word;}
+  .r-big small{font-size:1rem;font-weight:600;color:var(--text-dim);}
+  .r-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:10px;}
+  .kv{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:8px 10px;}
+  .kv .k{font-size:.72rem;color:var(--text-dim);}
+  .kv .v{font-family:var(--mono);font-size:1.02rem;font-weight:700;}
+  .kv.pick{border-color:var(--accent-line);background:var(--accent-soft);}
+  .kv.pick .v{color:var(--accent-ink);}
+
+  .formula{
+    margin-top:12px;background:var(--surface);border:1px dashed var(--accent-line);border-radius:10px;padding:10px 12px;
+    font-family:var(--mono);font-size:.84rem;line-height:1.75;overflow-x:auto;white-space:pre-wrap;word-break:break-word;
+  }
+  .formula .h{display:block;font-family:var(--sans);font-size:.72rem;font-weight:700;color:var(--accent-ink);letter-spacing:.04em;margin-bottom:2px;}
+
+  .msg{margin-top:10px;font-size:.82rem;border-radius:10px;padding:9px 12px;border:1px solid;}
+  .msg.ok{background:var(--ok-soft);border-color:var(--ok-line);color:var(--ok);}
+  .msg.warn{background:var(--warn-soft);border-color:var(--warn-line);color:var(--warn);}
+  .msg.bad{background:var(--bad-soft);border-color:var(--bad-line);color:var(--bad);}
+  .msg + .msg{margin-top:6px;}
+
+  .tips{margin-top:16px;border-top:1px solid var(--border);padding-top:13px;}
+  .tips h3{font-size:.86rem;font-weight:700;margin-bottom:6px;}
+  .tips ul{padding-left:1.2em;font-size:.82rem;color:var(--text-dim);}
+  .tips li{margin:3px 0;}
+  .tips b{color:var(--text);font-weight:600;}
+
+  table.cand{width:100%;border-collapse:collapse;margin-top:10px;font-size:.84rem;}
+  table.cand th{font-size:.72rem;color:var(--text-dim);font-weight:600;text-align:left;padding:4px 6px;border-bottom:1px solid var(--border);}
+  table.cand td{padding:7px 6px;border-bottom:1px solid var(--border);font-family:var(--mono);}
+  table.cand tr.best td{color:var(--accent-ink);font-weight:700;}
+
+  .note{
+    margin-top:18px;font-size:.76rem;color:var(--text-dim);line-height:1.7;
+    background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:12px;padding:11px 14px;
+  }
+  footer{text-align:center;color:var(--text-dim);font-size:.74rem;margin-top:20px;}
+  footer a{color:var(--accent-ink);}
+  [hidden]{display:none !important;}
+
+  @media (max-width:420px){
+    .panel{padding:16px 14px;}
+    .r-big{font-size:1.7rem;}
+    header h1{font-size:1.15rem;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="head-in">
+    <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+      <rect x="9" y="9" width="22" height="22" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/>
+      <g stroke="var(--accent)" stroke-width="2" stroke-linecap="round">
+        <line x1="15" y1="3" x2="15" y2="9"/><line x1="25" y1="3" x2="25" y2="9"/>
+        <line x1="15" y1="31" x2="15" y2="37"/><line x1="25" y1="31" x2="25" y2="37"/>
+        <line x1="3" y1="15" x2="9" y2="15"/><line x1="3" y1="25" x2="9" y2="25"/>
+        <line x1="31" y1="15" x2="37" y2="15"/><line x1="31" y1="25" x2="37" y2="25"/>
+      </g>
+      <text x="20" y="24.5" text-anchor="middle" font-family="var(--mono)" font-size="11" font-weight="700" fill="var(--accent-ink)">Ω</text>
+    </svg>
+    <div>
+      <h1>IoT 回路計算機</h1>
+      <p class="tagline">ESP32 / M5Stack の工作でよく使う計算と、その検算</p>
+    </div>
+    <a class="home" href="index.html">‹ ツール置き場</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="tabs" role="tablist" aria-label="計算の種類">
+    <button class="tab" role="tab" id="tab-led" aria-controls="p-led" data-key="led"><span class="e" aria-hidden="true">💡</span>LED 抵抗</button>
+    <button class="tab" role="tab" id="tab-div" aria-controls="p-div" data-key="div"><span class="e" aria-hidden="true">➗</span>分圧</button>
+    <button class="tab" role="tab" id="tab-adc" aria-controls="p-adc" data-key="adc"><span class="e" aria-hidden="true">📈</span>ADC 換算</button>
+    <button class="tab" role="tab" id="tab-i2c" aria-controls="p-i2c" data-key="i2c"><span class="e" aria-hidden="true">🔗</span>I2C プルアップ</button>
+    <button class="tab" role="tab" id="tab-bat" aria-controls="p-bat" data-key="bat"><span class="e" aria-hidden="true">🔋</span>電池の持ち</button>
+    <button class="tab" role="tab" id="tab-rc" aria-controls="p-rc" data-key="rc"><span class="e" aria-hidden="true">⏱️</span>RC 時定数</button>
+  </div>
+
+  <!-- ═════════ LED ═════════ -->
+  <section class="panel" role="tabpanel" id="p-led" aria-labelledby="tab-led">
+    <h2>LED の電流制限抵抗</h2>
+    <p class="lead">GPIO や電源から LED を光らせるとき、直列に入れる抵抗を求めます。</p>
+    <div class="cols">
+      <div>
+        <div class="field">
+          <label for="led-vs">電源電圧 V<sub>S</sub></label>
+          <div class="inrow"><input type="number" id="led-vs" value="3.3" step="any" min="0" inputmode="decimal"><span class="unit">V</span></div>
+          <div class="chips" data-target="led-vs">
+            <button class="chip" type="button" data-v="3.3">3.3V（ESP32 GPIO）</button>
+            <button class="chip" type="button" data-v="5">5V（USB）</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="led-vf">LED の順方向電圧 V<sub>F</sub> <span class="sub">データシートの値を優先</span></label>
+          <div class="inrow"><input type="number" id="led-vf" value="2.0" step="any" min="0" inputmode="decimal"><span class="unit">V</span></div>
+          <div class="chips" data-target="led-vf">
+            <button class="chip" type="button" data-v="2.0">赤 ≈2.0</button>
+            <button class="chip" type="button" data-v="2.1">黄・従来の緑 ≈2.1</button>
+            <button class="chip" type="button" data-v="3.0">青・白・高輝度緑 ≈3.0</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="led-if">流したい電流 I<sub>F</sub></label>
+          <div class="inrow"><input type="number" id="led-if" value="10" step="any" min="0" inputmode="decimal"><span class="unit">mA</span></div>
+          <div class="chips" data-target="led-if">
+            <button class="chip" type="button" data-v="2">2mA（表示灯なら十分）</button>
+            <button class="chip" type="button" data-v="10">10mA</button>
+            <button class="chip" type="button" data-v="20">20mA（一般的な定格）</button>
+          </div>
+        </div>
+      </div>
+      <div class="result" aria-live="polite" id="led-out"></div>
+    </div>
+    <div class="tips">
+      <h3>覚えておくこと</h3>
+      <ul>
+        <li>抵抗にかかるのは <b>V<sub>S</sub> − V<sub>F</sub></b> だけ。オームの法則 R = V / I をこの電圧で使う。</li>
+        <li>計算値ぴったりの抵抗は売っていないので、<b>1 つ大きい E 系列の値</b>を選ぶと電流が目標を超えない。</li>
+        <li>ESP32 の GPIO は 1 ピンあたり <b>20mA 程度まで</b>に抑えるのが無難。もっと流すならトランジスタで駆動する。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═════════ 分圧 ═════════ -->
+  <section class="panel" role="tabpanel" id="p-div" aria-labelledby="tab-div" hidden>
+    <h2>分圧回路</h2>
+    <p class="lead">2 本の抵抗で電圧を下げます。5V センサーの出力を 3.3V 入力に合わせる、電池電圧を ADC で測る、などに。</p>
+    <div class="field" style="margin-top:14px">
+      <span class="lbl">求めたいもの</span>
+      <div class="seg" role="group" aria-label="分圧の計算モード">
+        <button type="button" data-mode="fwd" aria-pressed="true">抵抗から V<sub>OUT</sub></button>
+        <button type="button" data-mode="inv" aria-pressed="false">目標 V<sub>OUT</sub> から抵抗を選ぶ</button>
+      </div>
+    </div>
+    <div class="cols">
+      <div>
+        <div class="field">
+          <label for="div-vin">入力電圧 V<sub>IN</sub></label>
+          <div class="inrow"><input type="number" id="div-vin" value="5" step="any" min="0" inputmode="decimal"><span class="unit">V</span></div>
+        </div>
+        <div id="div-fwd-in">
+          <div class="field">
+            <label for="div-r1">R1（上側・V<sub>IN</sub> 側）</label>
+            <div class="inrow"><input type="number" id="div-r1" value="10" step="any" min="0" inputmode="decimal">
+              <select id="div-r1-u" aria-label="R1 の単位"><option value="1">Ω</option><option value="1e3" selected>kΩ</option><option value="1e6">MΩ</option></select></div>
+          </div>
+          <div class="field">
+            <label for="div-r2">R2（下側・GND 側）</label>
+            <div class="inrow"><input type="number" id="div-r2" value="18" step="any" min="0" inputmode="decimal">
+              <select id="div-r2-u" aria-label="R2 の単位"><option value="1">Ω</option><option value="1e3" selected>kΩ</option><option value="1e6">MΩ</option></select></div>
+          </div>
+        </div>
+        <div id="div-inv-in" hidden>
+          <div class="field">
+            <label for="div-vt">目標の出力電圧 V<sub>OUT</sub></label>
+            <div class="inrow"><input type="number" id="div-vt" value="3.3" step="any" min="0" inputmode="decimal"><span class="unit">V</span></div>
+          </div>
+          <div class="field">
+            <label for="div-ser">使う抵抗の系列</label>
+            <select id="div-ser"><option value="E12">E12（手持ちが多い）</option><option value="E24">E24</option></select>
+          </div>
+          <label class="check"><input type="checkbox" id="div-cap" checked>目標を超えない組み合わせだけ（入力ピンを守る）</label>
+        </div>
+      </div>
+      <div class="result" aria-live="polite" id="div-out"></div>
+    </div>
+    <div class="tips">
+      <h3>覚えておくこと</h3>
+      <ul>
+        <li>V<sub>OUT</sub> = V<sub>IN</sub> × <b>R2 / (R1 + R2)</b>。下側の抵抗の「取り分」だけ電圧が出る。</li>
+        <li>抵抗を小さくすると電流が無駄に流れ、大きくすると ADC の読みが不安定になる。<b>合計 10k〜100kΩ</b> あたりが扱いやすい。</li>
+        <li>分圧は「信号」用。<b>モーターなど電流を食う負荷の電源には使えない</b>（負荷がつくと電圧が下がる）。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═════════ ADC ═════════ -->
+  <section class="panel" role="tabpanel" id="p-adc" aria-labelledby="tab-adc" hidden>
+    <h2>ADC の読み値 ⇔ 電圧</h2>
+    <p class="lead"><code>analogRead()</code> の数値を電圧に直す（またはその逆）。分圧を通しているなら元の電圧まで戻せます。</p>
+    <div class="field" style="margin-top:14px">
+      <span class="lbl">変換の向き</span>
+      <div class="seg" role="group" aria-label="ADC の変換方向">
+        <button type="button" data-mode="r2v" aria-pressed="true">読み値 → 電圧</button>
+        <button type="button" data-mode="v2r" aria-pressed="false">電圧 → 読み値</button>
+      </div>
+    </div>
+    <div class="cols">
+      <div>
+        <div class="field">
+          <label for="adc-bits">分解能</label>
+          <select id="adc-bits">
+            <option value="8">8 bit（0〜255）</option>
+            <option value="10">10 bit（0〜1023・Arduino Uno）</option>
+            <option value="12" selected>12 bit（0〜4095・ESP32）</option>
+            <option value="16">16 bit（0〜65535）</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="adc-vref">基準電圧（満点の電圧）</label>
+          <div class="inrow"><input type="number" id="adc-vref" value="3.3" step="any" min="0" inputmode="decimal"><span class="unit">V</span></div>
+        </div>
+        <div class="field" id="adc-raw-f">
+          <label for="adc-raw">読み値</label>
+          <input type="number" id="adc-raw" value="2048" step="1" min="0" inputmode="numeric">
+        </div>
+        <div class="field" id="adc-v-f" hidden>
+          <label for="adc-v">ピンの電圧</label>
+          <div class="inrow"><input type="number" id="adc-v" value="1.65" step="any" min="0" inputmode="decimal"><span class="unit">V</span></div>
+        </div>
+        <div class="field">
+          <label for="adc-k">分圧の倍率 <span class="sub">(R1+R2)/R2。分圧なしなら 1</span></label>
+          <input type="number" id="adc-k" value="1" step="any" min="1" inputmode="decimal">
+          <div class="chips" data-target="adc-k">
+            <button class="chip" type="button" data-v="1">なし</button>
+            <button class="chip" type="button" data-v="2">×2（同じ抵抗 2 本）</button>
+            <button class="chip" type="button" data-v="1.5">×1.5（10k + 20k）</button>
+          </div>
+        </div>
+      </div>
+      <div class="result" aria-live="polite" id="adc-out"></div>
+    </div>
+    <div class="tips">
+      <h3>ESP32 で使うときの注意</h3>
+      <ul>
+        <li>ESP32 の ADC は<b>理想的な直線ではありません</b>。ここの計算は理想 ADC としての目安。実機では <code>analogReadMilliVolts()</code>（工場校正値で補正してくれる）を使うと誤差が減る。</li>
+        <li>無印 ESP32 は 0V 付近と上限付近で特に誤差が大きい。ESP-IDF の資料では、最大の減衰設定でも<b>精度が出るのはおよそ 0.15〜2.45V</b>。</li>
+        <li>無印 ESP32 では <b>Wi-Fi を使っている間 ADC2 のピンが使えない</b>。IoT で使うなら ADC1 のピン（GPIO32〜39）を選ぶ。</li>
+        <li>3.3V を超える電圧は直接入れない。分圧タブで抵抗を選んでから入れる。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═════════ I2C ═════════ -->
+  <section class="panel" role="tabpanel" id="p-i2c" aria-labelledby="tab-i2c" hidden>
+    <h2>I2C のプルアップ抵抗</h2>
+    <p class="lead">SDA / SCL に入れるプルアップ抵抗の「使ってよい範囲」を、I2C 規格（NXP UM10204）の式で求めます。</p>
+    <div class="cols">
+      <div>
+        <div class="field">
+          <label for="i2c-vcc">プルアップ先の電圧</label>
+          <div class="inrow"><input type="number" id="i2c-vcc" value="3.3" step="any" min="0" inputmode="decimal"><span class="unit">V</span></div>
+        </div>
+        <div class="field">
+          <label for="i2c-mode">通信速度</label>
+          <select id="i2c-mode">
+            <option value="std">Standard-mode 100kHz</option>
+            <option value="fast" selected>Fast-mode 400kHz</option>
+            <option value="fmp">Fast-mode Plus 1MHz</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="i2c-cb">バス容量 C<sub>b</sub> <span class="sub">配線＋各デバイスの合計</span></label>
+          <div class="inrow"><input type="number" id="i2c-cb" value="50" step="any" min="1" inputmode="decimal"><span class="unit">pF</span></div>
+          <div class="chips" data-target="i2c-cb">
+            <button class="chip" type="button" data-v="50">50pF（短い配線・1台）</button>
+            <button class="chip" type="button" data-v="100">100pF</button>
+            <button class="chip" type="button" data-v="200">200pF（長め・複数台）</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="i2c-rm">モジュール基板に載っているプルアップ <span class="sub">わからなければ 0</span></label>
+          <div class="inrow"><input type="number" id="i2c-rm" value="10" step="any" min="0" inputmode="decimal"><span class="unit">kΩ</span></div>
+        </div>
+        <div class="field">
+          <label for="i2c-n">そのモジュールの台数</label>
+          <input type="number" id="i2c-n" value="2" step="1" min="0" inputmode="numeric">
+        </div>
+      </div>
+      <div class="result" aria-live="polite" id="i2c-out"></div>
+    </div>
+    <div class="tips">
+      <h3>覚えておくこと</h3>
+      <ul>
+        <li><b>下限</b>はデバイスが Low に引き下げられる電流で決まる：R<sub>min</sub> = (V<sub>CC</sub> − 0.4V) / I<sub>OL</sub>。</li>
+        <li><b>上限</b>は立ち上がりの遅さで決まる：R<sub>max</sub> = t<sub>r</sub> / (0.8473 × C<sub>b</sub>)。配線が長い・台数が多いほど C<sub>b</sub> が増えて上限が下がる。</li>
+        <li>規格の 400pF は最悪値の上限。<b>短い配線で数台なら実際は数十 pF</b> 程度のことが多い。長い配線やケーブル延長で増える。</li>
+        <li>センサー基板には 4.7k〜10kΩ のプルアップが<b>最初から載っていることが多い</b>。何台もつなぐと並列になって抵抗値が下がり、下限を割ることがある。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═════════ 電池 ═════════ -->
+  <section class="panel" role="tabpanel" id="p-bat" aria-labelledby="tab-bat" hidden>
+    <h2>電池の持ち（間欠動作）</h2>
+    <p class="lead">「一定間隔で起きて測定・送信し、残りはディープスリープ」という IoT センサーの電池寿命を見積もります。</p>
+    <div class="cols">
+      <div>
+        <div class="field">
+          <label for="bat-cap">電池容量</label>
+          <div class="inrow"><input type="number" id="bat-cap" value="2000" step="any" min="0" inputmode="decimal"><span class="unit">mAh</span></div>
+          <div class="chips" data-target="bat-cap">
+            <button class="chip" type="button" data-v="220">CR2032 ≈220</button>
+            <button class="chip" type="button" data-v="2000">単3 アルカリ ≈2000</button>
+            <button class="chip" type="button" data-v="3000">18650 ≈3000</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="bat-eff">実際に使える割合 <span class="sub">劣化・低温・電圧降下ぶんの余裕</span></label>
+          <div class="inrow"><input type="number" id="bat-eff" value="80" step="any" min="1" max="100" inputmode="decimal"><span class="unit">%</span></div>
+        </div>
+        <div class="field">
+          <label for="bat-ia">起きている間の電流</label>
+          <div class="inrow"><input type="number" id="bat-ia" value="120" step="any" min="0" inputmode="decimal"><span class="unit">mA</span></div>
+        </div>
+        <div class="field">
+          <label for="bat-ta">1 回あたり起きている時間</label>
+          <div class="inrow"><input type="number" id="bat-ta" value="3" step="any" min="0" inputmode="decimal"><span class="unit">秒</span></div>
+        </div>
+        <div class="field">
+          <label for="bat-is">スリープ中の電流</label>
+          <div class="inrow"><input type="number" id="bat-is" value="150" step="any" min="0" inputmode="decimal"><span class="unit">µA</span></div>
+        </div>
+        <div class="field">
+          <label for="bat-tp">起きる間隔</label>
+          <div class="inrow"><input type="number" id="bat-tp" value="10" step="any" min="0" inputmode="decimal">
+            <select id="bat-tp-u" aria-label="間隔の単位"><option value="1">秒</option><option value="60" selected>分</option><option value="3600">時間</option></select></div>
+        </div>
+      </div>
+      <div class="result" aria-live="polite" id="bat-out"></div>
+    </div>
+    <div class="tips">
+      <h3>覚えておくこと</h3>
+      <ul>
+        <li>平均電流 = (起きている電流 × 起きている時間 ＋ スリープ電流 × 寝ている時間) / 周期。<b>「時間で重みをつけた平均」</b>。</li>
+        <li>ESP32 チップ単体のディープスリープは 10µA 前後でも、<b>開発ボードは USB 変換 IC や電源 IC が電流を食う</b>ので数百µA〜数 mA になることがある。実測するのが確実。</li>
+        <li>電池を<b>直列</b>につなぐと電圧は増えるが<b>容量（mAh）は増えない</b>。容量を増やすのは並列。</li>
+        <li>Wi-Fi の接続が一番電気を食う。<b>起きている時間を短くする</b>（接続を速くする、送信をまとめる）のが一番効く。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═════════ RC ═════════ -->
+  <section class="panel" role="tabpanel" id="p-rc" aria-labelledby="tab-rc" hidden>
+    <h2>RC 時定数・ローパスフィルタ</h2>
+    <p class="lead">抵抗とコンデンサの組み合わせで、充電の速さ（時定数）とカットオフ周波数を求めます。スイッチのチャタリング対策や ADC のノイズ除去に。</p>
+    <div class="cols">
+      <div>
+        <div class="field">
+          <label for="rc-r">抵抗 R</label>
+          <div class="inrow"><input type="number" id="rc-r" value="10" step="any" min="0" inputmode="decimal">
+            <select id="rc-r-u" aria-label="R の単位"><option value="1">Ω</option><option value="1e3" selected>kΩ</option><option value="1e6">MΩ</option></select></div>
+        </div>
+        <div class="field">
+          <label for="rc-c">コンデンサ C</label>
+          <div class="inrow"><input type="number" id="rc-c" value="0.1" step="any" min="0" inputmode="decimal">
+            <select id="rc-c-u" aria-label="C の単位"><option value="1e-12">pF</option><option value="1e-9">nF</option><option value="1e-6" selected>µF</option></select></div>
+          <div class="chips" data-target="rc-c" data-unit="rc-c-u">
+            <button class="chip" type="button" data-v="0.1" data-u="1e-6">0.1µF（104）</button>
+            <button class="chip" type="button" data-v="1" data-u="1e-6">1µF（105）</button>
+            <button class="chip" type="button" data-v="10" data-u="1e-6">10µF</button>
+          </div>
+        </div>
+      </div>
+      <div class="result" aria-live="polite" id="rc-out"></div>
+    </div>
+    <div class="tips">
+      <h3>覚えておくこと</h3>
+      <ul>
+        <li>時定数 τ = R × C。<b>τ 経つと 63%</b>、<b>5τ でほぼ 100%（99.3%）</b>まで充電される。</li>
+        <li>カットオフ周波数 f<sub>c</sub> = 1 / (2πRC)。これより速い変化（ノイズ）ほど弱められる。</li>
+        <li>セラミックコンデンサの「104」は 10 × 10<sup>4</sup> pF = 0.1µF。3 桁目は 0 の個数。</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="note">
+    ⚠️ 計算結果は設計の目安です。部品のばらつき・温度・配線で実際の値は変わります。電源を入れる前にテスターで確認し、データシートの値を優先してください。
+  </p>
+  <footer>made by nerun ・ <a href="index.html">ツール置き場に戻る</a></footer>
+</div>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat($(id).value); return Number.isFinite(v) ? v : NaN; };
+const withUnit = id => num(id) * parseFloat($(id + '-u').value);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ── 数値の表示 ── */
+const PREFIX = {'-12':'p','-9':'n','-6':'µ','-3':'m','0':'','3':'k','6':'M','9':'G'};
+function si(v, unit, sig = 3){
+  if (!Number.isFinite(v)) return '—';
+  if (v === 0) return '0 ' + unit;
+  const neg = v < 0; v = Math.abs(v);
+  let e = Math.floor(Math.log10(v) / 3) * 3;
+  e = Math.max(-12, Math.min(9, e));
+  let m = Number((v / Math.pow(10, e)).toPrecision(sig));
+  if (m >= 1000 && e < 9){ e += 3; m = Number((m / 1000).toPrecision(sig)); }
+  return (neg ? '−' : '') + m + ' ' + PREFIX[e] + unit;
+}
+const fx = (v, d = 3) => Number.isFinite(v) ? String(Number(v.toPrecision(d))) : '—';
+const ohm = v => si(v, 'Ω');
+
+/* ── E 系列 ── */
+const E = {
+  E12: [1.0,1.2,1.5,1.8,2.2,2.7,3.3,3.9,4.7,5.6,6.8,8.2],
+  E24: [1.0,1.1,1.2,1.3,1.5,1.6,1.8,2.0,2.2,2.4,2.7,3.0,3.3,3.6,3.9,4.3,4.7,5.1,5.6,6.2,6.8,7.5,8.2,9.1],
+};
+function eList(series, lo = 1, hi = 1e7){
+  const out = [];
+  for (let d = 0; d <= 7; d++) for (const b of E[series]){
+    const v = Math.round(b * Math.pow(10, d) * 1000) / 1000;
+    if (v >= lo * (1 - 1e-9) && v <= hi * (1 + 1e-9)) out.push(v);
+  }
+  return out.sort((a, b) => a - b);
+}
+const nextUp = (r, s) => eList(s).find(v => v >= r * (1 - 1e-9));
+const nearest = (r, s) => eList(s).reduce((best, v) => Math.abs(Math.log(v / r)) < Math.abs(Math.log(best / r)) ? v : best);
+
+/* ── 表示部品 ── */
+const kv = (k, v, pick) => `<div class="kv${pick ? ' pick' : ''}"><div class="k">${k}</div><div class="v">${v}</div></div>`;
+const msg = (cls, t) => `<div class="msg ${cls}">${t}</div>`;
+const formula = lines => `<div class="formula"><span class="h">検算</span>${lines.map(esc).join('\n')}</div>`;
+const invalid = t => `<div class="r-label">結果</div><div class="r-big"><small>—</small></div>` + msg('warn', t);
+
+/* ═════════ LED ═════════ */
+function calcLED(){
+  const vs = num('led-vs'), vf = num('led-vf'), ifA = num('led-if') / 1000;
+  const out = $('led-out');
+  if (!(vs > 0) || !(vf >= 0) || !(ifA > 0)) { out.innerHTML = invalid('電圧と電流に正の数を入れてください。'); return; }
+  const vr = vs - vf;
+  if (vr <= 0) { out.innerHTML = invalid(`電源電圧 ${fx(vs)}V が V<sub>F</sub> ${fx(vf)}V 以下なので、この LED は点灯しません（抵抗以前の問題）。電源電圧を上げるか V<sub>F</sub> の低い LED を使います。`); return; }
+  const r = vr / ifA;
+  const r12 = nextUp(r, 'E12'), r24 = nearest(r, 'E24');
+  if (!r12) { out.innerHTML = invalid(`必要な抵抗が ${ohm(r)} と大きすぎて、手に入る抵抗（10MΩ まで）の範囲を超えています。電流の値を見直してください。`); return; }
+  const iReal = vr / r12, p = iReal * iReal * r12;
+  let h = `<div class="r-label">計算上の抵抗値</div><div class="r-big">${ohm(r)}</div>`;
+  h += `<div class="r-grid">${kv('おすすめ（E12・1つ上）', ohm(r12), true)}${kv('そのときの電流', si(iReal, 'A'))}${kv('抵抗の消費電力', si(p, 'W'))}${kv('E24 で一番近い値', ohm(r24))}</div>`;
+  h += formula([
+    `抵抗にかかる電圧 = ${fx(vs)} − ${fx(vf)} = ${fx(vr)} V`,
+    `R = ${fx(vr)} V ÷ ${fx(ifA * 1000, 6)} mA = ${ohm(r)}`,
+    `${ohm(r12)} を使うと I = ${fx(vr)} ÷ ${fx(r12)} = ${si(iReal, 'A')}`,
+    `P = I² × R = (${si(iReal, 'A')})² × ${ohm(r12)} = ${si(p, 'W')}`,
+  ]);
+  if (p > 0.125) h += msg('bad', `抵抗の消費電力が ${si(p, 'W')} あります。一般的な 1/4W 抵抗は定格の半分（125mW）以下で使うのが目安なので、1/2W 以上の抵抗を使ってください。`);
+  else h += msg('ok', `1/4W の抵抗で問題ありません（定格 250mW に対して ${si(p, 'W')}）。`);
+  if (ifA > 0.02 && vs <= 3.6) h += msg('warn', '20mA を超えています。ESP32 の GPIO から直接流すには多すぎるので、トランジスタや MOSFET で駆動しましょう。');
+  if (vr < 0.5) h += msg('warn', `抵抗にかかる電圧が ${fx(vr)}V しかありません。V<sub>F</sub> が少しばらつくだけで電流が大きく変わるので、明るさが個体ごとに揃いにくくなります。`);
+  out.innerHTML = h;
+}
+
+/* ═════════ 分圧 ═════════ */
+let divMode = 'fwd';
+function calcDiv(){
+  const out = $('div-out'), vin = num('div-vin');
+  $('div-fwd-in').hidden = divMode !== 'fwd';
+  $('div-inv-in').hidden = divMode !== 'inv';
+  if (!(vin > 0)) { out.innerHTML = invalid('入力電圧に正の数を入れてください。'); return; }
+  if (divMode === 'fwd'){
+    const r1 = withUnit('div-r1'), r2 = withUnit('div-r2');
+    if (!(r1 >= 0) || !(r2 > 0)) { out.innerHTML = invalid('R1 は 0 以上、R2 は正の数を入れてください。'); return; }
+    const k = r2 / (r1 + r2), vout = vin * k, i = vin / (r1 + r2);
+    let h = `<div class="r-label">出力電圧 V<sub>OUT</sub></div><div class="r-big">${fx(vout, 4)} <small>V</small></div>`;
+    h += `<div class="r-grid">${kv('分圧比 R2/(R1+R2)', fx(k, 4))}${kv('流れる電流', si(i, 'A'))}${kv('ADC で戻す倍率', '×' + fx(1 / k, 4))}</div>`;
+    h += formula([
+      `V_OUT = ${fx(vin)} × ${ohm(r2)} ÷ (${ohm(r1)} + ${ohm(r2)})`,
+      `      = ${fx(vin)} × ${fx(k, 4)} = ${fx(vout, 4)} V`,
+      `I = ${fx(vin)} ÷ ${ohm(r1 + r2)} = ${si(i, 'A')}`,
+    ]);
+    if (vout > 3.3) h += msg('warn', `${fx(vout, 3)}V は ESP32 の入力上限 3.3V を超えています。ESP32 につなぐなら R2 を小さく（または R1 を大きく）してください。`);
+    if (r1 + r2 < 1e3) h += msg('warn', '合計が 1kΩ 未満で、電流が無駄に流れます。');
+    if (r1 + r2 > 1e6) h += msg('warn', '合計が 1MΩ を超えると ADC の読みがノイズで不安定になりやすいです。');
+    out.innerHTML = h;
+  } else {
+    const vt = num('div-vt'), ser = $('div-ser').value, cap = $('div-cap').checked;
+    if (!(vt > 0) || vt >= vin) { out.innerHTML = invalid('目標の出力電圧は 0 より大きく、入力電圧より小さくしてください。'); return; }
+    const vals = eList(ser, 1e3, 1e5), cands = [];
+    for (const r1 of vals) for (const r2 of vals){
+      const v = vin * r2 / (r1 + r2);
+      if (cap && v > vt * (1 + 1e-9)) continue;
+      cands.push({ r1, r2, v, err: Math.abs(v - vt), size: Math.abs(Math.log10((r1 + r2) / 3e4)) });
+    }
+    cands.sort((a, b) => (a.err - b.err) || (a.size - b.size));
+    const seen = new Set(), top = [];
+    for (const c of cands){
+      const key = c.v.toFixed(5);
+      if (seen.has(key)) continue;
+      seen.add(key); top.push(c);
+      if (top.length === 4) break;
+    }
+    if (!top.length) { out.innerHTML = invalid('条件に合う組み合わせが見つかりませんでした。'); return; }
+    const b = top[0], i = vin / (b.r1 + b.r2);
+    let h = `<div class="r-label">おすすめの組み合わせ（${ser}・1k〜100kΩ）</div><div class="r-big">${ohm(b.r1)} <small>/</small> ${ohm(b.r2)}</div>`;
+    h += `<div class="r-grid">${kv('実際の V<sub>OUT</sub>', fx(b.v, 4) + ' V', true)}${kv('目標との差', (b.v >= vt ? '+' : '−') + fx(Math.abs(b.v - vt) * 1000, 3) + ' mV')}${kv('流れる電流', si(i, 'A'))}</div>`;
+    h += `<table class="cand"><thead><tr><th>R1（上）</th><th>R2（下）</th><th>V<sub>OUT</sub></th></tr></thead><tbody>`;
+    top.forEach((c, n) => { h += `<tr${n ? '' : ' class="best"'}><td>${ohm(c.r1)}</td><td>${ohm(c.r2)}</td><td>${fx(c.v, 4)} V</td></tr>`; });
+    h += `</tbody></table>`;
+    h += formula([
+      `V_OUT = ${fx(vin)} × ${ohm(b.r2)} ÷ (${ohm(b.r1)} + ${ohm(b.r2)})`,
+      `      = ${fx(b.v, 4)} V （目標 ${fx(vt)} V）`,
+    ]);
+    if (cap) h += msg('ok', '目標を超えない側の組み合わせだけを出しています。');
+    out.innerHTML = h;
+  }
+}
+
+/* ═════════ ADC ═════════ */
+let adcMode = 'r2v';
+function calcADC(){
+  const out = $('adc-out'), bits = parseInt($('adc-bits').value, 10), vref = num('adc-vref'), k = num('adc-k');
+  const max = Math.pow(2, bits) - 1, lsb = vref / max;
+  $('adc-raw-f').hidden = adcMode !== 'r2v';
+  $('adc-v-f').hidden = adcMode !== 'v2r';
+  $('adc-raw').max = max;
+  if (!(vref > 0) || !(k >= 1)) { out.innerHTML = invalid('基準電圧は正の数、分圧の倍率は 1 以上にしてください。'); return; }
+  let h;
+  if (adcMode === 'r2v'){
+    const raw = num('adc-raw');
+    if (!(raw >= 0) || raw > max) { out.innerHTML = invalid(`読み値は 0〜${max} の範囲です（${bits}bit）。`); return; }
+    const v = raw / max * vref;
+    h = `<div class="r-label">ピンの電圧</div><div class="r-big">${fx(v, 4)} <small>V</small></div>`;
+    h += `<div class="r-grid">${k !== 1 ? kv('分圧前の元の電圧', fx(v * k, 4) + ' V', true) : ''}${kv('1 目盛り（1LSB）', si(lsb, 'V'))}${kv('満点の読み値', max)}</div>`;
+    const lines = [`V = ${raw} ÷ ${max} × ${fx(vref)} = ${fx(v, 4)} V`];
+    if (k !== 1) lines.push(`元の電圧 = ${fx(v, 6)} × ${fx(k, 4)} = ${fx(v * k, 4)} V`);
+    lines.push(`1LSB = ${fx(vref)} ÷ ${max} = ${si(lsb, 'V')}`);
+    lines.push(`（教科書では ${fx(vref)} ÷ 2^${bits} と書くことも多い。差はごくわずか）`);
+    h += formula(lines);
+  } else {
+    const vin = num('adc-v');
+    if (!(vin >= 0)) { out.innerHTML = invalid('電圧に 0 以上の数を入れてください。'); return; }
+    const vp = vin / k, rawF = vp / vref * max, raw = Math.round(rawF);
+    h = `<div class="r-label">予想される読み値</div><div class="r-big">${Math.min(raw, max)}</div>`;
+    h += `<div class="r-grid">${k !== 1 ? kv('ピンにかかる電圧', fx(vp, 4) + ' V', true) : ''}${kv('1 目盛り（1LSB）', si(lsb, 'V'))}${kv('満点の読み値', max)}</div>`;
+    const lines = [];
+    if (k !== 1) lines.push(`ピンの電圧 = ${fx(vin, 4)} ÷ ${fx(k, 4)} = ${fx(vp, 4)} V`);
+    lines.push(`読み値 = ${fx(vp, 6)} ÷ ${fx(vref)} × ${max} = ${fx(rawF, 5)} → ${raw > max ? max + '（上限に張り付き）' : raw}`);
+    h += formula(lines);
+    if (rawF > max + 0.5) h += msg(vp > 3.3 ? 'bad' : 'warn', `ピンの電圧が基準電圧 ${fx(vref)}V を超えるので、読み値は ${max} に張り付きます。` + (vp > 3.3 ? 'しかも 3.3V を超えているので、ESP32 なら壊れるおそれがあります。分圧してください。' : '基準電圧（減衰設定）を上げるか、分圧してください。'));
+  }
+  h += msg('warn', 'ESP32 の ADC は直線からずれます。目安として使い、実機では analogReadMilliVolts() やテスターで補正してください。');
+  out.innerHTML = h;
+}
+
+/* ═════════ I2C ═════════ */
+const I2C = {
+  std:  { tr: 1000e-9, iol: 3e-3,  cbMax: 400e-12, name: 'Standard-mode' },
+  fast: { tr: 300e-9,  iol: 3e-3,  cbMax: 400e-12, name: 'Fast-mode' },
+  fmp:  { tr: 120e-9,  iol: 20e-3, cbMax: 550e-12, name: 'Fast-mode Plus' },
+};
+function calcI2C(){
+  const out = $('i2c-out'), vcc = num('i2c-vcc'), m = I2C[$('i2c-mode').value], cb = num('i2c-cb') * 1e-12;
+  const rm = num('i2c-rm') * 1e3, n = Math.max(0, Math.floor(num('i2c-n') || 0));
+  if (!(vcc > 0.4) || !(cb > 0)) { out.innerHTML = invalid('電圧は 0.4V より大きく、バス容量は正の数を入れてください。'); return; }
+  const rmin = (vcc - 0.4) / m.iol, rmax = m.tr / (0.8473 * cb);
+  let h;
+  if (rmin > rmax){
+    h = `<div class="r-label">使える範囲</div><div class="r-big"><small>なし</small></div>`;
+    h += msg('bad', `バス容量が大きすぎて、下限 ${ohm(rmin)} より上限 ${ohm(rmax)} のほうが小さくなっています。配線を短くする、台数を減らす、速度を落とす、のどれかが必要です。`);
+  } else {
+    const COMMON = [1000, 1500, 2200, 3300, 4700, 6800, 10000];
+    const picks = COMMON.filter(v => v >= rmin && v <= rmax);
+    const common = picks.length ? picks : eList('E12', rmin, rmax);
+    h = `<div class="r-label">使ってよい抵抗値（${m.name}）</div><div class="r-big">${ohm(rmin)} <small>〜</small> ${ohm(rmax)}</div>`;
+    h += `<div class="r-grid">${kv('範囲内のよく使う値', common.length ? common.slice(-3).map(ohm).join(' / ') : '—', true)}${kv('立ち上がり時間 t<sub>r</sub> 上限', si(m.tr, 's'))}${kv('Low 時の電流 I<sub>OL</sub>', si(m.iol, 'A'))}</div>`;
+  }
+  const lines = [
+    `R_min = (${fx(vcc)} − 0.4) ÷ ${si(m.iol, 'A')} = ${ohm(rmin)}`,
+    `R_max = ${si(m.tr, 's')} ÷ (0.8473 × ${fx(cb * 1e12)} pF) = ${ohm(rmax)}`,
+  ];
+  if (rm > 0 && n > 0){
+    const rp = rm / n;
+    lines.push(`基板の ${ohm(rm)} × ${n} 台が並列 → ${ohm(rm)} ÷ ${n} = ${ohm(rp)}`);
+    h += formula(lines);
+    if (rp < rmin) h += msg('bad', `基板のプルアップが並列になって ${ohm(rp)} まで下がり、下限 ${ohm(rmin)} を割っています。一部の基板のプルアップを外す（はんだジャンパを切るなど）必要があります。`);
+    else if (rp > rmax) h += msg('warn', `合成 ${ohm(rp)} は上限 ${ohm(rmax)} より大きく、立ち上がりが間に合いません。外付けでプルアップを追加するか、速度を落としましょう。`);
+    else h += msg('ok', `基板のプルアップの合成 ${ohm(rp)} は範囲内です。外付けは不要です。`);
+  } else {
+    h += formula(lines);
+  }
+  if (cb > m.cbMax) h += msg('warn', `${m.name} の規格上のバス容量上限は ${fx(m.cbMax * 1e12)}pF です。`);
+  out.innerHTML = h;
+}
+
+/* ═════════ 電池 ═════════ */
+function fmtDur(h){
+  if (!Number.isFinite(h)) return '—';
+  if (h < 48) return fx(h, 3) + ' 時間';
+  const d = h / 24;
+  if (d < 60) return fx(d, 3) + ' 日';
+  if (d < 730) return fx(d / 30.44, 3) + ' か月';
+  return fx(d / 365.25, 3) + ' 年';
+}
+function calcBat(){
+  const out = $('bat-out');
+  const cap = num('bat-cap'), eff = num('bat-eff') / 100, ia = num('bat-ia'), ta = num('bat-ta');
+  const is = num('bat-is') / 1000, tp = withUnit('bat-tp');
+  if (!(cap > 0) || !(eff > 0 && eff <= 1) || !(ia >= 0) || !(ta >= 0) || !(is >= 0) || !(tp > 0)) {
+    out.innerHTML = invalid('容量と間隔は正の数、電流と時間は 0 以上の数を入れてください（使える割合は 1〜100%）。'); return;
+  }
+  if (ta > tp) { out.innerHTML = invalid('起きている時間が起きる間隔より長くなっています。'); return; }
+  const iavg = (ia * ta + is * (tp - ta)) / tp;
+  if (!(iavg > 0)) { out.innerHTML = invalid('電流がすべて 0 なので、電池は減りません（計算できません）。'); return; }
+  const hours = cap * eff / iavg;
+  const perDay = iavg * 24;
+  const shareA = (ia * ta) / (ia * ta + is * (tp - ta) || 1);
+  let h = `<div class="r-label">電池の持ち（目安）</div><div class="r-big">${fmtDur(hours)}</div>`;
+  h += `<div class="r-grid">${kv('平均電流', si(iavg / 1000, 'A'), true)}${kv('1 日の消費', fx(perDay, 3) + ' mAh')}${kv('起きている時間の割合', fx(ta / tp * 100, 3) + ' %')}${kv('起きている間の消費の比率', fx(shareA * 100, 3) + ' %')}</div>`;
+  h += formula([
+    `平均 = (${fx(ia)}mA × ${fx(ta)}s + ${fx(is * 1000)}µA × ${fx(tp - ta, 6)}s) ÷ ${fx(tp, 6)}s`,
+    `     = ${si(iavg / 1000, 'A')}`,
+    `持ち = ${fx(cap)}mAh × ${fx(eff * 100)}% ÷ ${si(iavg / 1000, 'A')} = ${fx(hours, 4)} 時間`,
+  ]);
+  if (shareA > 0.5) h += msg('warn', `消費の ${fx(shareA * 100, 2)}% が起きている時間です。起きている時間を短くするか、起きる間隔を延ばすのが効きます。`);
+  else h += msg('warn', `消費の ${fx((1 - shareA) * 100, 2)}% がスリープ中です。スリープ電流（ボードの LDO や USB 変換 IC）を減らすのが効きます。`);
+  if (cap <= 300 && ia > 10) h += msg('bad', 'コイン電池（CR2032 など）は数 mA 程度しか流せません。Wi-Fi で 100mA 以上流れる ESP32 を直接動かすと電圧が下がってリセットします。ESP32 には単3・18650・LiPo を使いましょう。');
+  h += msg('warn', '自己放電や電池の電圧が下がって動かなくなる分は含みません。実際はこれより短くなると考えてください。');
+  out.innerHTML = h;
+}
+
+/* ═════════ RC ═════════ */
+function calcRC(){
+  const out = $('rc-out'), r = withUnit('rc-r'), c = withUnit('rc-c');
+  if (!(r > 0) || !(c > 0)) { out.innerHTML = invalid('R と C に正の数を入れてください。'); return; }
+  const tau = r * c, fc = 1 / (2 * Math.PI * tau);
+  let h = `<div class="r-label">時定数 τ</div><div class="r-big">${si(tau, 's')}</div>`;
+  h += `<div class="r-grid">${kv('カットオフ周波数 f<sub>c</sub>', si(fc, 'Hz'), true)}${kv('63% まで（1τ）', si(tau, 's'))}${kv('ほぼ満充電（5τ）', si(5 * tau, 's'))}${kv('半分まで（0.69τ）', si(Math.LN2 * tau, 's'))}</div>`;
+  h += formula([
+    `τ = ${ohm(r)} × ${si(c, 'F')} = ${si(tau, 's')}`,
+    `f_c = 1 ÷ (2π × ${si(tau, 's')}) = ${si(fc, 'Hz')}`,
+  ]);
+  if (tau >= 1e-3 && tau <= 50e-3) h += msg('ok', 'τ が 1〜50ms なので、ボタンのチャタリング（数 ms のバタつき）を均すのにちょうどよい範囲です。');
+  else if (tau < 1e-3) h += msg('warn', 'τ が 1ms 未満なので、チャタリング対策としては短めです（高い周波数のノイズ除去向き）。');
+  else h += msg('warn', 'τ が 50ms を超えると、ボタンの反応が遅く感じられることがあります。');
+  out.innerHTML = h;
+}
+
+/* ── 配線 ── */
+const CALC = { led: calcLED, div: calcDiv, adc: calcADC, i2c: calcI2C, bat: calcBat, rc: calcRC };
+Object.entries(CALC).forEach(([key, fn]) => {
+  const panel = $('p-' + key);
+  panel.addEventListener('input', fn);
+  panel.addEventListener('change', fn);
+});
+document.querySelectorAll('.chips').forEach(box => box.addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  $(box.dataset.target).value = b.dataset.v;
+  if (box.dataset.unit && b.dataset.u) $(box.dataset.unit).value = b.dataset.u;
+  $(box.dataset.target).dispatchEvent(new Event('input', { bubbles: true }));
+}));
+function bindSeg(panelId, set){
+  const btns = $(panelId).querySelectorAll('.seg button');
+  btns.forEach(b => b.addEventListener('click', () => {
+    btns.forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+    set(b.dataset.mode);
+  }));
+}
+bindSeg('p-div', m => { divMode = m; calcDiv(); });
+bindSeg('p-adc', m => { adcMode = m; calcADC(); });
+
+/* ── タブ ── */
+const tabs = [...document.querySelectorAll('.tab')];
+function show(key, focus){
+  if (!CALC[key]) key = 'led';
+  tabs.forEach(t => {
+    const on = t.dataset.key === key;
+    t.setAttribute('aria-selected', on ? 'true' : 'false');
+    t.tabIndex = on ? 0 : -1;
+    $(t.getAttribute('aria-controls')).hidden = !on;
+    if (on && focus) t.focus();
+    if (on) t.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  });
+  CALC[key]();
+  if (location.hash !== '#' + key) history.replaceState(null, '', '#' + key);
+}
+tabs.forEach((t, i) => {
+  t.addEventListener('click', () => show(t.dataset.key));
+  t.addEventListener('keydown', e => {
+    let j = null;
+    if (e.key === 'ArrowRight') j = (i + 1) % tabs.length;
+    else if (e.key === 'ArrowLeft') j = (i - 1 + tabs.length) % tabs.length;
+    else if (e.key === 'Home') j = 0;
+    else if (e.key === 'End') j = tabs.length - 1;
+    if (j !== null){ e.preventDefault(); show(tabs[j].dataset.key, true); }
+  });
+});
+window.addEventListener('hashchange', () => show(location.hash.slice(1)));
+show(location.hash.slice(1));
+</script>
+</body>
+</html>

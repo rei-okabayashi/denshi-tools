@@ -145,7 +145,7 @@
   .sync-msg{font-size:.84rem;font-weight:700;margin:10px 0 0;padding:10px 12px;border-radius:9px}
   .sync-msg.ok{color:var(--green);background:var(--green-soft);border:1px solid #D5DFC6}
   .sync-msg.ng{color:#b23a2e;background:#F7E3DE;border:1px solid #E8C4BA}
-  #sync-card details summary{cursor:pointer;user-select:none}
+  #sync-card details summary{cursor:pointer;user-select:none;padding:3px 0}
   footer{text-align:center;color:var(--ink-dim);font-size:.72rem;margin-top:26px}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}}
 </style>
@@ -206,7 +206,7 @@
 <!-- 項目検索 -->
 <section class="card">
   <h2>項目をさがす</h2>
-  <input id="find-input" type="search" placeholder="キーワードで104項目から検索（例：サブネット、稼働率、正規化）" autocomplete="off">
+  <input id="find-input" type="search" aria-label="項目検索" placeholder="キーワードで104項目から検索（例：サブネット、稼働率、正規化）" autocomplete="off">
   <div class="weaklist hidden" id="find-list"></div>
   <p class="mini hidden" id="find-none">見つかりませんでした。別の言い方で試してみて。</p>
 </section>
@@ -365,13 +365,13 @@
       <div class="sync-qr" id="sync-qr">QRを生成中…</div>
       <div class="sync-main">
         <p class="mini">スマホのカメラでQRを読み取って開くと、この端末の進捗が取り込まれます。URLをコピーしてメモアプリ等で送ってもOK。</p>
-        <div class="sync-row"><input id="sync-url" readonly><button id="btn-sync-copy">コピー</button></div>
+        <div class="sync-row"><input id="sync-url" readonly aria-label="共有URL"><button id="btn-sync-copy">コピー</button></div>
       </div>
     </div>
   </div>
   <details style="margin-top:12px">
     <summary class="mini">逆方向（スマホ→PCなど）：コードを貼り付けて取り込む</summary>
-    <div class="sync-row"><input id="sync-in" placeholder="共有コード または URL を貼り付け"><button id="btn-sync-import">取り込む</button></div>
+    <div class="sync-row"><input id="sync-in" aria-label="共有コードまたはURL" placeholder="共有コード または URL を貼り付け"><button id="btn-sync-import">取り込む</button></div>
   </details>
   <p id="sync-msg" class="sync-msg hidden"></p>
 </section>
