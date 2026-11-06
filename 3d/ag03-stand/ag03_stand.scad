@@ -9,11 +9,27 @@
 //    part = "half_b"    … 右パーツ（ダボ穴＝メス） ← STL書き出し用
 //    part = "drawer"    … 引き出し                 ← STL書き出し用
 //    part = "fit_test"  … 圧入の効き具合を試す小片（本番前に推奨）
+//    part = "ext_p1"〜"ext_p4" / "ext_keys" / "ext_cover" … 増設台（Kindle＋M5Stack）
+//    part = "mod_p"     … 拡張モジュールの部品（mod_bays で中身を決め、mod_piece で番号を選ぶ）
+//    part = "full_view" / "mod_view" … 全体の組み立て表示
+//  印刷済みの部品と組めるかの確認: python3 tools/compat_check.py（印刷済みの一覧は printed.md）
 //  コマンドライン例:
 //    openscad -D 'part="half_a"' -o ag03_stand_half_a.stl ag03_stand.scad
 // ============================================================
 
 part = "assembly";
+
+/* ---------- 版（刷り直す部品に刻印して、印刷済みの古い部品と見分ける） ----------
+   印刷済み（2026-11 時点）: AG03 台の左右＝初版（刻印なし）、増設台 P1〜P4・キー・カバー・パネル・引き出し＝初版（刻印なし）
+   刷り直す予定の部品だけ版を上げる。刻印は床の裏（机に接する面）に深さ 0.6mm */
+ver_ag03_r = 2;    // AG03 台の右（パーツB）
+ver_m5     = 2;    // 増設台の M5Stack 部（P4）
+lbl_size   = 4.5;  // 刻印の文字の大きさ [mm]
+// 床の裏（y=0 の面）に文字を彫る。文字は幅方向（z）に並び、裏から見て読める向き。flip: 部品を z 方向に裏返して組むとき
+module ver_label(txt, x, z, flip = false)
+    multmatrix(flip ? [[0, 1, 0, x], [0, 0, 1, -1], [1, 0, 0, z], [0, 0, 0, 1]]
+                    : [[0, 1, 0, x], [0, 0, -1, 0.6], [-1, 0, 0, z], [0, 0, 0, 1]])
+        linear_extrude(1.6) text(txt, size = lbl_size, font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
 
 use <ripple_pattern.scad>   // 側面パネルの「波紋」模様（tools/gen_ripple.py で生成）
 
@@ -187,7 +203,8 @@ module front_slope2d() offset(r = R_out) offset(delta = -R_out) polygon([
 module rnd() offset(r = 2.5) offset(delta = -2.5) children();       // 横桁の角も丸める
 
 // ダボ位置 [x, y, 直径]
-pegs = [
+// 【規格】pegs_v1 は印刷済みのパーツA（左・初版）に付いているダボ。パーツB（右）は必ずこの穴を持つ（位置を変えない）
+pegs_v1 = [
     [xL + 4.5, ceil_bot + 5.5, peg_d],     // 前板の下部（前の下側の開き止め）
     [-1.8,     ceil_bot + 5.5, peg_d],     // 〃
     concat(P(5,        -5), [peg_d]),      // 手前の横桁
@@ -196,10 +213,14 @@ pegs = [
     concat(P(S - 25,   -5), [peg_d]),      // 奥の横桁
     concat(P(S - 12,   -5), [peg_d]),
     [xr - 9,  5, peg_d],                   // 後ろ下の横桁
+];
+// 補強（版2）で増えたダボ。パーツB には穴だけ開けておく（初版の A と組むときは空き穴、A も刷り直せば効く）
+pegs_v2 = [
     [xr - 9, 31, peg_d],                   // 引き出しの奥の梁
     [40, ceil_bot + 5, peg_d],             // 厚くした天井板（引き出しの上）
     [95, ceil_bot + 5, peg_d],
 ];
+pegs = concat(pegs_v1, pegs_v2);
 
 // ============================================================
 //  3D
@@ -211,14 +232,15 @@ module half(male = true) {
             linear_extrude(g) guide2d();                               // 側板（横ズレ防止）
             linear_extrude(Zc) plates2d();                             // 横桁＋引き出しの天井板
             translate([0, 0, web_z0]) linear_extrude(Zc - web_z0) upper_web2d();   // 引き出しの上の補強
-            thick_ceiling(web_z0, Zc + 0.01);
-            rear_beam_ramped(web_z0, Zc + 0.01);                       // 引き出しの奥の梁（増設台と同じ）
+            thick_ceiling(web_z0, Zc);
+            rear_beam_ramped(web_z0, Zc);                       // 引き出しの奥の梁（増設台と同じ）
             if (male) for (p = pegs) translate([p[0], p[1], Zc - 0.01]) peg(p[2]);
             if (male) translate([0, 0, Zc - 0.01]) linear_extrude(lap_len) lap_tongue2d();
         }
         if (!male) for (p = pegs)
             translate([p[0], p[1], Zc - peg_len - 0.6]) peg_hole(p[2]);
         if (!male) translate([0, 0, Zc - lap_len - 0.3]) linear_extrude(lap_len + 1) lap_recess2d();
+        if (!male) ver_label(str("AG03-R v", ver_ag03_r), 25, Zc/2, true);   // 床の裏に版を刻印（組んだ状態で読める向き）
     }
 }
 
@@ -504,18 +526,26 @@ module ext_common2d() { front_wall2d(); front_slope2d(); front_rung2d(); rear_ru
 module floor_hole(z0, z1) translate([0, ext_t_floor + 1, 0]) rotate([90, 0, 0]) linear_extrude(ext_t_floor + 2)
     offset(r = 2) offset(delta = -2) let(c = floor_hole_c, x0 = floor_hole_x0, x1 = floor_hole_x1)
         polygon([[x0, z0 + c], [x0 + c, z0], [x1 - c, z0], [x1, z0 + c], [x1, z1 - c], [x1 - c, z1], [x0 + c, z1], [x0, z1 - c]]);
-module kin_support2d() {               // Kindle の座面（厚み 3mm の床）と、それを支える横桁（座面の高さまで持ち上げ）
-    band(0, S, kin_riser - 3, kin_riser);
-    for (r = [[-lip_t, 18], [S*0.45 - 8, S*0.45 + 8], [S - 30, S]]) band(r[0], r[1], -t_top, kin_riser);
-}
-module m5_support2d() intersection() {  // M5Stack の座面（傾斜面そのもの）。前板に 1mm 重ね、外形の内側に収めて微小な面を作らない
-    sil2d();
-    union() { band(-1, S, -3, 0); band(S*0.45 - 8, S*0.45 + 8, -t_top, 0); }
+// ---- 機器を置くベイの共通部品（どの機器も「厚み」と「傾斜方向の長さ」だけで決まる） ----
+// 座面の持ち上げ量：機器の前面を前板の上端（lip_h）にそろえる。前板より厚い機器は傾斜面にそのまま置く
+function dev_riser(t) = max(0, lip_h - t);
+module dev_support2d(riser) {
+    if (riser > 0.5) {                  // 持ち上げる機器（Kindle など）：厚み 3mm の座面と、それを支える横桁
+        band(0, S, riser - 3, riser);
+        for (r = [[-lip_t, 18], [S*0.45 - 8, S*0.45 + 8], [S - 30, S]]) band(r[0], r[1], -t_top, riser);
+    } else intersection() {             // 傾斜面に直接置く機器（M5Stack など）：前板に 1mm 重ね、外形の内側に収めて微小な面を作らない
+        sil2d();
+        union() { band(-1, S, -3, 0); band(S*0.45 - 8, S*0.45 + 8, -t_top, 0); }
+    }
 }
 // 機器の上側の空き：AG03 に合わせた傾斜の長さが余る部分を、前板の上端（lip_h）まで埋めて上面を面一にする
 module side_outline_raw2d() union() { sil2d(); guide2d(); }
-module kin_top2d() intersection() { side_outline_raw2d(); band(kin_h + dev_clr, S + 1, kin_riser - 1, lip_h); }
-module m5_top2d()  intersection() { side_outline_raw2d(); band(m5_h + dev_clr, S + 1, -1, lip_h); }
+module dev_top2d(h, riser) intersection() { side_outline_raw2d(); band(h + dev_clr, S + 1, riser - 1, lip_h); }
+m5_riser = dev_riser(m5_t);                        // M5Stack Basic は前板より厚いので 0
+module kin_support2d() dev_support2d(kin_riser);
+module m5_support2d()  dev_support2d(m5_riser);
+module kin_top2d() dev_top2d(kin_h, kin_riser);
+module m5_top2d()  dev_top2d(m5_h, m5_riser);
 notch_w = 36;                                          // 取り出し用の指掛けの幅 [mm]
 // 指掛け（機器の上端の中央）。両端を 45° の斜面にして、どちらの向きで印刷してもサポート不要
 module dev_notch(s0, h0, zc) hull() {
@@ -553,16 +583,17 @@ module cover_recess() {
         band(115.99, cov_s1 + 0.3, cov_h0, lip_h + 1);
     }
 }
+module chan_ceiling_hole(z0) translate([0, 0, z0 + 3]) linear_extrude(chan_w - 3)
+    translate([P(18, -t_top)[0], ceil_bot - 1]) square([rear_beam_x - 2 - P(18, -t_top)[0], t_ceil + 2]);
 module ext_div2d() intersection() { sil2d(); translate([xL - 1, 0]) square([rear_beam_x - xL + 1, ceil_top]); }  // 引き出しの仕切り
 
 module ext_solid() difference() { ext_solid_body(); cover_recess(); ext_cable_holes(); }
 module ext_cable_holes() {
     // 機器を取り出すときの指掛け（上側を埋めた面の、機器の上端の中央）
     dev_notch(kin_h + dev_clr, kin_riser + 0.3, ez_k0 + kin_w/2);     // 底は座面より 0.3mm 上（同じ高さにすると微小な辺ができる）
-    dev_notch(m5_h + dev_clr, 0.3, ez_m0 + m5_w/2);
+    dev_notch(m5_h + dev_clr, m5_riser + 0.3, ez_m0 + m5_w/2);
     // 通り道の下の天井の穴：通り道から下段（M5Stack 側）へケーブルを落とす。仕切りの右から通り道の右端まで（P3 の上面まで抜く）
-    translate([0, 0, ez_c0 + 3]) linear_extrude(chan_w - 3)
-        translate([P(18, -t_top)[0], ceil_bot - 1]) square([rear_beam_x - 2 - P(18, -t_top)[0], t_ceil + 2]);
+    chan_ceiling_hole(ez_c0);
     // 床の穴：机の穴とのあいだでケーブルを通す。Kindle の下（P1 の中）と、M5Stack の下（仕切りの右から M5Stack 側の枠の手前まで）
     floor_hole(kin_hole_z0, kin_hole_z1);
     floor_hole(ez_c0 + 3, ez_end - g - frame_w - 2);
@@ -591,7 +622,7 @@ pegs_c1 = [[xL + 4.5, ceil_bot + 5.5, peg_d], [-1.8, ceil_bot + 5.5, peg_d],
 pegs_c2 = [[xL + 4.5, ceil_bot + 5.5, peg_d], [-1.8, ceil_bot + 5.5, peg_d],
            concat(P(9, -5), [peg_d]), concat(P(S - 25, -5), [peg_d]), concat(P(S - 12, -5), [peg_d]),
            [xr - 9, 9, peg_d], [xr - 9, 31, peg_d]];                     // 奥の下の梁にも 2 本
-pegs_c3 = pegs_c2;
+pegs_c3 = pegs_c2;                  // 【規格】P3｜P4（M5Stack 部を刷り直すときもこの位置・この断面で P3 に差す）
 module slab(z0, z1) translate([-500, -500, z0 + 0.002]) cube([1000, 1000, z1 - z0 - 0.004]);   // 切り口ちょうどで始まる部品が厚み 0 の面を作らないよう、わずかに内側で切る
 module pegs_at(list, z)  for (p = list) translate([p[0], p[1], z - 0.01]) peg(p[2]);
 module holes_at(list, z) for (p = list) translate([p[0], p[1], z - 0.01]) peg_hole_up(p[2]);
@@ -603,7 +634,8 @@ module ext_p1() { intersection() { ext_solid(); slab(0, ez_cut1); } pegs_at(pegs
 module ext_p2() { difference() { intersection() { ext_solid(); slab(ez_cut1, ez_c0); } holes_at(pegs_c1, ez_cut1); } pegs_at(pegs_c2, ez_c0); }
 module ext_p3() difference() { intersection() { ext_solid(); slab(ez_c0, ez_c1); } holes_at(pegs_c2, ez_c0);
     for (p = pegs_c3) translate([p[0], p[1], ez_c1 - peg_len - 0.6]) peg_hole(p[2]); }        // 上の面にも穴（P4 のダボが入る）
-module ext_p4() { intersection() { ext_solid(); slab(ez_c1, ez_end); }                       // 右の枠を下にして印刷するので、ダボは左向き
+module ext_p4() { difference() { intersection() { ext_solid(); slab(ez_c1, ez_end); }      // 右の枠を下にして印刷するので、ダボは左向き
+        ver_label(str("M5 v", ver_m5), 25, (ez_c1 + ez_end)/2); }                        // 床の裏に版を刻印
     for (p = pegs_c3) translate([p[0], p[1], ez_c1 + 0.01]) mirror([0, 0, 1]) peg(p[2]); }
 
 // 連結キー：AG03 台の側面の穴と増設台の左の枠の穴に、両側から 6mm ずつ差し込むリング（3 個を 1 回で印刷）
@@ -614,6 +646,94 @@ module ext_keys() {
     translate([0, 0, 2*plug_len - 2*c - 0.01]) linear_extrude(c) plug_rim2d(plug_tol + 0.4);
 }
 
+
+// ============================================================
+//  拡張モジュール（共通規格）
+//  ・両端は AG03 台・増設台と同じ「枠＋側板＋穴」。となりとは連結キー（ext_keys）でつなぎ、右端には波紋パネル（panel_b）が付く
+//  ・側面の形・前板の高さ・天井板・床板・奥の梁・背板・補強はすべて増設台と同じ（上面は前板の上端で面一）
+//  ・中身は「ベイ」を左から並べるだけで決まる。新しい機器は 1 行足す:
+//      ["dev", 幅, 傾斜方向の長さ, 厚み]  機器を置く。前面を前板の上端にそろえ（薄い機器は座面を持ち上げる）、上側の空きは面一に埋め、取り出し用の指掛けを付ける
+//      ["chan"]                            ケーブルの通り道（幅 chan_w、増設台と同じカバーが付く）。両どなりは "dev"、端には置けない
+//      ["blank", 幅]                       何も置かない（前板の高さで平らにふさいだ小物置き）
+//  ・印刷はベイの境目ごとに分割し、長いベイは mod_max_piece 以下に等分。左端の部品は左の枠を、右端の部品は右の枠を下にして印刷（サポート不要）
+//  ・部品どうしは増設台と同じダボでつなぐ。部品の床の裏に「名前＋版−番号」を刻印
+//  書き出し: openscad -D 'part="mod_p"' -D 'mod_piece=1' -o mod_p1.stl ag03_stand.scad （部品数はコンソールの ECHO に出る）
+// ============================================================
+mod_name  = "EX";                                         // 刻印する名前（英数字）
+mod_ver   = 1;                                            // 版
+mod_bays  = [["dev", m5_w, m5_h, m5_t], ["blank", 50]];  // 例：M5Stack をもう 1 台＋小物置き（実際に作るときに書き換える）
+mod_max_piece   = 95;                                     // 1 部品の最大の幅 [mm]（背が高いと揺れるので 100mm 以下を推奨）
+mod_floor_holes = true;                                   // 機器・小物置きの下の床にケーブル用の穴を開ける
+mod_piece = 1;                                            // 書き出す部品の番号（1〜）
+mod_at    = 2*Zc + ez_end;                                // 組み立て表示での位置（増設台の右どなり）
+
+function bay_w(b)        = b[0] == "dev" ? b[1] + 2*dev_clr : b[0] == "chan" ? chan_w : b[1];
+function bay_z0(bays, i) = i == 0 ? g : bay_z0(bays, i - 1) + bay_w(bays[i - 1]);
+function mod_W(bays)     = bay_z0(bays, len(bays)) + g;
+function bay_at(bays, z) = [for (i = [0:1:len(bays) - 1]) if (z >= bay_z0(bays, i) && z < bay_z0(bays, i) + bay_w(bays[i])) i][0];
+function mod_bounds(bays) = concat([0], [for (i = [1:1:len(bays) - 1]) bay_z0(bays, i)], [mod_W(bays)]);
+function mod_pieces(bays) = let(B = mod_bounds(bays), n = len(B) - 1)
+    [for (i = [0:1:n - 1]) let(a = B[i], b = B[i + 1], k = max(ceil((b - a)/mod_max_piece), n == 1 ? 2 : 1))
+        for (j = [0:1:k - 1]) [a + (b - a)*j/k, a + (b - a)*(j + 1)/k]];
+// 継ぎ目のダボ：増設台と同じ規格の位置＋両側が厚い天井板なら天井板にも 2 本
+function mod_cut_pegs(bays, z) = let(l = bays[bay_at(bays, z - 0.5)], r = bays[bay_at(bays, z + 0.5)])
+    (l[0] != "chan" && r[0] != "chan") ? concat(pegs_c2, [[40, ceil_bot + 5, peg_d], [95, ceil_bot + 5, peg_d]]) : pegs_c2;
+module mod_check(bays) {
+    for (i = [0:1:len(bays) - 1]) {
+        assert(bay_w(bays[i]) >= 20, str("ベイ ", i + 1, " の幅が狭すぎます（20mm 以上）"));
+        if (bays[i][0] == "chan") assert(i > 0 && i < len(bays) - 1 && bays[i - 1][0] == "dev" && bays[i + 1][0] == "dev",
+                                         "ケーブルの通り道は両どなりを機器にしてください（端には置けません）");
+    }
+}
+
+module mod_body(bays) let(W = mod_W(bays), n = len(bays)) {
+    linear_extrude(g + frame_w) frame2d();  linear_extrude(g) guide2d();                     // 左の枠（共通規格の穴）
+    translate([0, 0, W]) mirror([0, 0, 1]) { linear_extrude(g + frame_w) frame2d(); linear_extrude(g) guide2d(); }   // 右の枠
+    linear_extrude(W) ext_common2d();
+    for (i = [0:1:n - 1]) let(b = bays[i], z0 = bay_z0(bays, i), z1 = z0 + bay_w(b),
+                              e0 = i == 0 ? z0 - 1 : z0, e1 = i == n - 1 ? z1 + 1 : z1,
+                              w0 = max(z0, web_z0), w1 = min(z1, W - web_z0)) {
+        if (b[0] == "dev") let(r = dev_riser(b[3])) {
+            translate([0, 0, e0]) linear_extrude(e1 - e0) intersection() { side_outline_raw2d(); dev_support2d(r); }          // 端のベイは側板に 1mm 重ねる（面が接するだけだと継ぎ目が残る）
+            translate([0, 0, e0]) linear_extrude(e1 - e0) dev_top2d(b[2], r);
+        }
+        if (b[0] == "blank") translate([0, 0, e0]) linear_extrude(e1 - e0) intersection() { side_outline_raw2d(); dev_support2d(lip_h); }   // 前板の高さの平らな板
+        if (b[0] == "chan") {
+            translate([0, 0, z0]) linear_extrude(chan_w) { chan_block2d(); chan_rblock2d(); }
+            translate([0, 0, z0]) linear_extrude(3) ext_div2d();
+        }
+        if (b[0] != "chan") {                                                                       // 引き出しの上の補強（通り道はケーブルが通るので入れない）
+            translate([0, 0, w0]) linear_extrude(w1 - w0) upper_web2d(false);
+            thick_ceiling(w0, w1, w0 == web_z0, w1 == W - web_z0);
+        }
+    }
+}
+module mod_holes(bays) let(W = mod_W(bays)) for (i = [0:1:len(bays) - 1]) let(b = bays[i], z0 = bay_z0(bays, i), z1 = z0 + bay_w(b),
+                                                                            f0 = max(z0 + 4, g + frame_w + 2), f1 = min(z1 - 4, W - g - frame_w - 2)) {
+    if (b[0] == "dev" && b[1] >= 40 && b[2] + dev_clr + 14 < S) dev_notch(b[2] + dev_clr, dev_riser(b[3]) + 0.3, (z0 + z1)/2);
+    if (b[0] == "chan") translate([0, 0, z0 - ez_c0]) cover_recess();
+    if (b[0] == "chan") chan_ceiling_hole(z0);
+    if (mod_floor_holes && b[0] != "chan" && f1 - f0 >= 30) floor_hole(f0, f1);
+}
+module mod_solid(bays) { mod_check(bays); difference() { mod_body(bays); mod_holes(bays); } }
+// k 番目（0〜）の部品（組み立てた位置のまま）。最後の部品だけ裏返して印刷するので、その左どなりは両面とも穴
+module mod_piece3d(bays, k) let(Ps = mod_pieces(bays), n = len(Ps), z0 = Ps[k][0], z1 = Ps[k][1]) {
+    difference() {
+        intersection() { mod_solid(bays); slab(z0, z1); }
+        if (k > 0 && k < n - 1) holes_at(mod_cut_pegs(bays, z0), z0);
+        if (k == n - 2) for (p = mod_cut_pegs(bays, z1)) translate([p[0], p[1], z1 - peg_len - 0.6]) peg_hole(p[2]);
+        ver_label(str(mod_name, mod_ver, "-", k + 1), 25, (z0 + z1)/2);
+    }
+    if (k < n - 2) pegs_at(mod_cut_pegs(bays, z1), z1);
+    if (k == n - 1) for (p = mod_cut_pegs(bays, z0)) translate([p[0], p[1], z0 + 0.01]) mirror([0, 0, 1]) peg(p[2]);
+}
+module mod_piece_print(bays, k) let(Ps = mod_pieces(bays), n = len(Ps))
+    if (k == n - 1) rotate([180, 0, 0]) translate([0, 0, -Ps[k][1]]) mod_piece3d(bays, k);   // 右端：右の枠を下に
+    else translate([0, 0, -Ps[k][0]]) mod_piece3d(bays, k);
+module mod_devices(bays) for (i = [0:1:len(bays) - 1]) let(b = bays[i], z0 = bay_z0(bays, i))
+    if (b[0] == "dev") dev_on(z0 + dev_clr, b[2], b[3], b[1], dev_riser(b[3]), "#3A6FD0");
+echo(str("拡張モジュール ", mod_name, mod_ver, "：幅 ", mod_W(mod_bays), "mm、部品 ", len(mod_pieces(mod_bays)), " 個 ", mod_pieces(mod_bays)));
+
 // 全体の組み立て表示（AG03 台の右に増設台。両端に波紋パネル、Kindle・M5Stack・AG03 をゴースト表示）
 module full_view() rotate([90, 0, 0]) {
     color("#2A2A2A") { half(true); translate([0, 0, 2*Zc]) mirror([0, 0, 1]) half(false); }
@@ -622,7 +742,7 @@ module full_view() rotate([90, 0, 0]) {
         color("#2E2E2E") ext_solid();
         translate([0, 0, ez_end]) mirror([0, 0, 1]) panel_colored(face_col, accent_col);
         dev_on(ez_k0, kin_h, kin_t, kin_w, kin_riser, "#E8E6DF");
-        dev_on(ez_m0, m5_h, m5_t, m5_w, 0, "#3A6FD0");
+        dev_on(ez_m0, m5_h, m5_t, m5_w, m5_riser, "#3A6FD0");
         color("#262626") cover_placed();
     }
     %translate([0, 0, g + clr]) multmatrix([[cos(tilt), -sin(tilt), 0, 0], [sin(tilt), cos(tilt), 0, H0], [0, 0, 1, 0], [0, 0, 0, 1]])
@@ -662,6 +782,12 @@ else if (part == "va_ext_keys")  rotate([90, 0, 0]) translate([0, 0, 2*Zc - plug
 else if (part == "va_dev_ag03")  rotate([90, 0, 0]) translate([0, 0, g + clr]) multmatrix([[cos(tilt), -sin(tilt), 0, 0], [sin(tilt), cos(tilt), 0, H0], [0, 0, 1, 0], [0, 0, 0, 1]])
                                      linear_extrude(dev_w) polygon([[0, 0], [dev_d, 0], [dev_d, dev_h_rear], [0, dev_h_front]]);
 else if (part == "va_dev_kindle") rotate([90, 0, 0]) translate([0, 0, 2*Zc]) dev_on(ez_k0, kin_h, kin_t, kin_w, kin_riser, "white");
-else if (part == "va_dev_m5")    rotate([90, 0, 0]) translate([0, 0, 2*Zc]) dev_on(ez_m0, m5_h, m5_t, m5_w, 0, "white");
+else if (part == "va_dev_m5")    rotate([90, 0, 0]) translate([0, 0, 2*Zc]) dev_on(ez_m0, m5_h, m5_t, m5_w, m5_riser, "white");
 else if (part == "fit_test") fit_test();
+else if (part == "mod_p")    mod_piece_print(mod_bays, mod_piece - 1);                 // 拡張モジュールの部品（印刷の向き）
+else if (part == "va_mod_p") rotate([90, 0, 0]) translate([0, 0, mod_at]) mod_piece3d(mod_bays, mod_piece - 1);
+else if (part == "va_mod_dev") rotate([90, 0, 0]) translate([0, 0, mod_at]) mod_devices(mod_bays);
+else if (part == "mod_view") { full_view(); rotate([90, 0, 0]) translate([0, 0, mod_at]) {
+        color("#2E2E2E") mod_solid(mod_bays); mod_devices(mod_bays);
+        color("#555") translate([0, 0, -plug_len + 0.6]) ext_keys(); } }
 else                         assembly();
