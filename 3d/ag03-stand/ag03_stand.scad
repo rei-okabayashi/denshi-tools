@@ -109,10 +109,12 @@ module frame2d() difference() { sil2d(); holes2d(); }
 t_ceil_up = 7;     // 天井板を上へ厚くする量 [mm]（天井板は合計 10mm。引き出しの高さは変わらない）
 deck_t    = 4;     // 傾斜面の下の板の厚み [mm]（横桁どうしを全幅でつなぐ。AG03 に触れないよう傾斜面から 1mm 下げる）
 web_t     = 5;     // 斜めの仕切りの厚み [mm]（側面フレームの斜材と同じ線）
+t_back_up = 6.5;   // 天井板より上の背板の厚み [mm]（側面フレームの後ろの柱 7mm とそろえる。フレームの穴にはかからない）
 module upper_web2d(deck = true) intersection() {
     sil2d();
     union() {
         if (deck) band(0, S, -1 - deck_t, -1);
+        translate([xr - t_back_up, ceil_bot]) square([t_back_up + 1, 500]);   // 厚い背板
         intersection() {
             hull() { translate([xr - 18, t_base]) circle(d = web_t); translate(P(S*0.45, -t_top)) circle(d = web_t); }
             translate([-500, ceil_bot + 1]) square(1000);
@@ -120,6 +122,17 @@ module upper_web2d(deck = true) intersection() {
     }
 }
 web_z0 = g + frame_w - 1;    // 補強を入れ始める位置（フレームの内面に 1mm 重ねる）
+// 引き出しの奥の梁（床〜天井、引き出しの奥の止め〜背面）。フレームの下の穴にかぶさる端は、後ろの柱の位置から
+// 45° より急な斜面で手前へ広げてサポート不要にする（中身はインフィルなので重さはそれほど増えない）
+module rear_beam_ramped(z0, z1) {
+    xb = xr - t_back_up;
+    rl = (xb - rear_beam_x)*1.25;
+    module rect(x0) translate([x0, 1]) square([xr - 1 - x0, ceil_top - 1.5]);
+    hull() {
+        translate([0, 0, z0]) linear_extrude(0.01) rect(xb);
+        translate([0, 0, z0 + rl]) linear_extrude(z1 - z0 - rl) rect(rear_beam_x);
+    }
+}
 // 厚い天井板（z0〜z1）。フレームの穴の上にかぶさる端（印刷で下になる端）は 45° の斜面で立ち上げてサポート不要にする
 module thick_ceiling(z0, z1, ramp0 = true, ramp1 = false) {
     xa = P(10, -t_top)[0] - 2;
@@ -183,6 +196,7 @@ pegs = [
     concat(P(S - 25,   -5), [peg_d]),      // 奥の横桁
     concat(P(S - 12,   -5), [peg_d]),
     [xr - 9,  5, peg_d],                   // 後ろ下の横桁
+    [xr - 9, 31, peg_d],                   // 引き出しの奥の梁
     [40, ceil_bot + 5, peg_d],             // 厚くした天井板（引き出しの上）
     [95, ceil_bot + 5, peg_d],
 ];
@@ -198,6 +212,7 @@ module half(male = true) {
             linear_extrude(Zc) plates2d();                             // 横桁＋引き出しの天井板
             translate([0, 0, web_z0]) linear_extrude(Zc - web_z0) upper_web2d();   // 引き出しの上の補強
             thick_ceiling(web_z0, Zc + 0.01);
+            rear_beam_ramped(web_z0, Zc + 0.01);                       // 引き出しの奥の梁（増設台と同じ）
             if (male) for (p = pegs) translate([p[0], p[1], Zc - 0.01]) peg(p[2]);
             if (male) translate([0, 0, Zc - 0.01]) linear_extrude(lap_len) lap_tongue2d();
         }
