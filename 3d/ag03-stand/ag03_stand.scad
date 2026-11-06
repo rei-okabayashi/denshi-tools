@@ -19,17 +19,6 @@
 
 part = "assembly";
 
-/* ---------- 版（刷り直す部品に刻印して、印刷済みの古い部品と見分ける） ----------
-   印刷済み（2026-11 時点）: AG03 台の左右＝初版（刻印なし）、増設台 P1〜P4・キー・カバー・パネル・引き出し＝初版（刻印なし）
-   刷り直す予定の部品だけ版を上げる。刻印は床の裏（机に接する面）に深さ 0.6mm */
-ver_ag03_r = 2;    // AG03 台の右（パーツB）
-ver_m5     = 2;    // 増設台の M5Stack 部（P4）
-lbl_size   = 4.5;  // 刻印の文字の大きさ [mm]
-// 床の裏（y=0 の面）に文字を彫る。文字は幅方向（z）に並び、裏から見て読める向き。flip: 部品を z 方向に裏返して組むとき
-module ver_label(txt, x, z, flip = false)
-    multmatrix(flip ? [[0, 1, 0, x], [0, 0, 1, -1], [1, 0, 0, z], [0, 0, 0, 1]]
-                    : [[0, 1, 0, x], [0, 0, -1, 0.6], [-1, 0, 0, z], [0, 0, 0, 1]])
-        linear_extrude(1.6) text(txt, size = lbl_size, font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
 
 use <ripple_pattern.scad>   // 側面パネルの「波紋」模様（tools/gen_ripple.py で生成）
 
@@ -240,7 +229,6 @@ module half(male = true) {
         if (!male) for (p = pegs)
             translate([p[0], p[1], Zc - peg_len - 0.6]) peg_hole(p[2]);
         if (!male) translate([0, 0, Zc - lap_len - 0.3]) linear_extrude(lap_len + 1) lap_recess2d();
-        if (!male) ver_label(str("AG03-R v", ver_ag03_r), 25, Zc/2, true);   // 床の裏に版を刻印（組んだ状態で読める向き）
     }
 }
 
@@ -634,8 +622,7 @@ module ext_p1() { intersection() { ext_solid(); slab(0, ez_cut1); } pegs_at(pegs
 module ext_p2() { difference() { intersection() { ext_solid(); slab(ez_cut1, ez_c0); } holes_at(pegs_c1, ez_cut1); } pegs_at(pegs_c2, ez_c0); }
 module ext_p3() difference() { intersection() { ext_solid(); slab(ez_c0, ez_c1); } holes_at(pegs_c2, ez_c0);
     for (p = pegs_c3) translate([p[0], p[1], ez_c1 - peg_len - 0.6]) peg_hole(p[2]); }        // 上の面にも穴（P4 のダボが入る）
-module ext_p4() { difference() { intersection() { ext_solid(); slab(ez_c1, ez_end); }      // 右の枠を下にして印刷するので、ダボは左向き
-        ver_label(str("M5 v", ver_m5), 25, (ez_c1 + ez_end)/2); }                        // 床の裏に版を刻印
+module ext_p4() { intersection() { ext_solid(); slab(ez_c1, ez_end); }                       // 右の枠を下にして印刷するので、ダボは左向き
     for (p = pegs_c3) translate([p[0], p[1], ez_c1 + 0.01]) mirror([0, 0, 1]) peg(p[2]); }
 
 // 連結キー：AG03 台の側面の穴と増設台の左の枠の穴に、両側から 6mm ずつ差し込むリング（3 個を 1 回で印刷）
@@ -656,11 +643,10 @@ module ext_keys() {
 //      ["chan"]                            ケーブルの通り道（幅 chan_w、増設台と同じカバーが付く）。両どなりは "dev"、端には置けない
 //      ["blank", 幅]                       何も置かない（前板の高さで平らにふさいだ小物置き）
 //  ・印刷はベイの境目ごとに分割し、長いベイは mod_max_piece 以下に等分。左端の部品は左の枠を、右端の部品は右の枠を下にして印刷（サポート不要）
-//  ・部品どうしは増設台と同じダボでつなぐ。部品の床の裏に「名前＋版−番号」を刻印
+//  ・部品どうしは増設台と同じダボでつなぐ
 //  書き出し: openscad -D 'part="mod_p"' -D 'mod_piece=1' -o mod_p1.stl ag03_stand.scad （部品数はコンソールの ECHO に出る）
 // ============================================================
-mod_name  = "EX";                                         // 刻印する名前（英数字）
-mod_ver   = 1;                                            // 版
+mod_name  = "EX";                                         // モジュールの名前（表示用）
 mod_bays  = [["dev", m5_w, m5_h, m5_t], ["blank", 50]];  // 例：M5Stack をもう 1 台＋小物置き（実際に作るときに書き換える）
 mod_max_piece   = 95;                                     // 1 部品の最大の幅 [mm]（背が高いと揺れるので 100mm 以下を推奨）
 mod_floor_holes = true;                                   // 機器・小物置きの下の床にケーブル用の穴を開ける
@@ -722,7 +708,6 @@ module mod_piece3d(bays, k) let(Ps = mod_pieces(bays), n = len(Ps), z0 = Ps[k][0
         intersection() { mod_solid(bays); slab(z0, z1); }
         if (k > 0 && k < n - 1) holes_at(mod_cut_pegs(bays, z0), z0);
         if (k == n - 2) for (p = mod_cut_pegs(bays, z1)) translate([p[0], p[1], z1 - peg_len - 0.6]) peg_hole(p[2]);
-        ver_label(str(mod_name, mod_ver, "-", k + 1), 25, (z0 + z1)/2);
     }
     if (k < n - 2) pegs_at(mod_cut_pegs(bays, z1), z1);
     if (k == n - 1) for (p = mod_cut_pegs(bays, z0)) translate([p[0], p[1], z0 + 0.01]) mirror([0, 0, 1]) peg(p[2]);
@@ -732,7 +717,7 @@ module mod_piece_print(bays, k) let(Ps = mod_pieces(bays), n = len(Ps))
     else translate([0, 0, -Ps[k][0]]) mod_piece3d(bays, k);
 module mod_devices(bays) for (i = [0:1:len(bays) - 1]) let(b = bays[i], z0 = bay_z0(bays, i))
     if (b[0] == "dev") dev_on(z0 + dev_clr, b[2], b[3], b[1], dev_riser(b[3]), "#3A6FD0");
-echo(str("拡張モジュール ", mod_name, mod_ver, "：幅 ", mod_W(mod_bays), "mm、部品 ", len(mod_pieces(mod_bays)), " 個 ", mod_pieces(mod_bays)));
+echo(str("拡張モジュール ", mod_name, "：幅 ", mod_W(mod_bays), "mm、部品 ", len(mod_pieces(mod_bays)), " 個 ", mod_pieces(mod_bays)));
 
 // 全体の組み立て表示（AG03 台の右に増設台。両端に波紋パネル、Kindle・M5Stack・AG03 をゴースト表示）
 module full_view() rotate([90, 0, 0]) {
