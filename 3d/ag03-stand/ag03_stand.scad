@@ -571,6 +571,35 @@ module cover_recess() {
         band(115.99, cov_s1 + 0.3, cov_h0, lip_h + 1);
     }
 }
+// M5Stack の上の隠し収納：上側の埋め（デッドスペース）をくり抜いた小物入れ。上面と面一のフタ（ext_lid）をはめる
+//  ・フタは段（深さ lid_t）に落とし込むだけ。手前の縁は M5Stack の指掛けの上に少しかかるので、同じ指掛けに指を入れて持ち上げる
+//  ・収納の底は M5Stack の座面の板（補強の箱はそのまま）。左端（通り道側）は印刷で上になるので、底へ下りる斜面にしてサポート不要
+box_s0 = 72;  box_s1 = 140;                    // 収納の口の範囲（傾斜に沿って）。手前は中の横桁・斜めの仕切りを避ける
+lid_s0 = 64;  lid_s1 = 144;                    // フタの範囲（手前は指掛けに 2.7mm かかる）
+lid_t  = 2.4;                                  // フタの厚み [mm]
+lid_clr = 0.25;                                // フタと段のすき間 [mm]
+lid_z0 = ez_c1 + 1.6;  lid_z1 = ez_end - g - 0.8;   // フタの幅方向の範囲（左は通り道との壁 1.6mm、右は側板の内側）
+box_z0 = lid_z0 + 2.4; box_z1 = lid_z1 - 2.4;       // 収納の口（フタを受ける段の幅 2.4mm）
+box_h  = lip_h - lid_t;                              // 収納の深さ（座面の板の上から）
+module slope_place(zref) multmatrix([[cos(tilt), 0, -sin(tilt), 0], [sin(tilt), 0, cos(tilt), H0], [0, -1, 0, zref], [0, 0, 0, 1]]) children();   // 傾斜面に沿った座標（u: 傾斜、v: 幅 -z、w: 法線）
+module rrect(a, b, r = 2) offset(r = r) offset(delta = -r) square([a, b]);
+lid_bev = lid_t*1.1;                                // 左端（印刷で上になる側）の段とフタの縁の斜め [mm]（45° より少し急）
+// 段・フタの形：左端（v が大きい側）だけ下側を斜めに落とした板。a: 傾斜方向、b: 幅、t: 厚み（w=0〜t）
+module bevel_plate(a, b, t, top_extra = 0) hull() {
+    linear_extrude(t) rrect(a, b - lid_bev);
+    translate([0, 0, t - 0.01]) linear_extrude(0.01 + top_extra) rrect(a, b);
+    linear_extrude(t + top_extra) rrect(a, b - lid_bev);
+}
+module m5_box_cut() {
+    slope_place(lid_z1) translate([lid_s0, 0, box_h]) bevel_plate(lid_s1 - lid_s0, lid_z1 - lid_z0, lid_t, 1);   // フタの段
+    rl = box_h*1.1;                                                     // 左端の斜面の長さ（45° より少し急）
+    hull() {
+        translate([0, 0, box_z0 + rl]) linear_extrude(box_z1 - box_z0 - rl) band(box_s0, box_s1, 0, box_h + 0.01);
+        translate([0, 0, box_z0]) linear_extrude(0.01) band(box_s0, box_s1, 0, 0.01);
+    }
+}
+module lid_local() translate([0, 0, -lid_t]) bevel_plate(lid_s1 - lid_s0 - 2*lid_clr, lid_z1 - lid_z0 - 2*lid_clr, lid_t);   // 上面が w=0
+module lid_placed() slope_place(lid_z1 - lid_clr) translate([lid_s0 + lid_clr, 0, lip_h]) lid_local();
 module chan_ceiling_hole(z0) translate([0, 0, z0 + 3]) linear_extrude(chan_w - 3)
     translate([P(18, -t_top)[0], ceil_bot - 1]) square([rear_beam_x - 2 - P(18, -t_top)[0], t_ceil + 2]);
 module ext_div2d() intersection() { sil2d(); translate([xL - 1, 0]) square([rear_beam_x - xL + 1, ceil_top]); }  // 引き出しの仕切り
@@ -582,6 +611,7 @@ module ext_cable_holes() {
     dev_notch(m5_h + dev_clr, m5_riser + 0.3, ez_m0 + m5_w/2);
     // 通り道の下の天井の穴：通り道から下段（M5Stack 側）へケーブルを落とす。仕切りの右から通り道の右端まで（P3 の上面まで抜く）
     chan_ceiling_hole(ez_c0);
+    m5_box_cut();                                                       // M5Stack の上の隠し収納
     // 床の穴：机の穴とのあいだでケーブルを通す。Kindle の下（P1 の中）と、M5Stack の下（仕切りの右から M5Stack 側の枠の手前まで）
     floor_hole(kin_hole_z0, kin_hole_z1);
     floor_hole(ez_c0 + 3, ez_end - g - frame_w - 2);
@@ -729,6 +759,7 @@ module full_view() rotate([90, 0, 0]) {
         dev_on(ez_k0, kin_h, kin_t, kin_w, kin_riser, "#E8E6DF");
         dev_on(ez_m0, m5_h, m5_t, m5_w, m5_riser, "#3A6FD0");
         color("#262626") cover_placed();
+        color("#262626") lid_placed();
     }
     %translate([0, 0, g + clr]) multmatrix([[cos(tilt), -sin(tilt), 0, 0], [sin(tilt), cos(tilt), 0, H0], [0, 0, 1, 0], [0, 0, 0, 1]])
         linear_extrude(dev_w) polygon([[0, 0], [dev_d, 0], [dev_d, dev_h_rear], [0, dev_h_front]]);
@@ -751,6 +782,7 @@ else if (part == "ext_p3")   translate([0, 0, -ez_c0]) ext_p3();            // �
 else if (part == "ext_p4")   rotate([180, 0, 0]) translate([0, 0, -ez_end]) ext_p4();   // 増設台 4/4（M5Stack。右の外面を下にして印刷）
 else if (part == "ext_keys") translate([0, 0, 0.6]) ext_keys();             // 連結キー 3 個
 else if (part == "ext_cover") rotate([180, 0, 0]) cover_local();          // ケーブルカバー（上面を下にして印刷）
+else if (part == "ext_lid")   rotate([180, 0, 0]) lid_local();            // 隠し収納のフタ（上面を下にして印刷）
 else if (part == "full_view") full_view();
 // --- ビューア用：組み立てた位置のまま 1 部品ずつ書き出す（viewer/ で使う） ---
 else if (part == "va_ag_a")      rotate([90, 0, 0]) half(true);
@@ -763,6 +795,7 @@ else if (part == "va_ext_p2")    rotate([90, 0, 0]) translate([0, 0, 2*Zc]) ext_
 else if (part == "va_ext_p3")    rotate([90, 0, 0]) translate([0, 0, 2*Zc]) ext_p3();
 else if (part == "va_ext_p4")    rotate([90, 0, 0]) translate([0, 0, 2*Zc]) ext_p4();
 else if (part == "va_ext_cover") rotate([90, 0, 0]) translate([0, 0, 2*Zc]) cover_placed();
+else if (part == "va_ext_lid")   rotate([90, 0, 0]) translate([0, 0, 2*Zc]) lid_placed();
 else if (part == "va_ext_keys")  rotate([90, 0, 0]) translate([0, 0, 2*Zc - plug_len + 0.6]) ext_keys();
 else if (part == "va_dev_ag03")  rotate([90, 0, 0]) translate([0, 0, g + clr]) multmatrix([[cos(tilt), -sin(tilt), 0, 0], [sin(tilt), cos(tilt), 0, H0], [0, 0, 1, 0], [0, 0, 0, 1]])
                                      linear_extrude(dev_w) polygon([[0, 0], [dev_d, 0], [dev_d, dev_h_rear], [0, dev_h_front]]);

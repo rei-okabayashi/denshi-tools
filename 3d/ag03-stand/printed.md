@@ -8,7 +8,7 @@
 | AG03 台 右（パーツB） | 初版 | `b4d3d18` `ag03_stand_half_b.stl` | 刷り直す予定 → 版2 |
 | 引き出し | 初版 | `9fa7f93` `ag03_stand_drawer.stl` | — |
 | 増設台 P1・P2・P3 | 初版 | `9fa7f93` `ag03_stand_ext_p1〜p3.stl` | 刷り直さない |
-| 増設台 P4（M5Stack） | 初版 | `9fa7f93` `ag03_stand_ext_p4.stl` | 刷り直す予定 → 版2 |
+| 増設台 P4（M5Stack） | 初版 | `9fa7f93` `ag03_stand_ext_p4.stl` | 刷り直す予定 → 版2（上側に隠し収納。フタ `ag03_stand_ext_lid.stl` を新しく印刷） |
 | 連結キー・ケーブルカバー | 初版 | `9fa7f93` `ag03_stand_ext_keys.stl` `ag03_stand_ext_cover.stl` | — |
 | 波紋パネル 左右 | 初版 | `9fa7f93` `ag03_stand_panel_a.stl` `ag03_stand_panel_b.stl` | — |
 
